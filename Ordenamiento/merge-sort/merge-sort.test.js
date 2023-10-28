@@ -1,18 +1,30 @@
-const { merge } = require('./merge-sort');
+const { merge, mergeSort } = require('./merge-sort');
 
-/*
 describe('mergeSort', () => {
-    it('should sort an array in ascending order', () => {
-        // Arrange
-        const unsortedArray = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5];
+    it('debería ordenar un array de números en orden ascendente', () => {
+        const arr = [4, 2, 7, 1, 9];
+        mergeSort(arr, 0, arr.length - 1);
+        expect(arr).toEqual([1, 2, 4, 7, 9]);
+    });
 
-        // Act
-        const sortedArray = mergeSort([...unsortedArray]);
-        // Assert
-        expect(sortedArray).toEqual([1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9]);
+    it('debería manejar un array vacío', () => {
+        const arr = [];
+        mergeSort(arr, 0, arr.length - 1);
+        expect(arr).toEqual([]);
+    });
+
+    it('debería manejar un array con un solo elemento', () => {
+        const arr = [42];
+        mergeSort(arr, 0, arr.length - 1);
+        expect(arr).toEqual([42]);
+    });
+
+    it('debería manejar un array que ya está ordenado', () => {
+        const arr = [1, 2, 3, 4, 5];
+        mergeSort(arr, 0, arr.length - 1);
+        expect(arr).toEqual([1, 2, 3, 4, 5]);
     });
 });
-*/
 
 describe('merge', () => {
     it('Fusiona dos partes ordenadas de un array en un nuevo array completamente ordenado', () => {
@@ -48,7 +60,6 @@ describe('merge', () => {
     it('Funciona con una cantidad par de elementos', () => {
         // Arrange
         const unsortedArray = [1, 3, 6, 2, 4, 5];
-        debugger
         // Act
         merge(unsortedArray, 0, 2, 5)
         // Assert
@@ -58,7 +69,6 @@ describe('merge', () => {
     it('Funciona con una cantidad impar de elementos', () => {
         // Arrange
         const unsortedArray = [1, 3, 6, 2, 4, 5, 8];
-        debugger
         // Act
         merge(unsortedArray, 0, 2, 6)
         // Assert
