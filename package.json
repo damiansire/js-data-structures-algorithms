@@ -1,0 +1,22 @@
+{
+  "name": "javascript-estructura-de-datos-y-algoritmos",
+  "version": "1.0.0",
+  "description": "Repositorio de estructura de datos y algoritmos",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/damiansire/javascript-estructura-de-datos-y-algoritmos.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/damiansire/javascript-estructura-de-datos-y-algoritmos/issues"
+  },
+  "homepage": "https://github.com/damiansire/javascript-estructura-de-datos-y-algoritmos#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
