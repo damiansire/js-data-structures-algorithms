@@ -1,11 +1,10 @@
 //Precondicion: Las modificaciones de hacen sobre el array original
 
-function mergeSort(arr) {
-    const beginSubArr1 = 0;
-    const endSubArr1 = Math.trunc(arr.length / 2);
-    const endSubArr2 = arr.length - 1;
-    const sortedArray = merge(arr, beginSubArr1, endSubArr1, endSubArr2);
-    return sortedArray;
+function mergeSort(arr, beginSubArray, endSubArray) {
+    const endSubArr1 = Math.trunc((beginSubArray + endSubArray) / 2);
+    mergeSort(arr, beginSubArray, endSubArr1)
+    mergeSort(arr, endSubArr1 + 1, endSubArray)
+    merge(arr, beginSubArr1, endSubArr1, endSubArr2);
 }
 
 function merge(arr, beginSubArr1, endSubArr1, endSubArr2) {
