@@ -3,13 +3,13 @@
 function mergeSort(arr) {
     const beginSubArr1 = 0;
     const endSubArr1 = Math.trunc(arr.length / 2);
-    const beginSubArr2 = endSubArr1 + 1;
     const endSubArr2 = arr.length - 1;
-    const sortedArray = merge(arr, beginSubArr1, endSubArr1, beginSubArr2, endSubArr2);
+    const sortedArray = merge(arr, beginSubArr1, endSubArr1, endSubArr2);
     return sortedArray;
 }
 
-function merge(arr, beginSubArr1, endSubArr1, beginSubArr2, endSubArr2) {
+function merge(arr, beginSubArr1, endSubArr1, endSubArr2) {
+    const beginSubArr2 = endSubArr1 + 1;
     const subArr1Length = endSubArr1 - beginSubArr1 + 1;
     const subArr1 = new Array(subArr1Length)
     for (let index = 0; index < subArr1Length; index++) {

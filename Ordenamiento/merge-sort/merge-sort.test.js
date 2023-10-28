@@ -20,7 +20,7 @@ describe('merge', () => {
         const unsortedArray = [1, 4, 7, 9, 3, 4, 8, 9];
 
         // Act
-        merge(unsortedArray, 0, 3, 4, 7)
+        merge(unsortedArray, 0, 3, 7)
         // Assert
         expect(unsortedArray).toEqual([1, 3, 4, 4, 7, 8, 9, 9]);
     });
@@ -30,7 +30,7 @@ describe('merge', () => {
         const unsortedArray = [];
 
         // Act
-        merge(unsortedArray, 0, 0, 0, 0)
+        merge(unsortedArray, 0, 0, 0)
         // Assert
         expect(unsortedArray).toEqual([]);
     });
@@ -40,7 +40,7 @@ describe('merge', () => {
         const unsortedArray = [1];
 
         // Act
-        merge(unsortedArray, 0, 0, 0, 0)
+        merge(unsortedArray, 0, 0, 0)
         // Assert
         expect(unsortedArray).toEqual([1]);
     });
@@ -50,7 +50,7 @@ describe('merge', () => {
         const unsortedArray = [1, 3, 6, 2, 4, 5];
         debugger
         // Act
-        merge(unsortedArray, 0, 2, 3, 5)
+        merge(unsortedArray, 0, 2, 5)
         // Assert
         expect(unsortedArray).toEqual([1, 2, 3, 4, 5, 6]);
     });
@@ -60,7 +60,7 @@ describe('merge', () => {
         const unsortedArray = [1, 3, 6, 2, 4, 5, 8];
         debugger
         // Act
-        merge(unsortedArray, 0, 2, 3, 6)
+        merge(unsortedArray, 0, 2, 6)
         // Assert
         expect(unsortedArray).toEqual([1, 2, 3, 4, 5, 6, 8]);
     });
