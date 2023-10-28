@@ -1,4 +1,4 @@
-const { merge, mergeSort } = require('./merge-sort');
+const { merge, mergeSort } = require('./in-place-merge-sort');
 
 describe('mergeSort', () => {
     it('debería ordenar un array de números en orden ascendente', () => {
