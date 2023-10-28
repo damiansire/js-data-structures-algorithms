@@ -10,16 +10,15 @@ function mergeSort(arr) {
 }
 
 function merge(arr, beginSubArr1, endSubArr1, beginSubArr2, endSubArr2) {
-    debugger
     const subArr1Length = endSubArr1 - beginSubArr1 + 1;
     const subArr1 = new Array(subArr1Length)
-    for (let index = 0; index <= subArr1Length; index++) {
+    for (let index = 0; index < subArr1Length; index++) {
         subArr1[index] = arr[beginSubArr1 + index]
     }
 
     const subArr2Length = endSubArr2 - beginSubArr2 + 1;
     const subArr2 = new Array(subArr2Length)
-    for (let index = 0; index <= subArr2Length; index++) {
+    for (let index = 0; index < subArr2Length; index++) {
         subArr2[index] = arr[beginSubArr2 + index]
     }
 
@@ -27,11 +26,11 @@ function merge(arr, beginSubArr1, endSubArr1, beginSubArr2, endSubArr2) {
     let indexSubArr2 = 0;
 
     for (let index = beginSubArr1; index <= endSubArr2; index++) {
-        if (subArr1[indexSubArr1] <= subArr1[indexSubArr2]) {
+        if (subArr1[indexSubArr1] <= subArr2[indexSubArr2]) {
             arr[index] = subArr1[indexSubArr1];
             indexSubArr1++;
         }
-        else if (subArr1[indexSubArr1] > subArr1[indexSubArr2]) {
+        else if (subArr1[indexSubArr1] > subArr2[indexSubArr2]) {
             arr[index] = subArr2[indexSubArr2];
             indexSubArr2++;
         }
