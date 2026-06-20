@@ -4,14 +4,19 @@
   "description": "Repositorio de estructura de datos y algoritmos",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/damiansire/javascript-estructura-de-datos-y-algoritmos.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Damian Sire",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
   "bugs": {
     "url": "https://github.com/damiansire/javascript-estructura-de-datos-y-algoritmos/issues"
   },
