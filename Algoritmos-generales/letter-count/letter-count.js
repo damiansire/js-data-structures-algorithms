@@ -1,5 +1,6 @@
 //Used only array and for, and letter to ASCII convert
 function countLetter(text) {
+    let letterAmountArray = [];
     for (let index = 0; index < text.length; index++) {
         let amountArrayIndex = getLetterAmountArray(text[index])
         if (letterAmountArray[amountArrayIndex] === undefined) {
@@ -19,15 +20,18 @@ function getLetterAmountArray(letter) {
     return letter.charCodeAt() - 97
 }
 
-
 //Used EM6
-let text = "hola como estas"
-let textWithout = "hola como estas".trim().replaceAll(" ", "")
-let countLetter = {};
-[...textWithout].map(letter => {
-    if (countLetter[letter] !== undefined) {
-        countLetter[letter]++;
-    } else {
-        countLetter[letter] = 1
-    }
-})
+function countLetterMap(text) {
+    let textWithout = text.trim().replaceAll(" ", "")
+    let counts = {};
+    [...textWithout].forEach(letter => {
+        if (counts[letter] !== undefined) {
+            counts[letter]++;
+        } else {
+            counts[letter] = 1
+        }
+    })
+    return counts;
+}
+
+module.exports = { countLetter, countLetterMap, revertPosition, getLetterAmountArray };
