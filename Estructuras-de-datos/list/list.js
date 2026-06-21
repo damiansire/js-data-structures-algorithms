@@ -55,9 +55,10 @@
             let aux = this.head;
             if (aux == null) { return null }
             if (aux.data == element) { this.head = aux.next; return aux.data }
-            while (aux.next.data != element) {
+            while (aux.next != null && aux.next.data != element) {
                 aux = aux.next
             }
+            if (aux.next == null) { return null }
             aux.next = aux.next.next
         }
         deleteByNode(node) {
