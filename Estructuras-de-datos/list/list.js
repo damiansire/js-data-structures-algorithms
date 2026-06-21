@@ -54,16 +54,18 @@
         delete(element) {
             let aux = this.head;
             if (aux == null) { return null }
-            if (aux.data == element) { this.head = aux.next; return aux.data }
+            if (aux.data == element) { this.head = aux.next; this.length--; return aux.data }
             while (aux.next != null && aux.next.data != element) {
                 aux = aux.next
             }
             if (aux.next == null) { return null }
             aux.next = aux.next.next
+            this.length--;
         }
         deleteByNode(node) {
             node.data = node.next.data
             node.next = node.next.next;
+            this.length--;
         }
     }
 
