@@ -39,7 +39,7 @@ class BinaryTree {
             return actualNode;
         }
         else {
-            alert("NO LO ENCONTRE XD")
+            throw new Error(`No se encontro ningun nodo en la ruta: ${path}`)
         }
     }
     recorrer(binaryTreeNode = this.root, level = 0) {

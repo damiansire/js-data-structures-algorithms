@@ -54,7 +54,7 @@ class Stack {
         if (this.top != null) {
             this.top = this.top.prev
         } else {
-            alert("Amigo, estas queriendo borrar un elemento de una pila vacia ")
+            throw new Error("No se puede hacer pop() sobre una pila vacia")
         }
     }
 
