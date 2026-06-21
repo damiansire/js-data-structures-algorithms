@@ -1,3 +1,9 @@
+/**
+ * Elimina los elementos duplicados de un array conservando el orden de primera
+ * aparición, apoyándose en un Set. O(n).
+ * @param {Array} array Array de entrada (puede tener duplicados).
+ * @returns {Array} Un array nuevo sin duplicados.
+ */
 function removeDuplicates(array) {
     let mySet = new Set(array)
     return Array.from(mySet)

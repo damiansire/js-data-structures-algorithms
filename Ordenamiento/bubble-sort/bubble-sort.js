@@ -1,3 +1,10 @@
+/**
+ * Ordena un array de menor a mayor con el algoritmo bubble sort. O(n²) en el
+ * peor caso, O(n) si ya está ordenado (corte temprano con la bandera swapped).
+ * Ordena in-place y devuelve el mismo array.
+ * @param {number[]} arr Array a ordenar (se modifica in-place).
+ * @returns {number[]} El mismo array, ya ordenado ascendentemente.
+ */
 function bubbleSort(arr) {
     // Bubble sort real: compara elementos adyacentes y los burbujea de a
     // pares en pasadas sucesivas. La bandera swapped permite corte temprano

@@ -1,15 +1,36 @@
+/**
+ * Nodo de un árbol binario genérico (hasta dos hijos: left y right).
+ */
 class BinaryTreeNode {
+    /**
+     * @param {*} value Valor almacenado en el nodo.
+     */
     constructor(value) {
         this.value = value;
+        /** @type {BinaryTreeNode|null} Hijo izquierdo. */
         this.left = null;
+        /** @type {BinaryTreeNode|null} Hijo derecho. */
         this.right = null;
     }
 }
 
+/**
+ * Árbol binario genérico cuyos nodos se direccionan por una ruta tipo XPath
+ * (valores separados por "/"), p. ej. "raiz/dia/datos".
+ */
 class BinaryTree {
     constructor() {
+        /** @type {BinaryTreeNode|null} Nodo raíz del árbol. */
         this.root = null
     }
+    /**
+     * Inserta un nodo. Sin path, lo coloca como raíz; con path, lo cuelga como
+     * hijo (left/right) del nodo ubicado en esa ruta.
+     * @param {*} value Valor del nuevo nodo.
+     * @param {string} [path] Ruta XPath del nodo padre (omitir para insertar la raíz).
+     * @param {('left'|'right')} [whereChild] Lado en el que colgar el nuevo nodo.
+     * @returns {BinaryTreeNode} El nodo recién insertado.
+     */
     insert(value, path, whereChild) {
         let node = new BinaryTreeNode(value);
         if (!path) {
@@ -20,6 +41,12 @@ class BinaryTree {
         }
         return node;
     }
+    /**
+     * Busca entre los hijos directos de un nodo el que tenga el valor indicado.
+     * @param {BinaryTreeNode} actualNode Nodo cuyos hijos se inspeccionan.
+     * @param {*} valueToSearch Valor del hijo buscado.
+     * @returns {BinaryTreeNode|undefined} El hijo coincidente, o undefined si no hay.
+     */
     foundChild(actualNode, valueToSearch) {
         if (actualNode.right?.value === valueToSearch) {
             return actualNode.right;
@@ -29,6 +56,13 @@ class BinaryTree {
         }
         //Javascript return undefined
     }
+    /**
+     * Resuelve una ruta XPath (valores separados por "/") y devuelve el nodo
+     * final, navegando nivel a nivel por coincidencia de valor.
+     * @param {string} path Ruta a resolver, p. ej. "raiz/dia/datos".
+     * @throws {Error} Si la ruta no resuelve a ningún nodo existente.
+     * @returns {BinaryTreeNode} El nodo ubicado al final de la ruta.
+     */
     findNodeByXpath(path) {
         let actualNode = this.root;
         let routes = path.split("/")
@@ -42,6 +76,13 @@ class BinaryTree {
             throw new Error(`No se encontro ningun nodo en la ruta: ${path}`)
         }
     }
+    /**
+     * Recorre el árbol en pre-orden (raíz, izquierda, derecha) imprimiendo cada
+     * valor por consola con sangría según el nivel.
+     * @param {BinaryTreeNode} [binaryTreeNode=this.root] Nodo desde el cual recorrer.
+     * @param {number} [level=0] Nivel de profundidad actual (para la sangría).
+     * @returns {void}
+     */
     recorrer(binaryTreeNode = this.root, level = 0) {
         console.log("-".repeat(level), binaryTreeNode.value);
 

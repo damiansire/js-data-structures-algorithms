@@ -1,3 +1,9 @@
+/**
+ * Combina dos arrays ya ordenados en uno solo ordenado ascendentemente.
+ * @param {number[]} arr1 Primer array ordenado.
+ * @param {number[]} arr2 Segundo array ordenado.
+ * @returns {number[]} Un array nuevo con todos los elementos ordenados.
+ */
 function merge(arr1, arr2) {
     //Declaramos un array vacio
     let combinedArray = [];
@@ -23,6 +29,12 @@ function merge(arr1, arr2) {
     return combinedArray;
 }
 
+/**
+ * Ordena un array de menor a mayor con merge sort recursivo (divide y vencerás).
+ * O(n log n). No muta el array original: devuelve uno nuevo.
+ * @param {number[]} arr Array a ordenar.
+ * @returns {number[]} Un array nuevo ordenado ascendentemente.
+ */
 function mergeSort(arr) {
     if (arr.length <= 1) { return arr }
     let mediumArray = Math.trunc(arr.length / 2);
