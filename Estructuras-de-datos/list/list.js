@@ -54,17 +54,27 @@
         delete(element) {
             let aux = this.head;
             if (aux == null) { return null }
-            if (aux.data == element) { this.head = aux.next; this.length--; return aux.data }
+            if (aux.data == element) {
+                this.head = aux.next;
+                if (aux == this.last) { this.last = this.head }
+                this.length--;
+                return aux.data;
+            }
             while (aux.next != null && aux.next.data != element) {
                 aux = aux.next
             }
             if (aux.next == null) { return null }
-            aux.next = aux.next.next
+            let removed = aux.next;
+            aux.next = aux.next.next;
+            if (removed == this.last) { this.last = aux }
             this.length--;
+            return removed.data;
         }
         deleteByNode(node) {
+            if (node.next == null) { return null }
             node.data = node.next.data
             node.next = node.next.next;
+            if (node.next == null) { this.last = node }
             this.length--;
         }
     }
