@@ -341,7 +341,7 @@ export default function mountEuclidGcd(host, meta) {
     infoCard(S.cardATitle, aOut, S.cardASub),
     infoCard(S.cardBTitle, bOut, S.cardBSub),
     infoCard(S.cardRemTitle, remOut, S.cardRemSub),
-    infoCard(S.cardGcdTitle, gcdOut, S.cardGcdSub)
+    infoCard(S.cardGcdTitle, gcdOut, S.cardGcdSub),
   );
 
   clear(host);
@@ -359,6 +359,6 @@ function infoCard(title, big, sub) {
     big,
     sub
       ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
-      : null
+      : null,
   );
 }

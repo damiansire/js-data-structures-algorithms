@@ -9,12 +9,12 @@
  * @returns {void}
  */
 function mergeSort(arr, beginSubArray, endSubArray) {
-    if (beginSubArray < endSubArray) {
-        const endSubArr1 = Math.trunc((beginSubArray + endSubArray - 1) / 2);
-        mergeSort(arr, beginSubArray, endSubArr1)
-        mergeSort(arr, endSubArr1 + 1, endSubArray)
-        merge(arr, beginSubArray, endSubArr1, endSubArray);
-    }
+  if (beginSubArray < endSubArray) {
+    const endSubArr1 = Math.trunc((beginSubArray + endSubArray - 1) / 2);
+    mergeSort(arr, beginSubArray, endSubArr1);
+    mergeSort(arr, endSubArr1 + 1, endSubArray);
+    merge(arr, beginSubArray, endSubArr1, endSubArray);
+  }
 }
 
 /**
@@ -27,43 +27,43 @@ function mergeSort(arr, beginSubArray, endSubArray) {
  * @returns {void}
  */
 function merge(arr, beginSubArr1, endSubArr1, endSubArr2) {
-    const beginSubArr2 = endSubArr1 + 1;
-    const subArr1Length = endSubArr1 - beginSubArr1 + 1;
-    const subArr1 = new Array(subArr1Length)
-    for (let index = 0; index < subArr1Length; index++) {
-        subArr1[index] = arr[beginSubArr1 + index]
-    }
+  const beginSubArr2 = endSubArr1 + 1;
+  const subArr1Length = endSubArr1 - beginSubArr1 + 1;
+  const subArr1 = new Array(subArr1Length);
+  for (let index = 0; index < subArr1Length; index++) {
+    subArr1[index] = arr[beginSubArr1 + index];
+  }
 
-    const subArr2Length = endSubArr2 - beginSubArr2 + 1;
-    const subArr2 = new Array(subArr2Length)
-    for (let index = 0; index < subArr2Length; index++) {
-        subArr2[index] = arr[beginSubArr2 + index]
-    }
+  const subArr2Length = endSubArr2 - beginSubArr2 + 1;
+  const subArr2 = new Array(subArr2Length);
+  for (let index = 0; index < subArr2Length; index++) {
+    subArr2[index] = arr[beginSubArr2 + index];
+  }
 
-    let indexSubArr1 = 0;
-    let indexSubArr2 = 0;
-    let index = beginSubArr1;
+  let indexSubArr1 = 0;
+  let indexSubArr2 = 0;
+  let index = beginSubArr1;
 
-    // Patrón canónico de tres bucles: comparar y copiar el menor mientras
-    // ambos subarrays tengan elementos, luego volcar el resto del que quede.
-    while (indexSubArr1 < subArr1Length && indexSubArr2 < subArr2Length) {
-        if (subArr1[indexSubArr1] <= subArr2[indexSubArr2]) {
-            arr[index++] = subArr1[indexSubArr1++];
-        } else {
-            arr[index++] = subArr2[indexSubArr2++];
-        }
+  // Patrón canónico de tres bucles: comparar y copiar el menor mientras
+  // ambos subarrays tengan elementos, luego volcar el resto del que quede.
+  while (indexSubArr1 < subArr1Length && indexSubArr2 < subArr2Length) {
+    if (subArr1[indexSubArr1] <= subArr2[indexSubArr2]) {
+      arr[index++] = subArr1[indexSubArr1++];
+    } else {
+      arr[index++] = subArr2[indexSubArr2++];
     }
+  }
 
-    while (indexSubArr1 < subArr1Length) {
-        arr[index++] = subArr1[indexSubArr1++];
-    }
+  while (indexSubArr1 < subArr1Length) {
+    arr[index++] = subArr1[indexSubArr1++];
+  }
 
-    while (indexSubArr2 < subArr2Length) {
-        arr[index++] = subArr2[indexSubArr2++];
-    }
+  while (indexSubArr2 < subArr2Length) {
+    arr[index++] = subArr2[indexSubArr2++];
+  }
 }
 
 module.exports = {
-    merge,
-    mergeSort
-}
+  merge,
+  mergeSort,
+};

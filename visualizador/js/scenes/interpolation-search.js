@@ -29,8 +29,7 @@ const STRINGS = {
     ready: 'Ready to play.',
     looking: 'Looking up ',
     bookLabel: 'PHONE BOOK · sorted pages',
-    windowLabel: (lo, hi) =>
-      `Window: pages <span class="mono">${lo}…${hi}</span>`,
+    windowLabel: (lo, hi) => `Window: pages <span class="mono">${lo}…${hi}</span>`,
     estimate: (lo, hi, pos, frac) =>
       `Estimate: the value sits about <span class="mono">${frac}</span> into the window <span class="mono">[${lo}…${hi}]</span> → thumb lands on page <span class="mono">${pos}</span> 👍`,
     probe: (pos, value) =>
@@ -39,10 +38,8 @@ const STRINGS = {
       `<span class="mono">${value}</span> is too small → skip ahead, drop the <b>left</b> pages.`,
     narrowLeft: (value) =>
       `<span class="mono">${value}</span> is too big → flip back, drop the <b>right</b> pages.`,
-    found: (pos) =>
-      `Found it on page <span class="mono">${pos}</span>! 🏆`,
-    notfound: () =>
-      `Not in the book. Returns <span class="mono">-1</span>.`,
+    found: (pos) => `Found it on page <span class="mono">${pos}</span>! 🏆`,
+    notfound: () => `Not in the book. Returns <span class="mono">-1</span>.`,
     done: 'Done — fewer flips than always guessing the middle. ✨',
     cxTitle: 'Complexity',
     cxBig: 'O(log log n)',
@@ -59,8 +56,7 @@ const STRINGS = {
     ready: 'Listo para reproducir.',
     looking: 'Buscando ',
     bookLabel: 'GUÍA TELEFÓNICA · páginas ordenadas',
-    windowLabel: (lo, hi) =>
-      `Ventana: páginas <span class="mono">${lo}…${hi}</span>`,
+    windowLabel: (lo, hi) => `Ventana: páginas <span class="mono">${lo}…${hi}</span>`,
     estimate: (lo, hi, pos, frac) =>
       `Estimación: el valor está a ~<span class="mono">${frac}</span> dentro de la ventana <span class="mono">[${lo}…${hi}]</span> → el dedo cae en la página <span class="mono">${pos}</span> 👍`,
     probe: (pos, value) =>
@@ -69,10 +65,8 @@ const STRINGS = {
       `<span class="mono">${value}</span> es muy chico → salto adelante, descarto las páginas de la <b>izquierda</b>.`,
     narrowLeft: (value) =>
       `<span class="mono">${value}</span> es muy grande → vuelvo atrás, descarto las páginas de la <b>derecha</b>.`,
-    found: (pos) =>
-      `¡La encontré en la página <span class="mono">${pos}</span>! 🏆`,
-    notfound: () =>
-      `No está en la guía. Devuelve <span class="mono">-1</span>.`,
+    found: (pos) => `¡La encontré en la página <span class="mono">${pos}</span>! 🏆`,
+    notfound: () => `No está en la guía. Devuelve <span class="mono">-1</span>.`,
     done: 'Listo — menos vueltas que adivinar siempre el medio. ✨',
     cxTitle: 'Complejidad',
     cxBig: 'O(log log n)',
@@ -95,7 +89,7 @@ if (!document.querySelector(`link[data-scene="interpolation-search"]`)) {
       rel: 'stylesheet',
       href: CSS_HREF,
       dataset: { scene: 'interpolation-search' },
-    })
+    }),
   );
 }
 
@@ -115,7 +109,7 @@ function buildTrace(arr, target) {
     const denom = arr[hi] - arr[lo];
     // estima la posición proporcional (idéntico al algoritmo estándar)
     const fraction = denom === 0 ? 0 : (target - arr[lo]) / denom;
-    const pos = denom === 0 ? lo : lo + Math.floor((target - arr[lo]) * (hi - lo) / denom);
+    const pos = denom === 0 ? lo : lo + Math.floor(((target - arr[lo]) * (hi - lo)) / denom);
 
     steps.push({
       type: 'estimate',
@@ -157,8 +151,8 @@ export default function mountInterpolationSearch(host, meta) {
       'div',
       { class: 'intp-page', dataset: { idx: String(i) } },
       el('span', { class: 'intp-page-val mono' }, String(v)),
-      el('span', { class: 'intp-page-idx mono' }, '#' + i)
-    )
+      el('span', { class: 'intp-page-idx mono' }, '#' + i),
+    ),
   );
   const rail = el('div', { class: 'intp-rail' }, ...pages);
 
@@ -173,24 +167,18 @@ export default function mountInterpolationSearch(host, meta) {
     'div',
     { class: 'intp-book' },
     el('span', { class: 'intp-book-label' }, S.bookLabel),
-    el('div', { class: 'intp-rail-wrap' }, thumbWrap, fracTag, rail)
+    el('div', { class: 'intp-rail-wrap' }, thumbWrap, fracTag, rail),
   );
 
   const target = el(
     'div',
     { class: 'intp-target' },
     S.looking,
-    el('span', { class: 'mono' }, String(TARGET))
+    el('span', { class: 'mono' }, String(TARGET)),
   );
 
   const narrator = el('div', { class: 'narrator' }, S.ready);
-  const canvas = el(
-    'div',
-    { class: 'stage-canvas intp-stage' },
-    target,
-    book,
-    narrator
-  );
+  const canvas = el('div', { class: 'stage-canvas intp-stage' }, target, book, narrator);
 
   // ── Helpers de render ────────────────────────────────────────────────
   function setNarration(html) {
@@ -224,8 +212,8 @@ export default function mountInterpolationSearch(host, meta) {
         'intp-estimating',
         'intp-dropped',
         'intp-found',
-        'intp-fail'
-      )
+        'intp-fail',
+      ),
     );
     clearProbe();
     fracTag.textContent = '';
@@ -264,9 +252,7 @@ export default function mountInterpolationSearch(host, meta) {
           pages[k].classList.remove('intp-in-window', 'intp-probing', 'intp-estimating');
           pages[k].classList.add('intp-dropped');
         }
-        return step.side === 'right'
-          ? S.narrowRight(step.value)
-          : S.narrowLeft(step.value);
+        return step.side === 'right' ? S.narrowRight(step.value) : S.narrowLeft(step.value);
       }
 
       case 'found':
@@ -308,9 +294,9 @@ export default function mountInterpolationSearch(host, meta) {
     infoCard(
       S.formulaTitle,
       el('code', {}, 'lo + ⌊(t−a[lo])·(hi−lo) / (a[hi]−a[lo])⌋'),
-      S.formulaSub
+      S.formulaSub,
     ),
-    infoCard(S.targetTitle, el('code', {}, String(TARGET)), S.targetSub(ARRAY.join(', ')))
+    infoCard(S.targetTitle, el('code', {}, String(TARGET)), S.targetSub(ARRAY.join(', '))),
   );
 
   clear(host);
@@ -327,6 +313,6 @@ function infoCard(title, big, sub) {
     big,
     sub
       ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
-      : null
+      : null,
   );
 }

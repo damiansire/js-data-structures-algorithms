@@ -40,18 +40,15 @@ const STRINGS = {
       `<span class="mono">p[${i}]</span> extends the prefix → <span class="mono">lps[${i}] = ${len}</span>.`,
     lpsFallback: (len) =>
       `Mismatch building LPS → fall back to <span class="mono">lps[len-1] = ${len}</span> (without moving forward).`,
-    lpsZero: (i) =>
-      `No prefix here → <span class="mono">lps[${i}] = 0</span>.`,
-    lpsDone:
-      'LPS table ready. Now the ruler can <b>slide forward</b> without ever sliding back.',
+    lpsZero: (i) => `No prefix here → <span class="mono">lps[${i}] = 0</span>.`,
+    lpsDone: 'LPS table ready. Now the ruler can <b>slide forward</b> without ever sliding back.',
     charMatch: (ch, i, j) =>
       `<span class="mono">text[${i}]=${ch}</span> = <span class="mono">pat[${j}]=${ch}</span> ✓ both pointers advance.`,
     mismatchShift: (newJ, i) =>
       `Mismatch. The ruler jumps forward to <span class="mono">j = ${newJ}</span> — <span class="mono">i = ${i}</span> never moves back.`,
     mismatchZero: (i) =>
       `Mismatch with <span class="mono">j = 0</span> → just advance <span class="mono">i = ${i}</span>.`,
-    found: (pos) =>
-      `Full match! Pattern found at index <span class="mono">${pos}</span> 🎯`,
+    found: (pos) => `Full match! Pattern found at index <span class="mono">${pos}</span> 🎯`,
     done: (n) =>
       n === 1
         ? 'Scan complete — <b>1</b> match found. The ruler never slid back. ✨'
@@ -74,8 +71,7 @@ const STRINGS = {
       `<span class="mono">p[${i}]</span> extiende el prefijo → <span class="mono">lps[${i}] = ${len}</span>.`,
     lpsFallback: (len) =>
       `Desajuste armando LPS → retrocedo a <span class="mono">lps[len-1] = ${len}</span> (sin avanzar).`,
-    lpsZero: (i) =>
-      `Acá no hay prefijo → <span class="mono">lps[${i}] = 0</span>.`,
+    lpsZero: (i) => `Acá no hay prefijo → <span class="mono">lps[${i}] = 0</span>.`,
     lpsDone:
       'Tabla LPS lista. Ahora la regla puede <b>deslizarse hacia adelante</b> sin volver atrás nunca.',
     charMatch: (ch, i, j) =>
@@ -103,7 +99,7 @@ const STRINGS = {
 const CSS_HREF = './css/scene-kmp-search.css';
 if (!document.querySelector(`link[data-scene="kmp-search"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'kmp-search' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'kmp-search' } }),
   );
 }
 
@@ -189,7 +185,7 @@ export default function mountKmpSearch(host, meta = {}) {
       'div',
       { class: 'kmp-tile' },
       el('span', { class: 'kmp-tile-ch' }, TEXT[k]),
-      el('span', { class: 'kmp-tile-idx mono' }, String(k))
+      el('span', { class: 'kmp-tile-idx mono' }, String(k)),
     );
     textTiles.push(tile);
   }
@@ -198,12 +194,15 @@ export default function mountKmpSearch(host, meta = {}) {
     'div',
     { class: 'kmp-rowwrap' },
     el('span', { class: 'kmp-rowlabel' }, S.textLabel),
-    textRow
+    textRow,
   );
 
   // Puntero i (texto): un cursor que se mueve sobre la fila del texto.
-  const iCursor = el('div', { class: 'kmp-cursor kmp-cursor-i' },
-    el('span', { class: 'kmp-cursor-tag mono' }, 'i'));
+  const iCursor = el(
+    'div',
+    { class: 'kmp-cursor kmp-cursor-i' },
+    el('span', { class: 'kmp-cursor-tag mono' }, 'i'),
+  );
 
   // ── La REGLA (el patrón) que se desliza ──────────────────────────────
   const patTiles = [];
@@ -212,7 +211,7 @@ export default function mountKmpSearch(host, meta = {}) {
       'div',
       { class: 'kmp-tile kmp-pat-tile' },
       el('span', { class: 'kmp-tile-ch' }, PATTERN[k]),
-      el('span', { class: 'kmp-tile-idx mono' }, String(k))
+      el('span', { class: 'kmp-tile-idx mono' }, String(k)),
     );
     patTiles.push(tile);
   }
@@ -222,12 +221,15 @@ export default function mountKmpSearch(host, meta = {}) {
     'div',
     { class: 'kmp-rowwrap' },
     el('span', { class: 'kmp-rowlabel' }, S.patternLabel),
-    patRow
+    patRow,
   );
 
   // Puntero j (patrón): cursor sobre la regla.
-  const jCursor = el('div', { class: 'kmp-cursor kmp-cursor-j' },
-    el('span', { class: 'kmp-cursor-tag mono' }, 'j'));
+  const jCursor = el(
+    'div',
+    { class: 'kmp-cursor kmp-cursor-j' },
+    el('span', { class: 'kmp-cursor-tag mono' }, 'j'),
+  );
   ruler.append(jCursor);
 
   const narrator = el('div', { class: 'narrator' }, S.ready);
@@ -237,7 +239,7 @@ export default function mountKmpSearch(host, meta = {}) {
     textWrap,
     iCursor,
     patWrap,
-    narrator
+    narrator,
   );
   // el cursor i vive en la fila del texto para alinearse con sus tiles
   textRow.append(iCursor);
@@ -250,7 +252,7 @@ export default function mountKmpSearch(host, meta = {}) {
       'div',
       { class: 'kmp-lps-cell' },
       el('span', { class: 'kmp-lps-key mono' }, PATTERN[k]),
-      valEl
+      valEl,
     );
     cell._val = valEl;
     lpsCells.push(cell);
@@ -410,12 +412,8 @@ export default function mountKmpSearch(host, meta = {}) {
     'div',
     { class: 'scene-aside' },
     infoCard(S.cardComplexityTitle, el('span', { class: 'big' }, 'O(n + m)'), S.cardComplexitySub),
-    infoCard(
-      S.cardLpsTitle,
-      lpsGrid,
-      S.cardLpsSub
-    ),
-    infoCard(S.cardPointersTitle, el('code', {}, `"${TEXT}" · "${PATTERN}"`), S.cardPointersSub)
+    infoCard(S.cardLpsTitle, lpsGrid, S.cardLpsSub),
+    infoCard(S.cardPointersTitle, el('code', {}, `"${TEXT}" · "${PATTERN}"`), S.cardPointersSub),
   );
 
   clear(host);
@@ -431,6 +429,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

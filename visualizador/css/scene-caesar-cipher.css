@@ -62,12 +62,15 @@
   font-weight: 700;
   border-radius: 50%;
   transform: rotate(var(--ang)) translateY(calc(-1 * var(--rad))) rotate(calc(-1 * var(--ang)));
-  transition: color 0.25s, background 0.25s, box-shadow 0.25s, transform 0.25s;
+  transition:
+    color 0.25s,
+    background 0.25s,
+    box-shadow 0.25s,
+    transform 0.25s;
 }
 /* contrarrota las letras del anillo interno para que queden legibles */
 .cae-ring-inner .cae-letter-inner {
-  transform:
-    rotate(var(--ang)) translateY(calc(-1 * var(--rad)))
+  transform: rotate(var(--ang)) translateY(calc(-1 * var(--rad)))
     rotate(calc(-1 * var(--ang) - var(--ring-rot, 0deg)));
 }
 .cae-letter-outer {
@@ -81,15 +84,19 @@
 .cae-letter-outer.cae-hot {
   color: #1a0f05;
   background: var(--cae-accent);
-  box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.5), 0 0 18px -2px rgba(251, 146, 60, 0.85);
-  transform: rotate(var(--ang)) translateY(calc(-1 * var(--rad))) rotate(calc(-1 * var(--ang))) scale(1.22);
+  box-shadow:
+    0 0 0 2px rgba(251, 146, 60, 0.5),
+    0 0 18px -2px rgba(251, 146, 60, 0.85);
+  transform: rotate(var(--ang)) translateY(calc(-1 * var(--rad))) rotate(calc(-1 * var(--ang)))
+    scale(1.22);
 }
 .cae-ring-inner .cae-letter-inner.cae-hot {
   color: #0a0820;
   background: var(--violet);
-  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.55), 0 0 18px -2px rgba(167, 139, 250, 0.9);
-  transform:
-    rotate(var(--ang)) translateY(calc(-1 * var(--rad)))
+  box-shadow:
+    0 0 0 2px rgba(167, 139, 250, 0.55),
+    0 0 18px -2px rgba(167, 139, 250, 0.9);
+  transform: rotate(var(--ang)) translateY(calc(-1 * var(--rad)))
     rotate(calc(-1 * var(--ang) - var(--ring-rot, 0deg))) scale(1.22);
 }
 
@@ -137,7 +144,9 @@
   border-right: 9px solid transparent;
   border-top: 14px solid var(--stroke-strong);
   z-index: 4;
-  transition: border-top-color 0.25s, filter 0.25s;
+  transition:
+    border-top-color 0.25s,
+    filter 0.25s;
 }
 .cae-pointer.cae-pointer-on {
   border-top-color: var(--cae-accent);
@@ -209,7 +218,12 @@
   border: 1px solid var(--stroke);
   background: var(--panel);
   color: var(--ink-dim);
-  transition: border-color 0.25s, color 0.25s, background 0.25s, transform 0.25s, box-shadow 0.25s;
+  transition:
+    border-color 0.25s,
+    color 0.25s,
+    background 0.25s,
+    transform 0.25s,
+    box-shadow 0.25s;
 }
 .cae-cell-space {
   opacity: 0.45;
@@ -219,7 +233,9 @@
   color: var(--cae-accent);
   background: var(--cae-accent-soft);
   transform: translateY(-3px);
-  box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.4), 0 8px 18px -8px rgba(251, 146, 60, 0.7);
+  box-shadow:
+    0 0 0 2px rgba(251, 146, 60, 0.4),
+    0 8px 18px -8px rgba(251, 146, 60, 0.7);
 }
 .cae-cell-cipher.cae-filled {
   border-color: rgba(167, 139, 250, 0.5);

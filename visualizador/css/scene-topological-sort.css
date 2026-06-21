@@ -60,11 +60,16 @@
   gap: 1px;
   background: radial-gradient(circle at 34% 28%, #3a3358, #232038 72%);
   border: 1.5px solid var(--stroke-strong, rgba(255, 255, 255, 0.2));
-  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7),
+  box-shadow:
+    0 8px 22px -8px rgba(0, 0, 0, 0.7),
     inset 0 3px 8px rgba(255, 255, 255, 0.1);
   z-index: 2;
-  transition: transform 0.35s cubic-bezier(0.34, 1.5, 0.5, 1), opacity 0.4s,
-    box-shadow 0.35s, border-color 0.35s, background 0.35s;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.5, 0.5, 1),
+    opacity 0.4s,
+    box-shadow 0.35s,
+    border-color 0.35s,
+    background 0.35s;
 }
 .tsg-emoji {
   font-size: 26px;
@@ -99,13 +104,18 @@
   background: #2a2740;
   border: 1.5px solid var(--stroke-strong, rgba(255, 255, 255, 0.22));
   box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.6);
-  transition: background 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
+  transition:
+    background 0.3s,
+    border-color 0.3s,
+    color 0.3s,
+    box-shadow 0.3s;
 }
 
 /* nodo con in-degree 0: listo para ponerse (brilla) */
 .tsg-node.tsg-ready {
   border-color: var(--tsg-accent);
-  box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.55),
+  box-shadow:
+    0 0 0 3px rgba(244, 114, 182, 0.55),
     0 0 30px -4px rgba(244, 114, 182, 0.7);
   z-index: 3;
 }
@@ -123,14 +133,21 @@
 .tsg-node.tsg-pick {
   animation: tsg-pop 0.5s ease;
   border-color: var(--tsg-accent);
-  box-shadow: 0 0 0 4px rgba(244, 114, 182, 0.7),
+  box-shadow:
+    0 0 0 4px rgba(244, 114, 182, 0.7),
     0 0 40px -2px rgba(244, 114, 182, 0.8);
   z-index: 5;
 }
 @keyframes tsg-pop {
-  0% { transform: scale(1); }
-  45% { transform: scale(1.18); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* prenda recién liberada (llegó a in-degree 0 por quitar una arista) */
@@ -138,8 +155,13 @@
   animation: tsg-freed 0.6s ease;
 }
 @keyframes tsg-freed {
-  0%, 100% { transform: scale(1); }
-  40% { transform: scale(1.12); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.12);
+  }
 }
 
 /* prenda ya puesta: se atenúa en el tablero */
@@ -191,8 +213,11 @@
   border: 1px solid var(--stroke);
   opacity: 0;
   transform: translateY(-10px) scale(0.8);
-  transition: transform 0.4s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.35s,
-    box-shadow 0.35s, border-color 0.35s;
+  transition:
+    transform 0.4s cubic-bezier(0.3, 1.5, 0.5, 1),
+    opacity 0.35s,
+    box-shadow 0.35s,
+    border-color 0.35s;
 }
 .tsg-chip.tsg-chip-in {
   opacity: 1;
@@ -221,7 +246,8 @@
 }
 .tsg-chip.tsg-chip-win {
   border-color: rgba(52, 211, 153, 0.6);
-  box-shadow: 0 0 0 1.5px rgba(52, 211, 153, 0.5),
+  box-shadow:
+    0 0 0 1.5px rgba(52, 211, 153, 0.5),
     0 6px 18px -8px rgba(52, 211, 153, 0.5);
 }
 

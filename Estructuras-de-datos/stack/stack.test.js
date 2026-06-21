@@ -1,14 +1,14 @@
-const { Stack, Node } = require("./stack");
+const { Stack, Node } = require('./stack');
 
-describe("Stack", () => {
-  test("una pila recién creada está vacía", () => {
+describe('Stack', () => {
+  test('una pila recién creada está vacía', () => {
     const s = new Stack();
     expect(s.isEmpty()).toBe(true);
     expect(s.length()).toBe(0);
     expect(s.peek()).toBeNull();
   });
 
-  test("push agrega elementos en el tope (LIFO)", () => {
+  test('push agrega elementos en el tope (LIFO)', () => {
     const s = new Stack();
     s.push(1);
     s.push(2);
@@ -18,23 +18,23 @@ describe("Stack", () => {
     expect(s.peek()).toBe(3);
   });
 
-  test("peekNode expone el nodo interno del tope", () => {
+  test('peekNode expone el nodo interno del tope', () => {
     const s = new Stack();
     s.push(3);
     expect(s.peekNode()).toBeInstanceOf(Node);
     expect(s.peekNode().data).toBe(3);
   });
 
-  test("pop devuelve y quita el último elemento apilado (LIFO)", () => {
+  test('pop devuelve y quita el último elemento apilado (LIFO)', () => {
     const s = new Stack();
-    s.push("a");
-    s.push("b");
-    expect(s.pop()).toBe("b");
+    s.push('a');
+    s.push('b');
+    expect(s.pop()).toBe('b');
     expect(s.length()).toBe(1);
-    expect(s.peek()).toBe("a");
+    expect(s.peek()).toBe('a');
   });
 
-  test("pop hasta vaciar deja la pila reutilizable", () => {
+  test('pop hasta vaciar deja la pila reutilizable', () => {
     const s = new Stack();
     s.push(10);
     expect(s.pop()).toBe(10);
@@ -45,12 +45,12 @@ describe("Stack", () => {
     expect(s.length()).toBe(1);
   });
 
-  test("pop sobre pila vacía lanza Error", () => {
+  test('pop sobre pila vacía lanza Error', () => {
     const s = new Stack();
-    expect(() => s.pop()).toThrow("No se puede hacer pop() sobre una pila vacia");
+    expect(() => s.pop()).toThrow('No se puede hacer pop() sobre una pila vacia');
   });
 
-  test("hasElement encuentra un valor presente y rechaza uno ausente", () => {
+  test('hasElement encuentra un valor presente y rechaza uno ausente', () => {
     const s = new Stack();
     s.push(1);
     s.push(2);
@@ -61,23 +61,23 @@ describe("Stack", () => {
     expect(s.hasElement(99)).toBe(false);
   });
 
-  test("hasElement en pila vacía devuelve false", () => {
+  test('hasElement en pila vacía devuelve false', () => {
     const s = new Stack();
     expect(s.hasElement(1)).toBe(false);
   });
 
-  test("print recorre del tope al fondo", () => {
+  test('print recorre del tope al fondo', () => {
     const s = new Stack();
     s.push(1);
     s.push(2);
     s.push(3);
-    const spy = jest.spyOn(console, "log").mockImplementation(() => {});
+    const spy = jest.spyOn(console, 'log').mockImplementation(() => {});
     s.print();
     expect(spy.mock.calls.map((c) => c[0])).toEqual([3, 2, 1]);
     spy.mockRestore();
   });
 
-  test("Node se construye con prev en null", () => {
+  test('Node se construye con prev en null', () => {
     const n = new Node(5);
     expect(n.data).toBe(5);
     expect(n.prev).toBeNull();

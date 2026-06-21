@@ -68,7 +68,8 @@ const STRINGS = {
       `Caso base: construir las primeras <span class="mono">${i}</span> letra${i === 1 ? '' : 's'} desde la nada cuesta <span class="mono">${i}</span> inserción${i === 1 ? '' : 'es'}.`,
     seedCol: (j) =>
       `Caso base: borrar <span class="mono">${j}</span> letra${j === 1 ? '' : 's'} hasta la nada cuesta <span class="mono">${j}</span>.`,
-    seedCorner: 'La esquina superior izquierda es <span class="mono">0</span>: vacío → vacío, sin ediciones.',
+    seedCorner:
+      'La esquina superior izquierda es <span class="mono">0</span>: vacío → vacío, sin ediciones.',
     match: (a, value) =>
       `Las letras coinciden (<span class="mono">${a}</span>). Paso la diagonal de largo → <span class="mono">${value}</span>, gratis.`,
     pick: (a, b, op, value) =>
@@ -100,7 +101,7 @@ const STRINGS = {
 const CSS_HREF = './css/scene-levenshtein.css';
 if (!document.querySelector(`link[data-scene="levenshtein"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'levenshtein' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'levenshtein' } }),
   );
 }
 
@@ -224,11 +225,14 @@ export default function mountLevenshtein(host, meta) {
     // Cabecera de fila (palabra A)
     const rowLabel = i === 0 ? '∅' : A[i - 1];
     grid.append(
-      el('div', { class: 'lev-row-head' + (i === 0 ? ' lev-empty-head' : '') }, rowLabel)
+      el('div', { class: 'lev-row-head' + (i === 0 ? ' lev-empty-head' : '') }, rowLabel),
     );
     for (let j = 0; j <= N; j++) {
-      const cell = el('div', { class: 'lev-cell', dataset: { i: String(i), j: String(j) } },
-        el('span', { class: 'lev-val' }, ''));
+      const cell = el(
+        'div',
+        { class: 'lev-cell', dataset: { i: String(i), j: String(j) } },
+        el('span', { class: 'lev-val' }, ''),
+      );
       if (i === 0 || j === 0) cell.classList.add('lev-border');
       cells[`${i}_${j}`] = cell;
       grid.append(cell);
@@ -244,25 +248,32 @@ export default function mountLevenshtein(host, meta) {
     { class: 'lev-legend' },
     el('span', { class: 'lev-leg lev-leg-up' }, S.legendUp),
     el('span', { class: 'lev-leg lev-leg-left' }, S.legendLeft),
-    el('span', { class: 'lev-leg lev-leg-diag' }, S.legendDiag)
+    el('span', { class: 'lev-leg lev-leg-diag' }, S.legendDiag),
   );
 
   const narrator = el('div', { class: 'narrator' }, S.ready);
   const canvas = el(
     'div',
     { class: 'stage-canvas lev-stage' },
-    el('div', { class: 'lev-words' },
+    el(
+      'div',
+      { class: 'lev-words' },
       el('span', { class: 'lev-word lev-word-a mono' }, WORD_A),
       el('span', { class: 'lev-arrow' }, '→'),
-      el('span', { class: 'lev-word lev-word-b mono' }, WORD_B)),
+      el('span', { class: 'lev-word lev-word-b mono' }, WORD_B),
+    ),
     gridWrap,
     legend,
-    narrator
+    narrator,
   );
 
   // ── Panel de distancia / operaciones en el aside ────────────────────
   const distValue = el('span', { class: 'lev-dist-num mono' }, '·');
-  const opsList = el('div', { class: 'lev-ops' }, el('span', { class: 'lev-ops-wait' }, S.opsWaiting));
+  const opsList = el(
+    'div',
+    { class: 'lev-ops' },
+    el('span', { class: 'lev-ops-wait' }, S.opsWaiting),
+  );
 
   // ── Helpers de render ───────────────────────────────────────────────
   function setNarration(html) {
@@ -275,7 +286,7 @@ export default function mountLevenshtein(host, meta) {
   }
   function clearDeps() {
     Object.values(cells).forEach((c) =>
-      c.classList.remove('lev-dep-up', 'lev-dep-left', 'lev-dep-diag', 'lev-active')
+      c.classList.remove('lev-dep-up', 'lev-dep-left', 'lev-dep-diag', 'lev-active'),
     );
   }
 
@@ -360,7 +371,7 @@ export default function mountLevenshtein(host, meta) {
         ops.push(
           same
             ? { kind: 'match', text: A[cur.i - 1] }
-            : { kind: 'replace', from: A[cur.i - 1], to: B[cur.j - 1] }
+            : { kind: 'replace', from: A[cur.i - 1], to: B[cur.j - 1] },
         );
       } else if (di === 1) {
         ops.push({ kind: 'delete', text: A[cur.i - 1] });
@@ -406,15 +417,10 @@ export default function mountLevenshtein(host, meta) {
     'div',
     { class: 'scene-aside' },
     infoCard(S.cardDistTitle, distValue, S.cardDistSub),
-    el(
-      'div',
-      { class: 'info-card lev-ops-card' },
-      el('h4', {}, S.opsTitle),
-      opsList
-    ),
+    el('div', { class: 'info-card lev-ops-card' }, el('h4', {}, S.opsTitle), opsList),
     infoCard(S.cardAlgoTitle, el('span', { class: 'big' }, 'DP'), S.cardAlgoSub),
     infoCard(S.cardComplexityTitle, el('span', { class: 'big' }, 'O(m·n)'), S.cardComplexitySub),
-    infoCard(S.cardWordsTitle, el('code', {}, `${WORD_A} → ${WORD_B}`), S.cardWordsSub)
+    infoCard(S.cardWordsTitle, el('code', {}, `${WORD_A} → ${WORD_B}`), S.cardWordsSub),
   );
 
   clear(host);
@@ -434,6 +440,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

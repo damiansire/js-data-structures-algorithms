@@ -6,16 +6,16 @@
  * @returns {number[]} Array disperso donde el índice i guarda la cantidad de la letra i-ésima.
  */
 function countLetter(text) {
-    let letterAmountArray = [];
-    for (let index = 0; index < text.length; index++) {
-        let amountArrayIndex = getLetterAmountArray(text[index])
-        if (letterAmountArray[amountArrayIndex] === undefined) {
-            letterAmountArray[amountArrayIndex] = 1;
-        } else {
-            letterAmountArray[amountArrayIndex]++;
-        }
+  let letterAmountArray = [];
+  for (let index = 0; index < text.length; index++) {
+    let amountArrayIndex = getLetterAmountArray(text[index]);
+    if (letterAmountArray[amountArrayIndex] === undefined) {
+      letterAmountArray[amountArrayIndex] = 1;
+    } else {
+      letterAmountArray[amountArrayIndex]++;
     }
-    return letterAmountArray;
+  }
+  return letterAmountArray;
 }
 
 /**
@@ -25,7 +25,7 @@ function countLetter(text) {
  * @returns {string} La letra correspondiente.
  */
 function revertPosition(num) {
-    return String.fromCharCode(num + 97)
+  return String.fromCharCode(num + 97);
 }
 
 /**
@@ -34,7 +34,7 @@ function revertPosition(num) {
  * @returns {number} El índice 0-25 correspondiente.
  */
 function getLetterAmountArray(letter) {
-    return letter.charCodeAt() - 97
+  return letter.charCodeAt() - 97;
 }
 
 //Used EM6
@@ -45,16 +45,16 @@ function getLetterAmountArray(letter) {
  * @returns {Object<string, number>} Mapa carácter -> cantidad de apariciones.
  */
 function countLetterMap(text) {
-    let textWithout = text.trim().replaceAll(" ", "")
-    let counts = {};
-    [...textWithout].forEach(letter => {
-        if (counts[letter] !== undefined) {
-            counts[letter]++;
-        } else {
-            counts[letter] = 1
-        }
-    })
-    return counts;
+  let textWithout = text.trim().replaceAll(' ', '');
+  let counts = {};
+  [...textWithout].forEach((letter) => {
+    if (counts[letter] !== undefined) {
+      counts[letter]++;
+    } else {
+      counts[letter] = 1;
+    }
+  });
+  return counts;
 }
 
 module.exports = { countLetter, countLetterMap, revertPosition, getLetterAmountArray };

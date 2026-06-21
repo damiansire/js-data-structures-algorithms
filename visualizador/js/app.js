@@ -109,7 +109,7 @@ function renderHome() {
           {},
           t('hero_pre'),
           el('span', { class: 'accent' }, t('hero_accent')),
-          t('hero_post')
+          t('hero_post'),
         ),
         el('p', { class: 'hero-sub' }, t('hero_sub')),
         el(
@@ -118,11 +118,11 @@ function renderHome() {
           chip(String(SCENES.length), t('stat_scenes')),
           chip(String(builtCount), t('stat_animated')),
           chip(String(categoryCount), t('stat_categories')),
-          el('span', { class: 'chip ghost' }, t('stat_vanilla'))
+          el('span', { class: 'chip ghost' }, t('stat_vanilla')),
         ),
-        el('div', { class: 'scroll-hint' }, t('scroll_hint'), el('span', { class: 'arrow' }, '↓'))
-      )
-    )
+        el('div', { class: 'scroll-hint' }, t('scroll_hint'), el('span', { class: 'arrow' }, '↓')),
+      ),
+    ),
   );
 
   for (const [key, cat] of Object.entries(CATEGORIES)) {
@@ -143,10 +143,10 @@ function renderHome() {
           { class: 'cat-head' },
           el('span', { class: 'cat-emoji' }, cat.emoji),
           el('h2', {}, label),
-          el('span', { class: 'count' }, `${scenes.length} ${word}`)
+          el('span', { class: 'count' }, `${scenes.length} ${word}`),
         ),
-        grid
-      )
+        grid,
+      ),
     );
   }
 }
@@ -177,8 +177,8 @@ function heroBubbles() {
             animationDuration: `${(13 + Math.random() * 12).toFixed(1)}s`,
           },
         },
-        String(v)
-      )
+        String(v),
+      ),
     );
   }
   return field;
@@ -189,14 +189,17 @@ function motifFor(category) {
   const motif = el('div', { class: `card-motif motif-${category}`, 'aria-hidden': 'true' });
   if (category === 'sorting') {
     [40, 70, 30, 90, 55, 75, 45].forEach((h, i) =>
-      motif.append(el('span', { class: 'm-bar', style: { '--n': String(i), height: `${h}%` } }))
+      motif.append(el('span', { class: 'm-bar', style: { '--n': String(i), height: `${h}%` } })),
     );
   } else if (category === 'structures') {
-    for (let i = 0; i < 4; i++) motif.append(el('span', { class: 'm-block', style: { '--n': String(i) } }));
+    for (let i = 0; i < 4; i++)
+      motif.append(el('span', { class: 'm-block', style: { '--n': String(i) } }));
   } else if (category === 'search') {
-    for (let i = 0; i < 7; i++) motif.append(el('span', { class: 'm-dot', style: { '--n': String(i) } }));
+    for (let i = 0; i < 7; i++)
+      motif.append(el('span', { class: 'm-dot', style: { '--n': String(i) } }));
   } else {
-    for (let i = 0; i < 5; i++) motif.append(el('span', { class: 'm-spark', style: { '--n': String(i) } }));
+    for (let i = 0; i < 5; i++)
+      motif.append(el('span', { class: 'm-spark', style: { '--n': String(i) } }));
   }
   return motif;
 }
@@ -215,12 +218,12 @@ function sceneCard(s, cat, idx) {
       el('span', { class: 'card-emoji' }, s.emoji),
       s.built
         ? el('span', { class: 'badge ready' }, t('badge_ready'))
-        : el('span', { class: 'badge soon' }, t('badge_soon'))
+        : el('span', { class: 'badge soon' }, t('badge_soon')),
     ),
     el('h3', {}, s.title),
     el('span', { class: 'scene-name' }, '“' + pick(s.scene) + '”'),
     el('p', {}, pick(s.description)),
-    el('span', { class: 'repo' }, s.repo)
+    el('span', { class: 'repo' }, s.repo),
   );
 
   if (s.built) {
@@ -257,8 +260,8 @@ async function renderScene(id) {
       { class: 'scene-titles' },
       el('h1', {}, el('span', {}, meta.emoji), meta.title),
       el('p', { class: 'scene-sub' }, '“' + pick(meta.scene) + '”'),
-      el('p', { class: 'scene-desc' }, pick(meta.description))
-    )
+      el('p', { class: 'scene-desc' }, pick(meta.description)),
+    ),
   );
 
   const host = el('div', { class: 'scene-host' });
@@ -312,8 +315,8 @@ function soonStage(meta, errored = false) {
       { class: 'soon-stage' },
       el('div', { class: 'big-emoji' }, errored ? '🚧' : meta.emoji),
       el('h3', {}, errored ? t('error_title') : t('soon_title')),
-      el('p', {}, errored ? t('error_body') : t('soon_body'))
-    )
+      el('p', {}, errored ? t('error_body') : t('soon_body')),
+    ),
   );
 }
 

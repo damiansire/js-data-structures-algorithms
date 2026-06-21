@@ -36,7 +36,9 @@
   stroke-width: 2;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
-  transition: stroke 0.3s, stroke-width 0.3s;
+  transition:
+    stroke 0.3s,
+    stroke-width 0.3s;
 }
 /* arista examinada (no relajada) */
 .dij-edge.dij-edge-active {
@@ -77,7 +79,11 @@
   background: rgba(10, 10, 20, 0.85);
   border: 1px solid var(--stroke-strong);
   z-index: 3;
-  transition: color 0.25s, border-color 0.25s, background 0.25s, transform 0.25s;
+  transition:
+    color 0.25s,
+    border-color 0.25s,
+    background 0.25s,
+    transform 0.25s;
 }
 .dij-weight.dij-weight-active {
   color: #fff;
@@ -97,11 +103,15 @@
   place-items: center;
   background: radial-gradient(circle at 34% 28%, #3a3a5e, #232338 70%);
   border: 1.5px solid var(--stroke-strong);
-  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7),
+  box-shadow:
+    0 8px 22px -8px rgba(0, 0, 0, 0.7),
     inset 0 3px 8px rgba(255, 255, 255, 0.1);
   z-index: 4;
-  transition: transform 0.3s cubic-bezier(0.34, 1.5, 0.5, 1),
-    box-shadow 0.3s, border-color 0.3s, background 0.3s;
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.5, 0.5, 1),
+    box-shadow 0.3s,
+    border-color 0.3s,
+    background 0.3s;
 }
 .dij-node-id {
   font-family: var(--mono);
@@ -128,7 +138,11 @@
   background: rgba(10, 10, 20, 0.92);
   border: 1px solid var(--stroke-strong);
   z-index: 5;
-  transition: color 0.25s, border-color 0.25s, background 0.25s, transform 0.25s;
+  transition:
+    color 0.25s,
+    border-color 0.25s,
+    background 0.25s,
+    transform 0.25s;
 }
 
 /* el origen, marcado sutilmente */
@@ -146,7 +160,8 @@
 /* nodo bajo examen (vecino que se está relajando / arista examinada) */
 .dij-node.dij-active {
   border-color: var(--dij-accent);
-  box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.35),
+  box-shadow:
+    0 0 0 3px rgba(244, 114, 182, 0.35),
     0 0 30px -4px rgba(244, 114, 182, 0.7);
   z-index: 6;
 }
@@ -174,7 +189,8 @@
 /* nodo finalizado y resaltado como activo: borde verde + halo */
 .dij-node.dij-final.dij-active {
   border-color: var(--dij-final);
-  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.4),
+  box-shadow:
+    0 0 0 3px rgba(52, 211, 153, 0.4),
     0 0 30px -4px rgba(52, 211, 153, 0.7);
 }
 
@@ -210,7 +226,9 @@
   border-radius: 10px;
   background: var(--panel);
   border: 1px solid var(--stroke);
-  transition: border-color 0.25s, background 0.25s;
+  transition:
+    border-color 0.25s,
+    background 0.25s;
 }
 .dij-dist-id {
   font-size: 12px;

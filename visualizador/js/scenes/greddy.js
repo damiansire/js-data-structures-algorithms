@@ -125,7 +125,7 @@ export default function mountGreddy(host, meta) {
     { class: 'gr-display' },
     el('span', { class: 'gr-led-label' }, S.ledLabel),
     el('span', { class: 'gr-led-cur mono' }, '$'),
-    ledValue
+    ledValue,
   );
 
   // ── Columna de denominaciones disponibles (mayor a menor) ─────────────────
@@ -135,13 +135,13 @@ export default function mountGreddy(host, meta) {
     const piece = el(
       'div',
       { class: `gr-piece gr-${IS_BILL(v) ? 'bill' : 'coin'}`, dataset: { denom: String(v) } },
-      el('span', { class: 'gr-piece-face mono' }, fmtDenom(v))
+      el('span', { class: 'gr-piece-face mono' }, fmtDenom(v)),
     );
     const row = el(
       'div',
       { class: 'gr-denom-row', dataset: { denom: String(v) } },
       piece,
-      el('span', { class: 'gr-denom-tag' }, kindOf(v))
+      el('span', { class: 'gr-denom-tag' }, kindOf(v)),
     );
     denomEls.set(v, row);
     denomList.append(row);
@@ -153,7 +153,7 @@ export default function mountGreddy(host, meta) {
     'div',
     { class: 'gr-tray' },
     el('span', { class: 'gr-tray-label' }, S.trayLabel),
-    trayInner
+    trayInner,
   );
 
   // ── Caja registradora (display + denominaciones + bandeja) ────────────────
@@ -161,7 +161,7 @@ export default function mountGreddy(host, meta) {
     'div',
     { class: 'gr-register' },
     display,
-    el('div', { class: 'gr-register-body' }, denomList, tray)
+    el('div', { class: 'gr-register-body' }, denomList, tray),
   );
 
   const narrator = el('div', { class: 'narrator' }, S.ready);
@@ -183,7 +183,7 @@ export default function mountGreddy(host, meta) {
     const piece = el(
       'div',
       { class: `gr-piece gr-${IS_BILL(denom) ? 'bill' : 'coin'} gr-drop` },
-      el('span', { class: 'gr-piece-face mono' }, fmtDenom(denom))
+      el('span', { class: 'gr-piece-face mono' }, fmtDenom(denom)),
     );
     trayInner.append(piece);
     // mantené la bandeja mostrando lo último entregado
@@ -209,8 +209,8 @@ export default function mountGreddy(host, meta) {
           'span',
           { class: 'gr-count-pill' },
           el('span', { class: `gr-dot gr-dot-${IS_BILL(v) ? 'bill' : 'coin'}` }),
-          el('span', { class: 'mono' }, `${fmtDenom(v)} ×${n}`)
-        )
+          el('span', { class: 'mono' }, `${fmtDenom(v)} ×${n}`),
+        ),
       );
     });
   }
@@ -304,7 +304,7 @@ export default function mountGreddy(host, meta) {
     { class: 'scene-aside' },
     infoCard(S.cardTargetTitle, el('span', { class: 'big mono' }, `$${TARGET}`), S.cardTargetSub),
     infoCard(S.cardRemainingTitle, remainEl, S.cardRemainingSub),
-    infoCard(S.cardPiecesTitle, piecesEl, countList)
+    infoCard(S.cardPiecesTitle, piecesEl, countList),
   );
 
   renderCounts();
@@ -326,6 +326,6 @@ function infoCard(title, big, sub) {
       ? typeof sub === 'string'
         ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
         : el('div', { style: { marginTop: '8px' } }, sub)
-      : null
+      : null,
   );
 }

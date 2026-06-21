@@ -62,7 +62,7 @@ const STRINGS = {
 const CSS_HREF = './css/scene-letter-count.css';
 if (!document.querySelector(`link[data-scene="letter-count"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'letter-count' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'letter-count' } }),
   );
 }
 
@@ -110,7 +110,7 @@ export default function mountLetterCount(host, meta = {}) {
     const tile = el(
       'div',
       { class: 'lc-tile' + (ch === ' ' ? ' lc-tile-space' : '') },
-      el('span', { class: 'lc-tile-ch' }, ch === ' ' ? '␣' : ch)
+      el('span', { class: 'lc-tile-ch' }, ch === ' ' ? '␣' : ch),
     );
     tile._ch = ch;
     tiles.push(tile);
@@ -122,7 +122,7 @@ export default function mountLetterCount(host, meta = {}) {
     el('div', { class: 'lc-belt-tread' }),
     beltStrip,
     el('div', { class: 'lc-roller lc-roller-l' }),
-    el('div', { class: 'lc-roller lc-roller-r' })
+    el('div', { class: 'lc-roller lc-roller-r' }),
   );
 
   // ── Cestas etiquetadas, una por letra distinta, con contador LED ────────
@@ -135,7 +135,7 @@ export default function mountLetterCount(host, meta = {}) {
       { class: 'lc-basket' },
       el('div', { class: 'lc-basket-led' }, ledEl),
       el('div', { class: 'lc-basket-body' }, el('span', { class: 'lc-basket-label' }, ch)),
-      el('div', { class: 'lc-basket-lip' })
+      el('div', { class: 'lc-basket-lip' }),
     );
     basket._ch = ch;
     basketByChar[ch] = basket;
@@ -147,7 +147,7 @@ export default function mountLetterCount(host, meta = {}) {
     'div',
     { class: 'lc-trash' },
     el('div', { class: 'lc-trash-grate' }),
-    el('span', { class: 'lc-trash-label' }, S.trashLabel)
+    el('span', { class: 'lc-trash-label' }, S.trashLabel),
   );
   const basketRow = el('div', { class: 'lc-baskets' }, ...baskets, trash);
 
@@ -162,7 +162,7 @@ export default function mountLetterCount(host, meta = {}) {
     belt,
     falling,
     basketRow,
-    narrator
+    narrator,
   );
 
   function setNarration(html) {
@@ -284,9 +284,13 @@ export default function mountLetterCount(host, meta = {}) {
   const aside = el(
     'div',
     { class: 'scene-aside' },
-    infoCard(S.cardStringTitle, el('code', {}, `"${RAW}"`), S.cardStringSub(trimmed.replace(/ /g, ''))),
+    infoCard(
+      S.cardStringTitle,
+      el('code', {}, `"${RAW}"`),
+      S.cardStringSub(trimmed.replace(/ /g, '')),
+    ),
     infoCard(S.cardCharTitle, idxValue, S.cardCharSub),
-    infoCard(S.cardResultTitle, resultCode, S.cardResultSub)
+    infoCard(S.cardResultTitle, resultCode, S.cardResultSub),
   );
 
   // refleja el índice/carácter actual en la tarjeta en cada cambio
@@ -335,6 +339,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

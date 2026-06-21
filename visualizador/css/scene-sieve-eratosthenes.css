@@ -38,8 +38,12 @@
   color: var(--ink);
   background: var(--panel);
   border: 1px solid var(--stroke);
-  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease,
-    box-shadow 0.3s ease, transform 0.3s ease;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
 }
 
 /* Línea de tachado (X / barra) que aparece sobre los compuestos. */
@@ -49,15 +53,17 @@
   inset: 0;
   border-radius: inherit;
   background: linear-gradient(
-      to top right,
-      transparent calc(50% - 1.4px),
-      currentColor calc(50% - 1.4px),
-      currentColor calc(50% + 1.4px),
-      transparent calc(50% + 1.4px)
-    );
+    to top right,
+    transparent calc(50% - 1.4px),
+    currentColor calc(50% - 1.4px),
+    currentColor calc(50% + 1.4px),
+    transparent calc(50% + 1.4px)
+  );
   opacity: 0;
   transform: scale(0.4);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
   pointer-events: none;
 }
 
@@ -73,7 +79,8 @@
 .sve-cell.sve-glow {
   z-index: 2;
   transform: scale(1.12);
-  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.9),
+  box-shadow:
+    0 0 0 2px rgba(251, 191, 36, 0.9),
     0 0 26px -2px rgba(251, 191, 36, 0.85);
   animation: sve-glow-pulse 0.6s ease;
 }
@@ -112,7 +119,8 @@
   }
   40% {
     transform: scale(1.16);
-    box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.7),
+    box-shadow:
+      0 0 0 3px rgba(251, 113, 133, 0.7),
       0 0 18px -2px rgba(251, 113, 133, 0.7);
     color: #fff;
   }

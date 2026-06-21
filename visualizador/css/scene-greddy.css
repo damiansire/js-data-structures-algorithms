@@ -30,7 +30,9 @@
   border-radius: 14px;
   background: radial-gradient(120% 140% at 50% 0%, #11261f, #08130f 70%);
   border: 1px solid var(--stroke);
-  box-shadow: inset 0 0 28px -6px rgba(52, 211, 153, 0.45), 0 10px 30px -14px rgba(0, 0, 0, 0.8);
+  box-shadow:
+    inset 0 0 28px -6px rgba(52, 211, 153, 0.45),
+    0 10px 30px -14px rgba(0, 0, 0, 0.8);
 }
 .gr-led-label {
   font-size: 11px;
@@ -54,12 +56,20 @@
 .gr-led-value {
   font-size: 44px;
   font-variant-numeric: tabular-nums;
-  transition: color 0.3s, text-shadow 0.3s;
+  transition:
+    color 0.3s,
+    text-shadow 0.3s;
   animation: gr-flicker 0.28s ease;
 }
 @keyframes gr-flicker {
-  0% { opacity: 0.35; transform: translateY(-2px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0.35;
+    transform: translateY(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .gr-display.gr-zero .gr-led-value,
 .gr-display.gr-zero .gr-led-cur {
@@ -67,7 +77,9 @@
   text-shadow: 0 0 14px rgba(251, 191, 36, 0.8);
 }
 .gr-display.gr-done {
-  box-shadow: inset 0 0 30px -4px rgba(251, 191, 36, 0.6), 0 0 36px -6px rgba(251, 191, 36, 0.5);
+  box-shadow:
+    inset 0 0 30px -4px rgba(251, 191, 36, 0.6),
+    0 0 36px -6px rgba(251, 191, 36, 0.5);
 }
 
 /* ── Cuerpo: denominaciones + bandeja ──────────────────────────────────────── */
@@ -94,7 +106,11 @@
   padding: 6px 8px;
   border-radius: 10px;
   border: 1px solid transparent;
-  transition: background 0.3s, border-color 0.3s, transform 0.3s, opacity 0.3s;
+  transition:
+    background 0.3s,
+    border-color 0.3s,
+    transform 0.3s,
+    opacity 0.3s;
 }
 .gr-denom-tag {
   font-size: 11px;
@@ -124,7 +140,9 @@
   color: #08130f;
   font-weight: 800;
   border: 1.5px solid rgba(255, 255, 255, 0.55);
-  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.7), inset 0 2px 6px rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 6px 16px -8px rgba(0, 0, 0, 0.7),
+    inset 0 2px 6px rgba(255, 255, 255, 0.45);
   flex: none;
 }
 .gr-piece-face {

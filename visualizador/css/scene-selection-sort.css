@@ -27,7 +27,10 @@
   background: rgba(167, 139, 250, 0.06);
   border: 1px dashed rgba(167, 139, 250, 0.4);
   opacity: 0;
-  transition: left 0.45s cubic-bezier(0.3, 0.8, 0.3, 1), width 0.45s, opacity 0.3s;
+  transition:
+    left 0.45s cubic-bezier(0.3, 0.8, 0.3, 1),
+    width 0.45s,
+    opacity 0.3s;
   pointer-events: none;
 }
 
@@ -38,7 +41,9 @@
   transform: translateX(-50%);
   opacity: 0;
   z-index: 5;
-  transition: left 0.4s cubic-bezier(0.34, 1.3, 0.5, 1), opacity 0.3s;
+  transition:
+    left 0.4s cubic-bezier(0.34, 1.3, 0.5, 1),
+    opacity 0.3s;
   pointer-events: none;
 }
 .ss-marker-tip {
@@ -49,8 +54,13 @@
   animation: ss-bob 1.1s ease-in-out infinite;
 }
 @keyframes ss-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
 }
 
 /* ─────────────────────────── Bailarinas-barra ───────────────────────────── */
@@ -66,8 +76,12 @@
   align-items: flex-start;
   justify-content: center;
   padding-top: 6px;
-  transition: left 0.5s cubic-bezier(0.34, 1.3, 0.5, 1), filter 0.3s, box-shadow 0.3s,
-    background 0.3s, transform 0.3s;
+  transition:
+    left 0.5s cubic-bezier(0.34, 1.3, 0.5, 1),
+    filter 0.3s,
+    box-shadow 0.3s,
+    background 0.3s,
+    transform 0.3s;
   will-change: left;
 }
 .ss-bar.no-anim {
@@ -89,7 +103,9 @@
   font-size: 20px;
   line-height: 1;
   opacity: 0;
-  transition: transform 0.3s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.3s;
+  transition:
+    transform 0.3s cubic-bezier(0.3, 1.5, 0.5, 1),
+    opacity 0.3s;
   pointer-events: none;
 }
 
@@ -103,7 +119,9 @@
 /* Barra que es el mínimo provisorio → coronada */
 .ss-bar.ss-min {
   background: linear-gradient(180deg, #b8860b, #7a5a06);
-  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.9), 0 0 30px -6px rgba(251, 191, 36, 0.7);
+  box-shadow:
+    0 0 0 2px rgba(251, 191, 36, 0.9),
+    0 0 30px -6px rgba(251, 191, 36, 0.7);
   z-index: 4;
 }
 .ss-bar.ss-min .ss-crown {

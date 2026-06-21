@@ -32,12 +32,10 @@ const STRINGS = {
       `Enter the maze at ${tag(node)} and tie down the thread 🧵 — start of the descent.`,
     visit: (node, from) =>
       `Follow the thread deeper to ${tag(node)}, the first unvisited neighbor of ${tag(from)}.`,
-    deadEnd: (node) =>
-      `${tag(node)} is a dead end — no unvisited neighbors. Retract the thread ↩`,
+    deadEnd: (node) => `${tag(node)} is a dead end — no unvisited neighbors. Retract the thread ↩`,
     backtrack: (node) =>
       `Backtrack along the thread to ${tag(node)}, looking for another way to go.`,
-    done: (count) =>
-      `Whole maze explored: ${tag(count)} nodes visited in depth-first order ✨`,
+    done: (count) => `Whole maze explored: ${tag(count)} nodes visited in depth-first order ✨`,
     cardOrder: 'Strategy',
     cardOrderBig: 'go deep first',
     cardOrderSub: 'backtrack on dead ends',
@@ -52,8 +50,7 @@ const STRINGS = {
   },
   es: {
     ready: 'Listo para reproducir.',
-    start: (node) =>
-      `Entrá al laberinto en ${tag(node)} y atá el hilo 🧵 — arranca el descenso.`,
+    start: (node) => `Entrá al laberinto en ${tag(node)} y atá el hilo 🧵 — arranca el descenso.`,
     visit: (node, from) =>
       `Seguí el hilo más a fondo hasta ${tag(node)}, el primer vecino sin visitar de ${tag(from)}.`,
     deadEnd: (node) =>
@@ -168,7 +165,7 @@ function buildTrace(source) {
 const CSS_HREF = './css/scene-dfs.css';
 if (!document.querySelector(`link[data-scene="dfs"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'dfs' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'dfs' } }),
   );
 }
 
@@ -234,11 +231,7 @@ export default function mountDFS(host, meta = {}) {
   // ── Nodos (círculos posicionados en % sobre .dfs-board) ──
   const nodeEls = new Map(); // id → el
   for (const n of NODES) {
-    const node = el(
-      'div',
-      { class: 'dfs-node' },
-      el('span', { class: 'dfs-node-val' }, n.id)
-    );
+    const node = el('div', { class: 'dfs-node' }, el('span', { class: 'dfs-node-val' }, n.id));
     node.style.left = n.x + '%';
     node.style.top = n.y + '%';
     if (n.id === SOURCE) node.classList.add('dfs-source');
@@ -267,8 +260,8 @@ export default function mountDFS(host, meta = {}) {
             'div',
             { class: 'dfs-stack-item' + (isTop ? ' dfs-stack-top' : '') },
             el('span', { class: 'dfs-stack-id mono' }, id),
-            isTop ? el('span', { class: 'dfs-stack-tip' }, '◀ top') : null
-          )
+            isTop ? el('span', { class: 'dfs-stack-tip' }, '◀ top') : null,
+          ),
         );
       });
   }
@@ -292,7 +285,7 @@ export default function mountDFS(host, meta = {}) {
     stack = [];
     order = [];
     nodeEls.forEach((node) =>
-      node.classList.remove('dfs-visited', 'dfs-active', 'dfs-dead', 'dfs-done')
+      node.classList.remove('dfs-visited', 'dfs-active', 'dfs-dead', 'dfs-done'),
     );
     edgeEls.forEach((line) => line.classList.remove('dfs-edge-back'));
     renderThread(stack);
@@ -394,10 +387,10 @@ export default function mountDFS(host, meta = {}) {
     infoCard(
       S.cardComplexity,
       el('span', { class: 'big' }, S.cardComplexityBig),
-      S.cardComplexitySub
+      S.cardComplexitySub,
     ),
     infoCard(S.cardStack, stackList, S.cardStackSub),
-    infoCard(S.cardOrderOut, orderList, S.cardOrderOutSub(NODES.length))
+    infoCard(S.cardOrderOut, orderList, S.cardOrderOutSub(NODES.length)),
   );
 
   clear(host);
@@ -415,6 +408,6 @@ function infoCard(title, big, sub) {
     big,
     sub
       ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
-      : null
+      : null,
   );
 }

@@ -25,8 +25,7 @@ const STRINGS = {
     ghostLabel: 'original · untouched',
     workLabelRecursive: 'new deck · result',
     workLabelInPlace: 'same row · reordered in place',
-    split: (vals) =>
-      `Split <span class="mono">[${vals}]</span> in half ✂️`,
+    split: (vals) => `Split <span class="mono">[${vals}]</span> in half ✂️`,
     merge: (left, right, result) =>
       `Merge <span class="mono">[${left}]</span> and <span class="mono">[${right}]</span> → <span class="mono">[${result}]</span>`,
     doneRecursive: 'New deck sorted! The original stayed untouched above ✨',
@@ -43,8 +42,7 @@ const STRINGS = {
     ghostLabel: 'original · no se toca',
     workLabelRecursive: 'mazo nuevo · resultado',
     workLabelInPlace: 'misma fila · se reordena in-place',
-    split: (vals) =>
-      `Divido <span class="mono">[${vals}]</span> por la mitad ✂️`,
+    split: (vals) => `Divido <span class="mono">[${vals}]</span> por la mitad ✂️`,
     merge: (left, right, result) =>
       `Mezclo <span class="mono">[${left}]</span> y <span class="mono">[${right}]</span> → <span class="mono">[${result}]</span>`,
     doneRecursive: '¡Mazo nuevo ordenado! El original quedó intacto arriba ✨',
@@ -76,7 +74,15 @@ function buildTrace(input) {
     }
     while (i < L.length) out.push(L[i++]);
     while (j < R.length) out.push(R[j++]);
-    steps.push({ type: 'merge', lo, mid: lo + mid, hi, left: L.slice(), right: R.slice(), result: out.slice() });
+    steps.push({
+      type: 'merge',
+      lo,
+      mid: lo + mid,
+      hi,
+      left: L.slice(),
+      right: R.slice(),
+      result: out.slice(),
+    });
     return out;
   }
   ms(input.slice(), 0);
@@ -98,7 +104,7 @@ function makeCard(v, cls) {
         background: `linear-gradient(165deg, hsl(${h} 85% 70%), hsl(${h} 70% 48%))`,
       },
     },
-    el('span', {}, String(v))
+    el('span', {}, String(v)),
   );
 }
 
@@ -115,7 +121,7 @@ export default function mountMergeSort(host, meta) {
     ghostRow = el(
       'div',
       { class: 'ms-row ms-ghost' },
-      el('span', { class: 'ms-row-label' }, S.ghostLabel)
+      el('span', { class: 'ms-row-label' }, S.ghostLabel),
     );
     VALUES.forEach((v, k) => {
       const c = makeCard(v, 'ms-card');
@@ -128,13 +134,9 @@ export default function mountMergeSort(host, meta) {
   const workRow = el(
     'div',
     { class: 'ms-row ms-work' },
-    el(
-      'span',
-      { class: 'ms-row-label' },
-      recursive ? S.workLabelRecursive : S.workLabelInPlace
-    ),
+    el('span', { class: 'ms-row-label' }, recursive ? S.workLabelRecursive : S.workLabelInPlace),
     band,
-    divider
+    divider,
   );
 
   const cards = VALUES.map((v) => {
@@ -228,13 +230,17 @@ export default function mountMergeSort(host, meta) {
   const aside = el(
     'div',
     { class: 'scene-aside' },
-    infoCard(S.infoComplexityTitle, el('span', { class: 'big' }, 'O(n log n)'), S.infoComplexitySub),
+    infoCard(
+      S.infoComplexityTitle,
+      el('span', { class: 'big' }, 'O(n log n)'),
+      S.infoComplexitySub,
+    ),
     infoCard(
       S.infoMemoryTitle,
       el('span', { class: 'big' }, recursive ? 'O(n)' : 'in-place'),
-      recursive ? S.infoMemorySubRecursive : S.infoMemorySubInPlace
+      recursive ? S.infoMemorySubRecursive : S.infoMemorySubInPlace,
     ),
-    infoCard(S.infoInputTitle, el('code', {}, `[${VALUES.join(', ')}]`), `n = ${N}`)
+    infoCard(S.infoInputTitle, el('code', {}, `[${VALUES.join(', ')}]`), `n = ${N}`),
   );
 
   clear(host);
@@ -256,6 +262,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

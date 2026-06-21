@@ -79,7 +79,7 @@ const STRINGS = {
 const CSS_HREF = './css/scene-remove-duplicates.css';
 if (!document.querySelector(`link[data-scene="remove-duplicates"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'remove-duplicates' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'remove-duplicates' } }),
   );
 }
 
@@ -115,9 +115,14 @@ export default function mountRemoveDuplicates(host, meta) {
   const setPanel = el(
     'div',
     { class: 'rd-set' },
-    el('div', { class: 'rd-set-head' }, el('span', { class: 'rd-set-icon' }, S.setHeadIcon), S.setHeadText,
-      el('span', { class: 'rd-set-tag mono' }, S.setTag)),
-    setChips
+    el(
+      'div',
+      { class: 'rd-set-head' },
+      el('span', { class: 'rd-set-icon' }, S.setHeadIcon),
+      S.setHeadText,
+      el('span', { class: 'rd-set-tag mono' }, S.setTag),
+    ),
+    setChips,
   );
 
   // ── El guardia + la puerta ──────────────────────────────────────────
@@ -127,7 +132,7 @@ export default function mountRemoveDuplicates(host, meta) {
     'div',
     { class: 'rd-door' },
     doorLight,
-    el('div', { class: 'rd-door-label' }, S.doorLabel)
+    el('div', { class: 'rd-door-label' }, S.doorLabel),
   );
   const gate = el('div', { class: 'rd-gate' }, guard, door);
 
@@ -137,20 +142,28 @@ export default function mountRemoveDuplicates(host, meta) {
       'div',
       { class: 'rd-person' },
       el('span', { class: 'rd-person-val mono' }, String(v)),
-      el('span', { class: 'rd-person-body' }, '🧍')
+      el('span', { class: 'rd-person-body' }, '🧍'),
     );
     p._value = v;
     p._index = i;
     return p;
   });
   const queue = el('div', { class: 'rd-queue' }, ...people);
-  const queueWrap = el('div', { class: 'rd-queue-wrap' },
-    el('span', { class: 'rd-zone-label' }, S.queueLabel), queue);
+  const queueWrap = el(
+    'div',
+    { class: 'rd-queue-wrap' },
+    el('span', { class: 'rd-zone-label' }, S.queueLabel),
+    queue,
+  );
 
   // ── Zona de admitidos (la salida deduplicada) ───────────────────────
   const admitted = el('div', { class: 'rd-admitted' });
-  const admittedWrap = el('div', { class: 'rd-admitted-wrap' },
-    el('span', { class: 'rd-zone-label rd-zone-ok' }, S.admittedLabel), admitted);
+  const admittedWrap = el(
+    'div',
+    { class: 'rd-admitted-wrap' },
+    el('span', { class: 'rd-zone-label rd-zone-ok' }, S.admittedLabel),
+    admitted,
+  );
 
   // ── Lienzo ──────────────────────────────────────────────────────────
   const narrator = el('div', { class: 'narrator' }, S.narratorReady);
@@ -161,7 +174,7 @@ export default function mountRemoveDuplicates(host, meta) {
     queueWrap,
     gate,
     admittedWrap,
-    narrator
+    narrator,
   );
 
   // ── Helpers de render ───────────────────────────────────────────────
@@ -273,8 +286,16 @@ export default function mountRemoveDuplicates(host, meta) {
     { class: 'scene-aside' },
     infoCard(S.cardStructureTitle, el('span', { class: 'big' }, 'Set'), S.cardStructureSub),
     infoCard(S.cardComplexityTitle, el('span', { class: 'big' }, 'O(n)'), S.cardComplexitySub),
-    infoCard(S.cardInputTitle, el('code', {}, `[${INPUT.join(', ')}]`), S.cardInputSub(INPUT.length)),
-    infoCard(S.cardOutputTitle, el('code', {}, `[${dedupe(INPUT).join(', ')}]`), S.cardOutputSub(dedupe(INPUT).length))
+    infoCard(
+      S.cardInputTitle,
+      el('code', {}, `[${INPUT.join(', ')}]`),
+      S.cardInputSub(INPUT.length),
+    ),
+    infoCard(
+      S.cardOutputTitle,
+      el('code', {}, `[${dedupe(INPUT).join(', ')}]`),
+      S.cardOutputSub(dedupe(INPUT).length),
+    ),
   );
 
   clear(host);
@@ -299,6 +320,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

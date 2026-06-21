@@ -53,7 +53,10 @@
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
   stroke-dasharray: 4 3.5;
-  transition: stroke 0.35s ease, stroke-width 0.35s ease, opacity 0.4s ease;
+  transition:
+    stroke 0.35s ease,
+    stroke-width 0.35s ease,
+    opacity 0.4s ease;
 }
 
 /* arista bajo evaluación: amarilla y pulsante */
@@ -64,7 +67,8 @@
   animation: krk-pulse 0.9s ease-in-out infinite;
 }
 @keyframes krk-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.6;
   }
   50% {
@@ -128,7 +132,9 @@
   stroke: rgba(255, 255, 255, 0.14);
   stroke-width: 0.4;
   vector-effect: non-scaling-stroke;
-  transition: fill 0.3s ease, stroke 0.3s ease;
+  transition:
+    fill 0.3s ease,
+    stroke 0.3s ease;
 }
 .krk-wlabel {
   font-family: var(--mono, monospace);
@@ -166,11 +172,15 @@
   place-items: center;
   background: radial-gradient(circle at 34% 28%, #3a3a5e, #22223a 72%);
   border: 2px solid var(--stroke-strong, rgba(255, 255, 255, 0.22));
-  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7),
+  box-shadow:
+    0 8px 22px -8px rgba(0, 0, 0, 0.7),
     inset 0 3px 8px rgba(255, 255, 255, 0.1);
   z-index: 3;
-  transition: transform 0.3s cubic-bezier(0.34, 1.5, 0.5, 1),
-    box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.5, 0.5, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease,
+    background 0.35s ease;
 }
 .krk-node-icon {
   font-size: 19px;
@@ -191,7 +201,8 @@
 /* isla bajo evaluación (extremo de la arista candidata) */
 .krk-node.krk-node-active {
   border-color: var(--amber, #fbbf24);
-  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.7),
+  box-shadow:
+    0 0 0 3px rgba(251, 191, 36, 0.7),
     0 0 26px -4px rgba(251, 191, 36, 0.6);
   transform: scale(1.08);
   z-index: 5;
@@ -200,7 +211,8 @@
 /* isla teñida por su componente conexa (color via --krk-grp) */
 .krk-node.krk-node-grouped {
   border-color: var(--krk-grp, #f472b6);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--krk-grp, #f472b6) 65%, transparent),
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--krk-grp, #f472b6) 65%, transparent),
     0 8px 22px -8px rgba(0, 0, 0, 0.7);
   background: radial-gradient(
     circle at 34% 28%,

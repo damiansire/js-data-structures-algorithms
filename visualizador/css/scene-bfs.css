@@ -42,7 +42,9 @@
   stroke-width: 2;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
-  transition: stroke 0.35s ease, stroke-width 0.35s ease;
+  transition:
+    stroke 0.35s ease,
+    stroke-width 0.35s ease;
 }
 /* arista recorrida por BFS: encendida de forma permanente */
 .bfs-edge.bfs-edge-on {
@@ -86,10 +88,14 @@
   place-items: center;
   background: radial-gradient(circle at 34% 28%, #3b3b5c, #232338 72%);
   border: 1.5px solid var(--stroke-strong, rgba(255, 255, 255, 0.2));
-  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7),
+  box-shadow:
+    0 8px 22px -8px rgba(0, 0, 0, 0.7),
     inset 0 3px 8px rgba(255, 255, 255, 0.1);
   z-index: 2;
-  transition: background 0.4s ease, border-color 0.3s ease, box-shadow 0.3s ease,
+  transition:
+    background 0.4s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
     transform 0.3s cubic-bezier(0.34, 1.5, 0.5, 1);
 }
 .bfs-node-val {
@@ -115,7 +121,8 @@
     hsl(var(--bfs-hue) 70% 46%) 72%
   );
   border-color: hsl(var(--bfs-hue) 90% 78%);
-  box-shadow: 0 0 0 1.5px hsl(var(--bfs-hue) 80% 60% / 0.5),
+  box-shadow:
+    0 0 0 1.5px hsl(var(--bfs-hue) 80% 60% / 0.5),
     0 10px 26px -8px hsl(var(--bfs-hue) 80% 50% / 0.55);
 }
 .bfs-node.bfs-visited .bfs-node-val {
@@ -126,7 +133,8 @@
 /* nodo recién dequeued: lo estamos explorando ahora */
 .bfs-node.bfs-dequeued {
   transform: scale(1.12);
-  box-shadow: 0 0 0 3px var(--bfs-accent),
+  box-shadow:
+    0 0 0 3px var(--bfs-accent),
     0 0 30px -4px rgba(244, 114, 182, 0.7);
   z-index: 5;
 }
@@ -142,7 +150,8 @@
 /* árbol BFS completo: pequeño brillo final */
 .bfs-node.bfs-win {
   border-color: rgba(52, 211, 153, 0.7);
-  box-shadow: 0 0 0 1.5px rgba(52, 211, 153, 0.55),
+  box-shadow:
+    0 0 0 1.5px rgba(52, 211, 153, 0.55),
     0 8px 24px -8px rgba(52, 211, 153, 0.45),
     0 0 18px -2px hsl(var(--bfs-hue) 80% 55% / 0.5);
 }

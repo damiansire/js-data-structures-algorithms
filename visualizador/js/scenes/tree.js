@@ -202,16 +202,24 @@ export default function mountTree(host, meta) {
     const card = el(
       'div',
       {
-        class: 'tr-node' + (n.depth === 0 ? ' tr-root' : '') + (n.children.length === 0 ? ' tr-leaf-node' : ''),
+        class:
+          'tr-node' +
+          (n.depth === 0 ? ' tr-root' : '') +
+          (n.children.length === 0 ? ' tr-leaf-node' : ''),
         style: { left: `${px(n)}px`, top: `${py(n)}px` },
       },
       el('span', { class: 'tr-ico' }, n.icon),
-      el('span', { class: 'tr-label' }, n.value)
+      el('span', { class: 'tr-label' }, n.value),
     );
     return card;
   });
 
-  const plane = el('div', { class: 'tr-plane', style: { width: `${W_}px`, height: `${H_}px` } }, svg, ...cards);
+  const plane = el(
+    'div',
+    { class: 'tr-plane', style: { width: `${W_}px`, height: `${H_}px` } },
+    svg,
+    ...cards,
+  );
   const scroll = el('div', { class: 'tr-scroll' }, plane);
 
   const canvas = el('div', { class: 'stage-canvas tr-stage' }, scroll);
@@ -238,7 +246,7 @@ export default function mountTree(host, meta) {
   function resetVisual() {
     revealed = new Set();
     cards.forEach((c) =>
-      c.classList.remove('tr-shown', 'tr-current', 'tr-visited', 'tr-expanded', 'tr-fan')
+      c.classList.remove('tr-shown', 'tr-current', 'tr-visited', 'tr-expanded', 'tr-fan'),
     );
     lines.forEach((l) => l && l.classList.remove('tr-link-shown', 'tr-link-active'));
     // la raíz arranca visible
@@ -270,7 +278,8 @@ export default function mountTree(host, meta) {
         step.children.forEach((cid, k) => {
           cards[cid].classList.add('tr-fan');
           showNode(cid, 120 + k * 120);
-          if (lines[cid]) setTimeout(() => lines[cid].classList.add('tr-link-active'), 120 + k * 120);
+          if (lines[cid])
+            setTimeout(() => lines[cid].classList.add('tr-link-active'), 120 + k * 120);
         });
         cards[step.id].classList.add('tr-visited');
         const names = step.children.map((c) => NODES[c].value).join(', ');
@@ -319,9 +328,21 @@ export default function mountTree(host, meta) {
   const aside = el(
     'div',
     { class: 'scene-aside' },
-    infoCard(S.info_structure_title, el('span', { class: 'big' }, S.info_structure_big), S.info_structure_sub),
-    infoCard(S.info_traversal_title, el('span', { class: 'big' }, S.info_traversal_big), S.info_traversal_sub),
-    infoCard(S.info_nodes_title, el('span', { class: 'big' }, String(NODES.length)), S.info_nodes_sub(MAX_DEPTH))
+    infoCard(
+      S.info_structure_title,
+      el('span', { class: 'big' }, S.info_structure_big),
+      S.info_structure_sub,
+    ),
+    infoCard(
+      S.info_traversal_title,
+      el('span', { class: 'big' }, S.info_traversal_big),
+      S.info_traversal_sub,
+    ),
+    infoCard(
+      S.info_nodes_title,
+      el('span', { class: 'big' }, String(NODES.length)),
+      S.info_nodes_sub(MAX_DEPTH),
+    ),
   );
 
   clear(host);
@@ -338,6 +359,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

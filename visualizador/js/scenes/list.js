@@ -70,7 +70,8 @@ const STRINGS = {
     pushFirst: (n) => `<b>push(${n})</b> → primer vagón: <span class="mono">head = last</span>.`,
     pushMore: (n) =>
       `<b>push(${n})</b> → cae un vagón al final y la cola <span class="mono">last.next</span> lo engancha.`,
-    prependFirst: (n) => `<b>prepend(${n})</b> → primer vagón: <span class="mono">head = last</span>.`,
+    prependFirst: (n) =>
+      `<b>prepend(${n})</b> → primer vagón: <span class="mono">head = last</span>.`,
     prependMore: (n) =>
       `<b>prepend(${n})</b> → cae al frente y su <span class="mono">next</span> apunta al viejo head.`,
     popMsg: (n) =>
@@ -184,7 +185,7 @@ export default function mountList(host, meta) {
     'div',
     { class: 'll-loco', title: S.locoTitle },
     el('span', { class: 'll-loco-face' }, '🚂'),
-    el('span', { class: 'll-loco-smoke' })
+    el('span', { class: 'll-loco-smoke' }),
   );
   train.append(loco, rail);
 
@@ -196,13 +197,13 @@ export default function mountList(host, meta) {
     'div',
     { class: 'll-legend ll-legend-head' },
     el('b', {}, S.legendHead),
-    el('small', {}, S.legendHeadSub)
+    el('small', {}, S.legendHeadSub),
   );
   const lastMark = el(
     'div',
     { class: 'll-legend ll-legend-last' },
     el('b', {}, S.legendLast),
-    el('small', {}, S.legendLastSub)
+    el('small', {}, S.legendLastSub),
   );
   canvas.append(el('div', { class: 'll-legends' }, headMark, lastMark));
 
@@ -230,7 +231,7 @@ export default function mountList(host, meta) {
         isHead ? el('span', { class: 'll-flag ll-flag-head' }, S.flagHead) : null,
         isLast ? el('span', { class: 'll-flag ll-flag-last' }, S.flagLast) : null,
         el('span', { class: 'll-car-val' }, String(node.data)),
-        el('span', { class: 'll-car-wheels' }, el('i', {}), el('i', {}))
+        el('span', { class: 'll-car-wheels' }, el('i', {}), el('i', {})),
       );
       if (node === fallNode) car.classList.add('ll-fall');
 
@@ -240,7 +241,7 @@ export default function mountList(host, meta) {
         { class: 'll-link' + (isLast ? ' is-null' : '') },
         el('span', { class: 'll-link-chain' }),
         el('span', { class: 'll-link-arrow' }, isLast ? '∅' : '→'),
-        el('span', { class: 'll-link-label' }, isLast ? S.nextNull : S.next)
+        el('span', { class: 'll-link-label' }, isLast ? S.nextNull : S.next),
       );
 
       rail.append(car, link);
@@ -256,14 +257,20 @@ export default function mountList(host, meta) {
       const prevLink = links[links.length - 2]; // enganche del penúltimo vagón
       if (prevLink) {
         prevLink.classList.add('ll-link-join');
-        prevLink.addEventListener('animationend', () => prevLink.classList.remove('ll-link-join'), { once: true });
+        prevLink.addEventListener('animationend', () => prevLink.classList.remove('ll-link-join'), {
+          once: true,
+        });
       }
     }
     if (fallNode && fallSide === 'head') {
       const firstLink = rail.querySelector('.ll-link');
       if (firstLink) {
         firstLink.classList.add('ll-link-join');
-        firstLink.addEventListener('animationend', () => firstLink.classList.remove('ll-link-join'), { once: true });
+        firstLink.addEventListener(
+          'animationend',
+          () => firstLink.classList.remove('ll-link-join'),
+          { once: true },
+        );
       }
     }
   }
@@ -388,7 +395,7 @@ export default function mountList(host, meta) {
     el('span', { class: 'spacer' }),
     shiftBtn,
     popBtn,
-    clearBtn
+    clearBtn,
   );
 
   // ── Info cards (length / head / last en vivo) ───────────────────
@@ -402,7 +409,7 @@ export default function mountList(host, meta) {
     { class: 'scene-aside' },
     infoCard('length', statLen, S.cardLengthSub),
     infoCard('head', statHead, S.cardHeadSub),
-    infoCard('last', statLast, S.cardLastSub)
+    infoCard('last', statLast, S.cardLastSub),
   );
 
   clear(host);
@@ -426,6 +433,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

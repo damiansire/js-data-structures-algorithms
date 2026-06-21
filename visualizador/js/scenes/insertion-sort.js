@@ -31,8 +31,7 @@ const STRINGS = {
       `Round <span class="mono">${i}</span>: I lift the card <span class="mono">${value}</span> out of the row 🃏`,
     compare: (sorted, key) =>
       `Is the sorted card <span class="mono">${sorted}</span> bigger than <span class="mono">${key}</span>?`,
-    shift: (sorted) =>
-      `Yes → <span class="mono">${sorted}</span> slides right to open a gap.`,
+    shift: (sorted) => `Yes → <span class="mono">${sorted}</span> slides right to open a gap.`,
     place: (value) =>
       `No (or edge) → the card <span class="mono">${value}</span> drops into its slot ✔`,
     done: 'Hand sorted from lowest to highest! ✨',
@@ -72,7 +71,7 @@ const STRINGS = {
 const CSS_HREF = new URL('../../css/scene-insertion-sort.css', import.meta.url).href;
 if (!document.querySelector(`link[data-scene="insertion-sort"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'insertion-sort' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'insertion-sort' } }),
   );
 }
 
@@ -126,7 +125,7 @@ export default function mountInsertionSort(host, meta) {
       { class: 'is-card', style: { height: `${h}px` } },
       el('span', { class: 'is-card-pip is-pip-tl' }, String(v)),
       el('span', { class: 'is-card-rank mono' }, String(v)),
-      el('span', { class: 'is-card-pip is-pip-br' }, String(v))
+      el('span', { class: 'is-card-pip is-pip-br' }, String(v)),
     );
     c._value = v;
     return c;
@@ -149,9 +148,7 @@ export default function mountInsertionSort(host, meta) {
   }
 
   function clearMarks() {
-    cards.forEach((c) =>
-      c.classList.remove('is-key', 'is-compare', 'is-gap')
-    );
+    cards.forEach((c) => c.classList.remove('is-key', 'is-compare', 'is-gap'));
   }
 
   // Marca como ordenadas las primeras `count` posiciones físicas.
@@ -163,7 +160,7 @@ export default function mountInsertionSort(host, meta) {
 
   function resetVisual() {
     cards.forEach((c) =>
-      c.classList.remove('is-key', 'is-compare', 'is-gap', 'is-sorted', 'is-win')
+      c.classList.remove('is-key', 'is-compare', 'is-gap', 'is-sorted', 'is-win'),
     );
     slots = cards.slice();
     markSorted(1); // la 1ª carta es la mano ordenada inicial
@@ -233,7 +230,7 @@ export default function mountInsertionSort(host, meta) {
     { class: 'scene-aside' },
     infoCard(S.cardTimeTitle, el('span', { class: 'big' }, 'O(n²)'), S.cardTimeSub),
     infoCard(S.cardStableTitle, el('span', { class: 'big' }, 'Stable'), S.cardStableSub),
-    infoCard(S.cardInputTitle, el('code', {}, `[${VALUES.join(', ')}]`), S.cardInputSub)
+    infoCard(S.cardInputTitle, el('code', {}, `[${VALUES.join(', ')}]`), S.cardInputSub),
   );
 
   clear(host);
@@ -254,6 +251,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

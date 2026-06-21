@@ -11,11 +11,8 @@
   --gcd-gold: var(--amber);
   min-height: 460px;
   display: block;
-  background: radial-gradient(
-      120% 120% at 75% 15%,
-      rgba(56, 189, 248, 0.1),
-      transparent 55%
-    ),
+  background:
+    radial-gradient(120% 120% at 75% 15%, rgba(56, 189, 248, 0.1), transparent 55%),
     radial-gradient(120% 120% at 15% 90%, rgba(167, 139, 250, 0.06), transparent 55%);
 }
 

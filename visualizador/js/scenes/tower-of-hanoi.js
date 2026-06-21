@@ -25,7 +25,8 @@ const MIN_MOVES = Math.pow(2, N) - 1; // 15
 // ── Strings bilingües (inglés por defecto, español opcional) ──────────
 const STRINGS = {
   en: {
-    ready: 'Ready to play. Move the golden tower from peg <span class="mono">A</span> to peg <span class="mono">C</span>.',
+    ready:
+      'Ready to play. Move the golden tower from peg <span class="mono">A</span> to peg <span class="mono">C</span>.',
     pegSource: 'SOURCE',
     pegAux: 'AUXILIARY',
     pegTarget: 'TARGET',
@@ -40,7 +41,8 @@ const STRINGS = {
     cardRuleSub: 'never a bigger disk on a smaller one',
   },
   es: {
-    ready: 'Listo para reproducir. Mové la torre dorada de la clavija <span class="mono">A</span> a la clavija <span class="mono">C</span>.',
+    ready:
+      'Listo para reproducir. Mové la torre dorada de la clavija <span class="mono">A</span> a la clavija <span class="mono">C</span>.',
     pegSource: 'ORIGEN',
     pegAux: 'AUXILIAR',
     pegTarget: 'DESTINO',
@@ -60,7 +62,7 @@ const STRINGS = {
 const CSS_HREF = './css/scene-tower-of-hanoi.css';
 if (!document.querySelector(`link[data-scene="tower-of-hanoi"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'tower-of-hanoi' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'tower-of-hanoi' } }),
   );
 }
 
@@ -109,7 +111,7 @@ export default function mountTowerOfHanoi(host, meta) {
           background: `linear-gradient(180deg, ${c1}, ${c2})`,
         },
       },
-      el('span', { class: 'toh-disk-cap mono' }, String(d))
+      el('span', { class: 'toh-disk-cap mono' }, String(d)),
     );
     diskEls[d] = disk;
   }
@@ -126,18 +128,22 @@ export default function mountTowerOfHanoi(host, meta) {
       rod,
       stack,
       baseTile,
-      el('div', { class: 'toh-peg-label' },
+      el(
+        'div',
+        { class: 'toh-peg-label' },
         el('span', { class: 'toh-peg-letter mono' }, letter),
-        el('span', { class: 'toh-peg-role' }, pegLabels[letter])
-      )
+        el('span', { class: 'toh-peg-role' }, pegLabels[letter]),
+      ),
     );
     pegEls[letter] = { col, stack };
     pegsRow.append(col);
   });
 
-  const moveTag = el('div', { class: 'toh-move-tag' },
+  const moveTag = el(
+    'div',
+    { class: 'toh-move-tag' },
     el('span', { class: 'toh-move-count mono' }, '0'),
-    el('span', { class: 'toh-move-min' }, `/ ${MIN_MOVES}`)
+    el('span', { class: 'toh-move-min' }, `/ ${MIN_MOVES}`),
   );
   const moveCountEl = moveTag.querySelector('.toh-move-count');
 
@@ -163,7 +169,9 @@ export default function mountTowerOfHanoi(host, meta) {
     pegs = { A: [], B: [], C: [] };
     for (let d = N; d >= 1; d--) pegs.A.push(d);
     PEGS.forEach((l) => pegEls[l].col.classList.remove('toh-active'));
-    Object.values(diskEls).forEach((dk) => dk.classList.remove('toh-lift', 'toh-land', 'toh-moving'));
+    Object.values(diskEls).forEach((dk) =>
+      dk.classList.remove('toh-lift', 'toh-land', 'toh-moving'),
+    );
     renderPegs();
     moveCountEl.textContent = '0';
     setNarration(S.ready);
@@ -195,7 +203,9 @@ export default function mountTowerOfHanoi(host, meta) {
       disk.classList.remove('toh-land');
       void disk.offsetWidth; // reflow
       disk.classList.add('toh-land');
-      disk.addEventListener('animationend', () => disk.classList.remove('toh-land'), { once: true });
+      disk.addEventListener('animationend', () => disk.classList.remove('toh-land'), {
+        once: true,
+      });
     }
 
     return S.move(step.disk, step.from, step.to);
@@ -220,7 +230,7 @@ export default function mountTowerOfHanoi(host, meta) {
     { class: 'scene-aside' },
     infoCard(S.cardMovesTitle, el('span', { class: 'big' }, String(MIN_MOVES)), S.cardMovesSub(N)),
     infoCard(S.cardDisksTitle, el('span', { class: 'big' }, String(N)), S.cardDisksSub),
-    infoCard(S.cardRuleTitle, el('span', { class: 'big' }, 'LIFO'), S.cardRuleSub)
+    infoCard(S.cardRuleTitle, el('span', { class: 'big' }, 'LIFO'), S.cardRuleSub),
   );
 
   clear(host);
@@ -240,6 +250,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

@@ -73,7 +73,7 @@ const STRINGS = {
 const CSS_HREF = './css/scene-radix-sort.css';
 if (!document.querySelector(`link[data-scene="radix-sort"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'radix-sort' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'radix-sort' } }),
   );
 }
 
@@ -117,14 +117,16 @@ export default function mountRadixSort(host, meta) {
   // ── La fila de correo (cada carta es un número de 3 dígitos) ────────
   function makeCard(value) {
     const padded = String(value).padStart(MAX_DIGITS, '0');
-    const digitSpans = padded.split('').map((ch, i) =>
-      el('span', { class: 'rx-digit', dataset: { pos: String(MAX_DIGITS - 1 - i) } }, ch)
-    );
+    const digitSpans = padded
+      .split('')
+      .map((ch, i) =>
+        el('span', { class: 'rx-digit', dataset: { pos: String(MAX_DIGITS - 1 - i) } }, ch),
+      );
     const card = el(
       'div',
       { class: 'rx-card' },
       el('span', { class: 'rx-card-icon' }, '✉️'),
-      el('span', { class: 'rx-card-num mono' }, ...digitSpans)
+      el('span', { class: 'rx-card-num mono' }, ...digitSpans),
     );
     card._value = value;
     card._digits = digitSpans;
@@ -136,7 +138,7 @@ export default function mountRadixSort(host, meta) {
     'div',
     { class: 'rx-row-wrap' },
     el('span', { class: 'rx-zone-label' }, S.queueLabel),
-    row
+    row,
   );
 
   // ── Los 10 casilleros 0..9 ──────────────────────────────────────────
@@ -148,7 +150,7 @@ export default function mountRadixSort(host, meta) {
       'div',
       { class: 'rx-bin' },
       el('span', { class: 'rx-bin-label mono' }, String(d)),
-      body
+      body,
     );
   });
   const binsLane = el('div', { class: 'rx-bins' }, ...bins);
@@ -156,18 +158,12 @@ export default function mountRadixSort(host, meta) {
     'div',
     { class: 'rx-bins-wrap' },
     el('span', { class: 'rx-zone-label rx-zone-accent' }, S.binsLabel),
-    binsLane
+    binsLane,
   );
 
   // ── Lienzo ──────────────────────────────────────────────────────────
   const narrator = el('div', { class: 'narrator' }, S.ready);
-  const canvas = el(
-    'div',
-    { class: 'stage-canvas rx-stage' },
-    rowWrap,
-    binsWrap,
-    narrator
-  );
+  const canvas = el('div', { class: 'stage-canvas rx-stage' }, rowWrap, binsWrap, narrator);
 
   // ── Helpers de render ───────────────────────────────────────────────
   function setNarration(html) {
@@ -185,9 +181,7 @@ export default function mountRadixSort(host, meta) {
   // Resalta el dígito en la posición `place` de TODAS las cartas.
   function highlightPlace(place) {
     canvas.querySelectorAll('.rx-card').forEach((c) => {
-      c._digits.forEach((d) =>
-        d.classList.toggle('rx-digit-on', Number(d.dataset.pos) === place)
-      );
+      c._digits.forEach((d) => d.classList.toggle('rx-digit-on', Number(d.dataset.pos) === place));
     });
   }
 
@@ -230,7 +224,7 @@ export default function mountRadixSort(host, meta) {
       if (src) {
         src.classList.add('rx-active');
         src._digits.forEach((d) =>
-          d.classList.toggle('rx-digit-on', Number(d.dataset.pos) === step.place)
+          d.classList.toggle('rx-digit-on', Number(d.dataset.pos) === step.place),
         );
       }
       // suelta una copia de la carta en el casillero correspondiente
@@ -238,7 +232,7 @@ export default function mountRadixSort(host, meta) {
       const dropped = makeCard(step.value);
       dropped.classList.add('rx-binned');
       dropped._digits.forEach((d) =>
-        d.classList.toggle('rx-digit-on', Number(d.dataset.pos) === step.place)
+        d.classList.toggle('rx-digit-on', Number(d.dataset.pos) === step.place),
       );
       if (animate) dropped.classList.add('rx-drop');
       binBodies[step.digit].append(dropped);
@@ -290,10 +284,18 @@ export default function mountRadixSort(host, meta) {
   const aside = el(
     'div',
     { class: 'scene-aside' },
-    infoCard(S.cardComplexityTitle, el('span', { class: 'big' }, 'O(d·(n+b))'), S.cardComplexitySub),
+    infoCard(
+      S.cardComplexityTitle,
+      el('span', { class: 'big' }, 'O(d·(n+b))'),
+      S.cardComplexitySub,
+    ),
     infoCard(S.cardStableTitle, el('span', { class: 'big' }, 'Stable'), S.cardStableSub),
-    infoCard(S.cardInputTitle, el('code', {}, `[${INPUT.join(', ')}]`), S.cardInputSub(INPUT.length)),
-    infoCard(S.cardPassesTitle, el('span', { class: 'big' }, String(MAX_DIGITS)), S.cardPassesSub)
+    infoCard(
+      S.cardInputTitle,
+      el('code', {}, `[${INPUT.join(', ')}]`),
+      S.cardInputSub(INPUT.length),
+    ),
+    infoCard(S.cardPassesTitle, el('span', { class: 'big' }, String(MAX_DIGITS)), S.cardPassesSub),
   );
 
   clear(host);
@@ -328,6 +330,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

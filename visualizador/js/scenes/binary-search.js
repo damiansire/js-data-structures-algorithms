@@ -23,8 +23,7 @@ const STRINGS = {
     searching: 'Searching ',
     rangeEmpty: 'Empty range…',
     rangeActive: (lo, hi) => `Active range: indices <span class="mono">${lo}…${hi}</span>`,
-    probe: (mid, value) =>
-      `Opening the middle door (#${mid}) → <span class="mono">${value}</span>`,
+    probe: (mid, value) => `Opening the middle door (#${mid}) → <span class="mono">${value}</span>`,
     discard: (value, side) =>
       `<span class="mono">${value}</span> isn't it: the <b>${side}</b> half collapses into the void 🕳️`,
     sideLeft: 'left',
@@ -96,21 +95,16 @@ export default function mountBinarySearch(host, meta) {
       { class: 'bsr-door', dataset: { idx: String(i) } },
       el('div', { class: 'bsr-door-leaf' }, el('span', {}, String(v))),
       el('div', { class: 'bsr-door-frame' }, el('span', { class: 'bsr-treasure' }, '🏆')),
-      el('span', { class: 'bsr-idx' }, '#' + i)
-    )
+      el('span', { class: 'bsr-idx' }, '#' + i),
+    ),
   );
   doors.forEach((d) => hall.append(d));
 
   const canvas = el(
     'div',
     { class: 'stage-canvas bsr-stage' },
-    el(
-      'div',
-      { class: 'bsr-target' },
-      S.searching,
-      el('span', { class: 'mono' }, String(TARGET))
-    ),
-    hall
+    el('div', { class: 'bsr-target' }, S.searching, el('span', { class: 'mono' }, String(TARGET))),
+    hall,
   );
   const narrator = el('div', { class: 'narrator' }, S.ready);
   canvas.append(narrator);
@@ -120,9 +114,7 @@ export default function mountBinarySearch(host, meta) {
   }
 
   function resetVisual() {
-    doors.forEach((d) =>
-      d.classList.remove('in-range', 'probing', 'collapsed', 'found', 'fail')
-    );
+    doors.forEach((d) => d.classList.remove('in-range', 'probing', 'collapsed', 'found', 'fail'));
     setNarration(S.ready);
   }
 
@@ -182,7 +174,7 @@ export default function mountBinarySearch(host, meta) {
     { class: 'scene-aside' },
     infoCard(S.cxTitle, el('span', { class: 'big' }, 'O(log n)'), S.cxSub),
     infoCard(S.preTitle, el('span', { class: 'big' }, S.preBig), S.preSub),
-    infoCard(S.targetTitle, el('code', {}, String(TARGET)), S.targetSub(ARRAY.join(', ')))
+    infoCard(S.targetTitle, el('code', {}, String(TARGET)), S.targetSub(ARRAY.join(', '))),
   );
 
   clear(host);
@@ -197,6 +189,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

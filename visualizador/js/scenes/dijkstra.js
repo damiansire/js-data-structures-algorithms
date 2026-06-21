@@ -67,8 +67,7 @@ const STRINGS = {
       `Shorter route to ${mono(to)} via ${mono(from)}: ${mono(dlabel(oldD))} → ${mono(newD)}. Edge relaxed ⚡`,
     skip: (from, to, dist) =>
       `Route to ${mono(to)} via ${mono(from)} is not shorter (${mono(dlabel(dist))}). Kept as is.`,
-    done: (src) =>
-      `All nodes finalized. Shortest distances from ${mono(src)} are locked in ✨`,
+    done: (src) => `All nodes finalized. Shortest distances from ${mono(src)} are locked in ✨`,
     cardAlgoTitle: 'Algorithm',
     cardAlgoSub: 'greedy + priority',
     cardComplexityTitle: 'Complexity',
@@ -111,7 +110,7 @@ const STRINGS = {
 const CSS_HREF = './css/scene-dijkstra.css';
 if (!document.querySelector(`link[data-scene="dijkstra"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'dijkstra' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'dijkstra' } }),
   );
 }
 
@@ -247,7 +246,7 @@ export default function mountDijkstra(host, meta = {}) {
       'div',
       { class: 'dij-node' + (n.id === SOURCE ? ' dij-source' : '') },
       el('span', { class: 'dij-node-id' }, n.id),
-      distLabel
+      distLabel,
     );
     nodeEl.style.left = n.x + '%';
     nodeEl.style.top = n.y + '%';
@@ -377,8 +376,8 @@ export default function mountDijkstra(host, meta = {}) {
     el(
       'div',
       { style: { marginTop: '8px', fontSize: '12px', color: '#76749a' } },
-      S.distFrom(SOURCE)
-    )
+      S.distFrom(SOURCE),
+    ),
   );
 
   const legend = el(
@@ -390,18 +389,22 @@ export default function mountDijkstra(host, meta = {}) {
       { class: 'dij-legend' },
       el('span', { class: 'dij-leg dij-leg-final' }, S.legendFinal),
       el('span', { class: 'dij-leg dij-leg-active' }, S.legendActive),
-      el('span', { class: 'dij-leg dij-leg-inf' }, S.legendInf)
-    )
+      el('span', { class: 'dij-leg dij-leg-inf' }, S.legendInf),
+    ),
   );
 
   const aside = el(
     'div',
     { class: 'scene-aside' },
     infoCard(S.cardAlgoTitle, el('span', { class: 'big' }, 'Dijkstra'), S.cardAlgoSub),
-    infoCard(S.cardComplexityTitle, el('span', { class: 'big' }, 'O(E log V)'), S.cardComplexitySub),
+    infoCard(
+      S.cardComplexityTitle,
+      el('span', { class: 'big' }, 'O(E log V)'),
+      S.cardComplexitySub,
+    ),
     infoCard(S.cardSourceTitle, el('code', {}, SOURCE), S.cardSourceSub),
     distCard,
-    legend
+    legend,
   );
 
   clear(host);
@@ -423,6 +426,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

@@ -79,7 +79,7 @@ const STRINGS = {
 const CSS_HREF = './css/scene-n-queens.css';
 if (!document.querySelector(`link[data-scene="n-queens"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'n-queens' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'n-queens' } }),
   );
 }
 
@@ -144,7 +144,7 @@ export default function mountNQueens(host, meta) {
       const cell = el(
         'div',
         { class: `nq-cell ${dark ? 'nq-dark' : 'nq-light'}` },
-        el('span', { class: 'nq-queen' }, '♛')
+        el('span', { class: 'nq-queen' }, '♛'),
       );
       cell._row = row;
       cell._col = col;
@@ -160,7 +160,7 @@ export default function mountNQueens(host, meta) {
     'div',
     { class: 'stage-canvas nq-stage' },
     el('div', { class: 'nq-board-wrap' }, board),
-    narrator
+    narrator,
   );
 
   // ── Aside: fila actual + contador de backtracks ─────────────────────
@@ -257,7 +257,7 @@ export default function mountNQueens(host, meta) {
     infoCard(S.cardAlgoTitle, el('span', { class: 'big' }, 'Backtracking'), S.cardAlgoSub),
     infoCard(S.cardRowTitle, rowValue, S.cardRowSub),
     infoCard(S.cardBackTitle, backValue, S.cardBackSub),
-    infoCard(S.cardBoardTitle, el('code', {}, `[${solution.join(', ')}]`), S.cardBoardSub)
+    infoCard(S.cardBoardTitle, el('code', {}, `[${solution.join(', ')}]`), S.cardBoardSub),
   );
 
   clear(host);
@@ -277,6 +277,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

@@ -29,8 +29,7 @@ const STRINGS = {
   en: {
     ready: 'Ready to play.',
     // narración BST
-    bstCompareDup: (val, against) =>
-      `Ball ${tag(val)} hits ${tag(against)} — =.`,
+    bstCompareDup: (val, against) => `Ball ${tag(val)} hits ${tag(against)} — =.`,
     bstCompareMove: (val, rel, against, side) =>
       `${tag(val)} ${rel} ${tag(against)} → deflects to the ${side}.`,
     bstSideLeft: 'left ↙',
@@ -39,20 +38,18 @@ const STRINGS = {
     // narración BT
     btCompare: (val, against) =>
       `Ball ${tag(val)} reaches node ${tag(
-        against
+        against,
       )}: it looks for the first free slot (left before right).`,
     dup: (val) =>
       `${tag(val)} already exists — the BST allows no duplicates, the ball is discarded.`,
     placeRoot: (val) =>
       `${tag(val)} is the <strong>root</strong>: it starts at the top of the board.`,
-    placeChild: (val, sideTxt) =>
-      `Slot found: ${tag(val)} materializes as the ${sideTxt} child 🎯`,
+    placeChild: (val, sideTxt) => `Slot found: ${tag(val)} materializes as the ${sideTxt} child 🎯`,
     sideLeft: 'left',
     sideRight: 'right',
     doneBST: (total) =>
       `Tree complete: ${tag(total)} nodes, an in-order traversal gives the values sorted ✨`,
-    doneBT: (total) =>
-      `Tree complete: ${tag(total)} nodes hung by levels ✨`,
+    doneBT: (total) => `Tree complete: ${tag(total)} nodes hung by levels ✨`,
     // tarjetas (info-card)
     cardRule: 'Rule',
     ruleBigBST: 'smaller ↙ / larger ↗',
@@ -69,8 +66,7 @@ const STRINGS = {
   es: {
     ready: 'Listo para reproducir.',
     // narración BST
-    bstCompareDup: (val, against) =>
-      `La bolita ${tag(val)} choca con ${tag(against)} — =.`,
+    bstCompareDup: (val, against) => `La bolita ${tag(val)} choca con ${tag(against)} — =.`,
     bstCompareMove: (val, rel, against, side) =>
       `${tag(val)} ${rel} ${tag(against)} → se desvía a la ${side}.`,
     bstSideLeft: 'izquierda ↙',
@@ -79,20 +75,17 @@ const STRINGS = {
     // narración BT
     btCompare: (val, against) =>
       `La bolita ${tag(val)} llega al nodo ${tag(
-        against
+        against,
       )}: busca el primer hueco libre (izquierda antes que derecha).`,
-    dup: (val) =>
-      `${tag(val)} ya existe — el BST no admite duplicados, la bolita se descarta.`,
-    placeRoot: (val) =>
-      `${tag(val)} es la <strong>raíz</strong>: arranca arriba del tablero.`,
+    dup: (val) => `${tag(val)} ya existe — el BST no admite duplicados, la bolita se descarta.`,
+    placeRoot: (val) => `${tag(val)} es la <strong>raíz</strong>: arranca arriba del tablero.`,
     placeChild: (val, sideTxt) =>
       `Hueco encontrado: ${tag(val)} se materializa como hijo ${sideTxt} 🎯`,
     sideLeft: 'izquierdo',
     sideRight: 'derecho',
     doneBST: (total) =>
       `Árbol completo: ${tag(total)} nodos, recorrido in-order da los valores ordenados ✨`,
-    doneBT: (total) =>
-      `Árbol completo: ${tag(total)} nodos colgados por niveles ✨`,
+    doneBT: (total) => `Árbol completo: ${tag(total)} nodos colgados por niveles ✨`,
     // tarjetas (info-card)
     cardRule: 'Regla',
     ruleBigBST: 'menor ↙ / mayor ↗',
@@ -260,7 +253,7 @@ export default function mountPachinko(host, meta = {}) {
     const node = el(
       'div',
       { class: 'pk-node' },
-      el('span', { class: 'pk-node-val' }, String(value))
+      el('span', { class: 'pk-node-val' }, String(value)),
     );
     node.style.left = leftPct(g.x) + '%';
     node.style.top = topPct(g.depth) + '%';
@@ -316,8 +309,7 @@ export default function mountPachinko(host, meta = {}) {
         moveBall(g, true);
         ball.classList.add('pk-drop');
         if (isBST) {
-          const rel =
-            step.value < step.against ? '&lt;' : step.value > step.against ? '&gt;' : '=';
+          const rel = step.value < step.against ? '&lt;' : step.value > step.against ? '&gt;' : '=';
           const side =
             step.value < step.against
               ? S.bstSideLeft
@@ -378,11 +370,7 @@ export default function mountPachinko(host, meta = {}) {
   const stage = el('div', { class: 'stage' }, canvas, bar);
 
   const ruleCard = isBST
-    ? infoCard(
-        S.cardRule,
-        el('span', { class: 'big' }, S.ruleBigBST),
-        S.ruleSubBST
-      )
+    ? infoCard(S.cardRule, el('span', { class: 'big' }, S.ruleBigBST), S.ruleSubBST)
     : infoCard(S.cardRule, el('span', { class: 'big' }, S.ruleBigBT), S.ruleSubBT);
 
   const aside = el(
@@ -391,10 +379,10 @@ export default function mountPachinko(host, meta = {}) {
     infoCard(
       isBST ? S.cardBST : S.cardBT,
       el('span', { class: 'big' }, isBST ? 'O(log n)' : 'O(n)'),
-      isBST ? S.cardSubBST : S.cardSubBT
+      isBST ? S.cardSubBST : S.cardSubBT,
     ),
     ruleCard,
-    infoCard(S.cardInput, el('code', {}, `[${seq.join(', ')}]`), S.cardInputSub(seq.length))
+    infoCard(S.cardInput, el('code', {}, `[${seq.join(', ')}]`), S.cardInputSub(seq.length)),
   );
 
   clear(host);
@@ -411,6 +399,6 @@ function infoCard(title, big, sub) {
     big,
     sub
       ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
-      : null
+      : null,
   );
 }

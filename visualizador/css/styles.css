@@ -365,7 +365,9 @@ a {
   background: var(--panel);
   border: 1px solid var(--stroke);
   overflow: hidden;
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.25s,
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.25s,
     background 0.25s;
 }
 .card::before {
@@ -721,7 +723,11 @@ a {
   padding: 9px 18px;
   border-radius: 999px;
   backdrop-filter: blur(6px);
-  transition: opacity 0.2s, border-color 0.2s, background 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    border-color 0.2s,
+    background 0.2s,
+    transform 0.2s;
   pointer-events: none;
 }
 /* Escenas con reproductor: el lienzo es clickeable (= botón Play) */

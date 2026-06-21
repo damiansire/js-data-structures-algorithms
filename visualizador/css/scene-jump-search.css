@@ -47,8 +47,7 @@
   border-radius: 18px;
   border: 1px solid var(--stroke);
   background:
-    linear-gradient(180deg, rgba(34, 211, 238, 0.05), rgba(34, 211, 238, 0.12)),
-    var(--panel);
+    linear-gradient(180deg, rgba(34, 211, 238, 0.05), rgba(34, 211, 238, 0.12)), var(--panel);
   overflow-x: auto;
   overflow-y: visible;
 }
@@ -81,8 +80,12 @@
   padding: 6px 4px 4px;
   border-radius: 12px;
   border: 1px solid transparent;
-  transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease,
-    box-shadow 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease;
 }
 .jmp-val {
   font-size: 14px;
@@ -92,13 +95,18 @@
   border: 1px solid var(--stroke);
   border-radius: 8px;
   padding: 1px 8px;
-  transition: color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 .jmp-rock {
   font-size: 30px;
   line-height: 1;
   filter: grayscale(0.25) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
-  transition: filter 0.3s ease, transform 0.3s ease;
+  transition:
+    filter 0.3s ease,
+    transform 0.3s ease;
 }
 .jmp-treasure {
   position: absolute;
@@ -106,7 +114,9 @@
   font-size: 22px;
   opacity: 0;
   transform: scale(0.4) translateY(6px);
-  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1);
   pointer-events: none;
 }
 .jmp-idx {
@@ -130,7 +140,9 @@
 .jmp-stone.jmp-probe {
   transform: translateY(-6px) scale(1.06);
   border-color: var(--amber);
-  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.5), 0 8px 22px -8px rgba(251, 191, 36, 0.6);
+  box-shadow:
+    0 0 0 1px rgba(251, 191, 36, 0.5),
+    0 8px 22px -8px rgba(251, 191, 36, 0.6);
 }
 .jmp-stone.jmp-probe .jmp-val {
   color: var(--amber);
@@ -149,7 +161,9 @@
 .jmp-stone.jmp-found {
   transform: translateY(-8px) scale(1.12);
   border-color: var(--green);
-  box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.6), 0 10px 30px -8px rgba(52, 211, 153, 0.8);
+  box-shadow:
+    0 0 0 1px rgba(52, 211, 153, 0.6),
+    0 10px 30px -8px rgba(52, 211, 153, 0.8);
   animation: jmp-pop 0.6s cubic-bezier(0.3, 1.5, 0.5, 1);
 }
 .jmp-stone.jmp-found .jmp-val {

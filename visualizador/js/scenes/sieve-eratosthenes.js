@@ -66,7 +66,7 @@ const STRINGS = {
 const CSS_HREF = './css/scene-sieve-eratosthenes.css';
 if (!document.querySelector(`link[data-scene="sieve-eratosthenes"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'sieve-eratosthenes' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'sieve-eratosthenes' } }),
   );
 }
 
@@ -207,8 +207,12 @@ export default function mountSieveEratosthenes(host, meta) {
     currentCard,
     primesCard,
     infoCard(S.cardSieveTitle, el('span', { class: 'big' }, 'Criba'), S.cardSieveSub),
-    infoCard(S.cardComplexityTitle, el('span', { class: 'big' }, 'O(n log log n)'), S.cardComplexitySub),
-    infoCard(S.cardRangeTitle, el('code', {}, `2…${N}`), S.cardRangeSub(FIRST, N))
+    infoCard(
+      S.cardComplexityTitle,
+      el('span', { class: 'big' }, 'O(n log log n)'),
+      S.cardComplexitySub,
+    ),
+    infoCard(S.cardRangeTitle, el('code', {}, `2…${N}`), S.cardRangeSub(FIRST, N)),
   );
 
   clear(host);
@@ -233,9 +237,12 @@ function infoCard(title, big, sub) {
     sub
       ? el(
           'div',
-          { class: 'info-card-sub', style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } },
-          sub
+          {
+            class: 'info-card-sub',
+            style: { marginTop: '6px', fontSize: '12px', color: '#76749a' },
+          },
+          sub,
         )
-      : null
+      : null,
   );
 }

@@ -54,7 +54,10 @@
   border-radius: 12px;
   background: linear-gradient(180deg, rgba(167, 139, 250, 0.12), rgba(167, 139, 250, 0.04));
   border: 1px solid var(--stroke);
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 .rx-card-icon {
   font-size: 22px;
@@ -72,7 +75,11 @@
   display: inline-block;
   padding: 0 2px;
   border-radius: 5px;
-  transition: color 0.25s, background 0.25s, box-shadow 0.25s, transform 0.25s;
+  transition:
+    color 0.25s,
+    background 0.25s,
+    box-shadow 0.25s,
+    transform 0.25s;
 }
 /* Dígito actualmente bajo examen */
 .rx-digit.rx-digit-on {
@@ -86,7 +93,9 @@
 .rx-card.rx-active {
   transform: translateY(-6px) scale(1.06);
   border-color: var(--violet);
-  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.55), 0 10px 24px -10px rgba(167, 139, 250, 0.7);
+  box-shadow:
+    0 0 0 2px rgba(167, 139, 250, 0.55),
+    0 10px 24px -10px rgba(167, 139, 250, 0.7);
 }
 
 /* Recolectada: pequeño pop al rearmar la fila */
@@ -108,7 +117,9 @@
 .rx-card.rx-sorted {
   animation: rx-win 0.5s ease both;
   border-color: rgba(52, 211, 153, 0.6);
-  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.45), 0 10px 24px -10px rgba(52, 211, 153, 0.6);
+  box-shadow:
+    0 0 0 2px rgba(52, 211, 153, 0.45),
+    0 10px 24px -10px rgba(52, 211, 153, 0.6);
 }
 @keyframes rx-win {
   0% {
@@ -143,7 +154,10 @@
   border-radius: 12px;
   border: 1px solid var(--stroke);
   background: rgba(255, 255, 255, 0.02);
-  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s,
+    background 0.3s;
 }
 .rx-bin-label {
   display: grid;
@@ -156,7 +170,10 @@
   color: var(--ink-faint);
   background: var(--panel-strong, rgba(255, 255, 255, 0.07));
   border: 1px solid var(--stroke);
-  transition: color 0.3s, background 0.3s, border-color 0.3s;
+  transition:
+    color 0.3s,
+    background 0.3s,
+    border-color 0.3s;
 }
 .rx-bin-body {
   display: flex;

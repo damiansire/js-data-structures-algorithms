@@ -23,7 +23,7 @@ const A_CODE = 'A'.charCodeAt(0);
 const CSS_HREF = './css/scene-caesar-cipher.css';
 if (!document.querySelector(`link[data-scene="caesar-cipher"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'caesar-cipher' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'caesar-cipher' } }),
   );
 }
 
@@ -31,7 +31,8 @@ if (!document.querySelector(`link[data-scene="caesar-cipher"]`)) {
 const STRINGS = {
   en: {
     ready: 'Ready to play. Spin the ring to read the secret message.',
-    reset: 'Ready to play. The outer ring is the plaintext; the inner ring is rotated by the shift.',
+    reset:
+      'Ready to play. The outer ring is the plaintext; the inner ring is rotated by the shift.',
     ringOuterLabel: 'PLAINTEXT',
     ringInnerLabel: `+${SHIFT} CIPHER`,
     plaintextLabel: 'Plaintext',
@@ -45,14 +46,13 @@ const STRINGS = {
     cardComplexitySub: 'one pass',
     encode: (plain, cipher) =>
       `Letter <span class="mono">${plain}</span> on the outer ring lines up with <span class="mono">${cipher}</span> on the inner ring → cipher <span class="mono">${cipher}</span>.`,
-    skip: () =>
-      `A space stays a space — only letters ride the ring.`,
-    done: (out) =>
-      `Message encoded → <span class="mono">${out}</span> ✨`,
+    skip: () => `A space stays a space — only letters ride the ring.`,
+    done: (out) => `Message encoded → <span class="mono">${out}</span> ✨`,
   },
   es: {
     ready: 'Listo para reproducir. Girá el anillo para leer el mensaje secreto.',
-    reset: 'Listo para reproducir. El anillo externo es el texto plano; el interno está rotado por el desplazamiento.',
+    reset:
+      'Listo para reproducir. El anillo externo es el texto plano; el interno está rotado por el desplazamiento.',
     ringOuterLabel: 'TEXTO PLANO',
     ringInnerLabel: `+${SHIFT} CIFRADO`,
     plaintextLabel: 'Texto plano',
@@ -66,10 +66,8 @@ const STRINGS = {
     cardComplexitySub: 'una pasada',
     encode: (plain, cipher) =>
       `La letra <span class="mono">${plain}</span> del anillo externo se alinea con <span class="mono">${cipher}</span> del anillo interno → cifra <span class="mono">${cipher}</span>.`,
-    skip: () =>
-      `Un espacio sigue siendo espacio — solo las letras viajan en el anillo.`,
-    done: (out) =>
-      `Mensaje cifrado → <span class="mono">${out}</span> ✨`,
+    skip: () => `Un espacio sigue siendo espacio — solo las letras viajan en el anillo.`,
+    done: (out) => `Mensaje cifrado → <span class="mono">${out}</span> ✨`,
   },
 };
 
@@ -142,7 +140,7 @@ export default function mountCaesarCipher(host, meta) {
     'div',
     { class: 'cae-hub' },
     el('span', { class: 'cae-hub-shift mono' }, `+${SHIFT}`),
-    el('span', { class: 'cae-hub-label' }, S.shiftLabel)
+    el('span', { class: 'cae-hub-label' }, S.shiftLabel),
   );
   const pointer = el('div', { class: 'cae-pointer' });
 
@@ -154,7 +152,7 @@ export default function mountCaesarCipher(host, meta) {
     outerRing,
     innerRing,
     hub,
-    pointer
+    pointer,
   );
 
   // ── Tira del mensaje + salida cifrada (letra por letra) ─────────────
@@ -167,9 +165,13 @@ export default function mountCaesarCipher(host, meta) {
     const pc = el(
       'span',
       { class: 'cae-cell cae-cell-plain mono' + (isSpace ? ' cae-cell-space' : '') },
-      isSpace ? '␣' : MESSAGE[i]
+      isSpace ? '␣' : MESSAGE[i],
     );
-    const cc = el('span', { class: 'cae-cell cae-cell-cipher mono' + (isSpace ? ' cae-cell-space' : '') }, '·');
+    const cc = el(
+      'span',
+      { class: 'cae-cell cae-cell-cipher mono' + (isSpace ? ' cae-cell-space' : '') },
+      '·',
+    );
     plainCells.push(pc);
     cipherCells.push(cc);
     plainRow.append(pc);
@@ -178,22 +180,24 @@ export default function mountCaesarCipher(host, meta) {
   const strip = el(
     'div',
     { class: 'cae-strip' },
-    el('div', { class: 'cae-strip-line' },
-      el('span', { class: 'cae-strip-label' }, S.plaintextLabel), plainRow),
+    el(
+      'div',
+      { class: 'cae-strip-line' },
+      el('span', { class: 'cae-strip-label' }, S.plaintextLabel),
+      plainRow,
+    ),
     el('div', { class: 'cae-strip-arrow' }, '↓'),
-    el('div', { class: 'cae-strip-line' },
-      el('span', { class: 'cae-strip-label cae-strip-label-out' }, S.ciphertextLabel), cipherRow)
+    el(
+      'div',
+      { class: 'cae-strip-line' },
+      el('span', { class: 'cae-strip-label cae-strip-label-out' }, S.ciphertextLabel),
+      cipherRow,
+    ),
   );
 
   // ── Lienzo ──────────────────────────────────────────────────────────
   const narrator = el('div', { class: 'narrator' }, S.ready);
-  const canvas = el(
-    'div',
-    { class: 'stage-canvas cae-stage' },
-    wheel,
-    strip,
-    narrator
-  );
+  const canvas = el('div', { class: 'stage-canvas cae-stage' }, wheel, strip, narrator);
 
   // ── Helpers de render ───────────────────────────────────────────────
   function setNarration(html) {
@@ -278,7 +282,7 @@ export default function mountCaesarCipher(host, meta) {
     infoCard(S.cardFormulaTitle, el('span', { class: 'big' }, `+${SHIFT}`), S.cardFormulaSub),
     infoCard(S.cardComplexityTitle, el('span', { class: 'big' }, 'O(n)'), S.cardComplexitySub),
     infoCard(S.plaintextLabel, el('code', {}, MESSAGE), null),
-    infoCard(S.ciphertextLabel, el('code', {}, CIPHERTEXT), null)
+    infoCard(S.ciphertextLabel, el('code', {}, CIPHERTEXT), null),
   );
 
   clear(host);
@@ -298,6 +302,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

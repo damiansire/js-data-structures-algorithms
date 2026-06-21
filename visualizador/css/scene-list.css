@@ -34,7 +34,9 @@
   border-radius: 16px 22px 12px 12px;
   background: linear-gradient(160deg, #2a2a44, #15152a);
   border: 1px solid var(--stroke-strong);
-  box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.7), inset 0 2px 8px rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 14px 30px -12px rgba(0, 0, 0, 0.7),
+    inset 0 2px 8px rgba(255, 255, 255, 0.08);
   display: grid;
   place-items: center;
   margin-right: 2px;
@@ -56,9 +58,17 @@
   animation: ll-smoke 2.4s ease-in-out infinite;
 }
 @keyframes ll-smoke {
-  0% { transform: translateY(0) scale(0.6); opacity: 0; }
-  30% { opacity: 0.6; }
-  100% { transform: translateY(-46px) translateX(-10px) scale(1.5); opacity: 0; }
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-46px) translateX(-10px) scale(1.5);
+    opacity: 0;
+  }
 }
 
 /* Riel donde viven vagones y enganches */
@@ -80,10 +90,14 @@
   color: #07101a;
   font-weight: 800;
   border: 1.5px solid rgba(255, 255, 255, 0.45);
-  box-shadow: 0 10px 22px -8px rgba(0, 0, 0, 0.7),
+  box-shadow:
+    0 10px 22px -8px rgba(0, 0, 0, 0.7),
     inset 0 3px 10px rgba(255, 255, 255, 0.4),
     inset 0 -4px 10px rgba(0, 0, 0, 0.18);
-  transition: box-shadow 0.3s, transform 0.3s, filter 0.3s;
+  transition:
+    box-shadow 0.3s,
+    transform 0.3s,
+    filter 0.3s;
 }
 .ll-car-val {
   font-family: var(--mono);
@@ -110,16 +124,22 @@
 }
 
 .ll-car.is-head {
-  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.85),
-    0 10px 22px -8px rgba(0, 0, 0, 0.7), inset 0 3px 10px rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 0 0 2px rgba(34, 211, 238, 0.85),
+    0 10px 22px -8px rgba(0, 0, 0, 0.7),
+    inset 0 3px 10px rgba(255, 255, 255, 0.4);
 }
 .ll-car.is-last {
-  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.9),
-    0 10px 22px -8px rgba(0, 0, 0, 0.7), inset 0 3px 10px rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 0 0 2px rgba(52, 211, 153, 0.9),
+    0 10px 22px -8px rgba(0, 0, 0, 0.7),
+    inset 0 3px 10px rgba(255, 255, 255, 0.4);
 }
 .ll-car.is-head.is-last {
-  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.95),
-    0 10px 22px -8px rgba(0, 0, 0, 0.7), inset 0 3px 10px rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 0 0 2px rgba(167, 139, 250, 0.95),
+    0 10px 22px -8px rgba(0, 0, 0, 0.7),
+    inset 0 3px 10px rgba(255, 255, 255, 0.4);
 }
 
 /* Banderines head / last sobre el vagón */
@@ -144,8 +164,14 @@
   background: var(--green);
   box-shadow: 0 4px 10px -3px rgba(52, 211, 153, 0.7);
 }
-.ll-car.is-head.is-last .ll-flag-head { left: 50%; transform: translateX(-115%); }
-.ll-car.is-head.is-last .ll-flag-last { right: 50%; transform: translateX(115%); }
+.ll-car.is-head.is-last .ll-flag-head {
+  left: 50%;
+  transform: translateX(-115%);
+}
+.ll-car.is-head.is-last .ll-flag-last {
+  right: 50%;
+  transform: translateX(115%);
+}
 
 /* ── Enganche = puntero next (cadena + flechita) ──────────────────── */
 .ll-link {
@@ -197,11 +223,7 @@
 }
 /* La cola: next = null */
 .ll-link.is-null .ll-link-chain {
-  background: repeating-linear-gradient(
-    90deg,
-    rgba(118, 116, 154, 0.5) 0 4px,
-    transparent 4px 9px
-  );
+  background: repeating-linear-gradient(90deg, rgba(118, 116, 154, 0.5) 0 4px, transparent 4px 9px);
 }
 .ll-link.is-null .ll-link-arrow {
   color: var(--ink-faint);
@@ -219,14 +241,29 @@
   animation: ll-chain-snap 0.6s ease;
 }
 @keyframes ll-couple {
-  0% { transform: scale(0.2) rotate(-90deg); color: var(--amber); }
-  60% { transform: scale(1.35) rotate(10deg); }
-  100% { transform: scale(1) rotate(0); }
+  0% {
+    transform: scale(0.2) rotate(-90deg);
+    color: var(--amber);
+  }
+  60% {
+    transform: scale(1.35) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
 }
 @keyframes ll-chain-snap {
-  0% { transform: translateY(-50%) scaleX(0.1); opacity: 0; }
-  60% { transform: translateY(-50%) scaleX(1.08); opacity: 1; }
-  100% { transform: translateY(-50%) scaleX(1); }
+  0% {
+    transform: translateY(-50%) scaleX(0.1);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-50%) scaleX(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50%) scaleX(1);
+  }
 }
 
 /* ── Vagón que CAE desde arriba con rebote al engancharse ─────────── */
@@ -234,11 +271,22 @@
   animation: ll-drop 0.62s cubic-bezier(0.3, 1.55, 0.5, 1);
 }
 @keyframes ll-drop {
-  0% { transform: translateY(-300px) rotate(-6deg); opacity: 0; }
-  55% { opacity: 1; }
-  72% { transform: translateY(0) scaleY(0.82) scaleX(1.08); }
-  86% { transform: translateY(-14px); }
-  100% { transform: translateY(0) scale(1); }
+  0% {
+    transform: translateY(-300px) rotate(-6deg);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  72% {
+    transform: translateY(0) scaleY(0.82) scaleX(1.08);
+  }
+  86% {
+    transform: translateY(-14px);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* ── Vagón que se desengancha y SALE ──────────────────────────────── */
@@ -247,14 +295,20 @@
   z-index: 1;
 }
 @keyframes ll-depart-tail {
-  to { transform: translate(160px, -40px) rotate(16deg); opacity: 0; }
+  to {
+    transform: translate(160px, -40px) rotate(16deg);
+    opacity: 0;
+  }
 }
 .ll-leave-front {
   animation: ll-depart-head 0.5s cubic-bezier(0.4, 0, 0.7, 0.4) forwards;
   z-index: 1;
 }
 @keyframes ll-depart-head {
-  to { transform: translate(-160px, -40px) rotate(-16deg); opacity: 0; }
+  to {
+    transform: translate(-160px, -40px) rotate(-16deg);
+    opacity: 0;
+  }
 }
 /* Cadena que se rompe al borrar */
 .ll-link-break .ll-link-chain {
@@ -264,10 +318,17 @@
   animation: ll-arrow-fade 0.5s ease forwards;
 }
 @keyframes ll-break {
-  to { transform: translateY(-50%) scaleX(0.1); opacity: 0; }
+  to {
+    transform: translateY(-50%) scaleX(0.1);
+    opacity: 0;
+  }
 }
 @keyframes ll-arrow-fade {
-  to { transform: scale(0.3) rotate(60deg); opacity: 0; color: var(--rose); }
+  to {
+    transform: scale(0.3) rotate(60deg);
+    opacity: 0;
+    color: var(--rose);
+  }
 }
 
 .ll-empty {
@@ -303,11 +364,21 @@
   color: var(--ink-faint);
   margin-top: 2px;
 }
-.ll-legend-head b { background: var(--cyan); }
-.ll-legend-last b { background: var(--green); }
+.ll-legend-head b {
+  background: var(--cyan);
+}
+.ll-legend-last b {
+  background: var(--green);
+}
 
 @media (max-width: 560px) {
-  .ll-legends { display: none; }
-  .ll-car { width: 78px; }
-  .ll-link { width: 38px; }
+  .ll-legends {
+    display: none;
+  }
+  .ll-car {
+    width: 78px;
+  }
+  .ll-link {
+    width: 38px;
+  }
 }

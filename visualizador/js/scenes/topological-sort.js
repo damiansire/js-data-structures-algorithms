@@ -26,7 +26,7 @@ import { getLang } from '../i18n.js';
 const CSS_HREF = './css/scene-topological-sort.css';
 if (!document.querySelector('link[data-scene="topological-sort"]')) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'topological-sort' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'topological-sort' } }),
   );
 }
 
@@ -43,10 +43,8 @@ const STRINGS = {
       `${emoji} ${tag(label)} needs nothing first (in-degree 0) → put it on. ✨`,
     removeEdge: (from, to, emoji, deg) =>
       `Remove ${tag(from)} → ${tag(to)}: ${emoji} ${tag(to)} needs 1 fewer. in-degree → ${tag(deg)}.`,
-    freed: (label, emoji) =>
-      `${emoji} ${tag(label)} reaches in-degree 0 — it can be put on next.`,
-    done: (order) =>
-      `Fully dressed! A valid order: ${tag(order)} ✨`,
+    freed: (label, emoji) => `${emoji} ${tag(label)} reaches in-degree 0 — it can be put on next.`,
+    done: (order) => `Fully dressed! A valid order: ${tag(order)} ✨`,
     cardAlgoTitle: 'Algorithm',
     cardAlgoSub: "Kahn's, in-degree 0 first",
     cardComplexityTitle: 'Complexity',
@@ -64,10 +62,8 @@ const STRINGS = {
       `${emoji} ${tag(label)} no necesita nada antes (in-degree 0) → se pone. ✨`,
     removeEdge: (from, to, emoji, deg) =>
       `Quito ${tag(from)} → ${tag(to)}: ${emoji} ${tag(to)} necesita 1 menos. in-degree → ${tag(deg)}.`,
-    freed: (label, emoji) =>
-      `${emoji} ${tag(label)} llega a in-degree 0 — se puede poner ahora.`,
-    done: (order) =>
-      `¡Vestido completo! Un orden válido: ${tag(order)} ✨`,
+    freed: (label, emoji) => `${emoji} ${tag(label)} llega a in-degree 0 — se puede poner ahora.`,
+    done: (order) => `¡Vestido completo! Un orden válido: ${tag(order)} ✨`,
     cardAlgoTitle: 'Algoritmo',
     cardAlgoSub: 'Kahn, in-degree 0 primero',
     cardComplexityTitle: 'Complejidad',
@@ -187,7 +183,7 @@ export default function mountTopologicalSort(host) {
       { class: 'tsg-node' },
       el('span', { class: 'tsg-emoji' }, n.emoji),
       el('span', { class: 'tsg-label' }, n[lang]),
-      badge
+      badge,
     );
     node.style.left = n.x + '%';
     node.style.top = n.y + '%';
@@ -225,7 +221,7 @@ export default function mountTopologicalSort(host) {
     'div',
     { class: 'tsg-order-wrap' },
     el('span', { class: 'tsg-zone-label' }, S.orderLabel),
-    orderRow
+    orderRow,
   );
 
   const narrator = el('div', { class: 'narrator' }, S.ready);
@@ -235,7 +231,7 @@ export default function mountTopologicalSort(host) {
     edgesSvg,
     board,
     orderWrap,
-    narrator
+    narrator,
   );
 
   const setNarration = (html) => {
@@ -286,7 +282,7 @@ export default function mountTopologicalSort(host) {
           { class: 'tsg-chip' },
           el('span', { class: 'tsg-chip-num mono' }, String(placedCount)),
           el('span', { class: 'tsg-chip-emoji' }, emojiOf(step.id)),
-          el('span', { class: 'tsg-chip-label' }, labelOf(step.id))
+          el('span', { class: 'tsg-chip-label' }, labelOf(step.id)),
         );
         orderRow.append(chip);
         requestAnimationFrame(() => chip.classList.add('tsg-chip-in'));
@@ -349,11 +345,7 @@ export default function mountTopologicalSort(host) {
     { class: 'scene-aside' },
     infoCard(S.cardAlgoTitle, el('span', { class: 'big' }, 'Kahn'), S.cardAlgoSub),
     infoCard(S.cardComplexityTitle, el('span', { class: 'big' }, 'O(V + E)'), S.cardComplexitySub),
-    infoCard(
-      S.cardOrderTitle,
-      el('code', { class: 'tsg-order-code' }, orderText),
-      S.cardOrderSub
-    )
+    infoCard(S.cardOrderTitle, el('code', { class: 'tsg-order-code' }, orderText), S.cardOrderSub),
   );
 
   clear(host);
@@ -371,6 +363,6 @@ function infoCard(title, big, sub) {
     big,
     sub
       ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
-      : null
+      : null,
   );
 }

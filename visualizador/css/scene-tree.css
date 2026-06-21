@@ -50,7 +50,9 @@
   stroke-dasharray: 240;
   stroke-dashoffset: 240;
   opacity: 0;
-  transition: stroke-dashoffset 0.55s cubic-bezier(0.3, 0.8, 0.3, 1), opacity 0.4s,
+  transition:
+    stroke-dashoffset 0.55s cubic-bezier(0.3, 0.8, 0.3, 1),
+    opacity 0.4s,
     stroke 0.4s;
 }
 .tr-link.tr-link-shown {
@@ -79,8 +81,13 @@
   white-space: nowrap;
   opacity: 0;
   z-index: 2;
-  transition: transform 0.5s cubic-bezier(0.34, 1.4, 0.5, 1), opacity 0.4s,
-    box-shadow 0.35s, border-color 0.35s, background 0.35s, filter 0.35s;
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.4, 0.5, 1),
+    opacity 0.4s,
+    box-shadow 0.35s,
+    border-color 0.35s,
+    background 0.35s,
+    filter 0.35s;
   will-change: transform, opacity;
 }
 .tr-node.tr-shown {
@@ -105,7 +112,8 @@
 .tr-node.tr-root {
   background: linear-gradient(180deg, #3a2d5c, #2a2046);
   border-color: color-mix(in srgb, var(--violet) 55%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--violet) 40%, transparent),
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--violet) 40%, transparent),
     0 12px 28px -10px rgba(124, 58, 237, 0.6);
 }
 
@@ -147,7 +155,8 @@
   z-index: 6;
   border-color: var(--amber);
   background: linear-gradient(180deg, #4a3a12, #352a0d);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--amber) 85%, transparent),
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--amber) 85%, transparent),
     0 0 34px -4px rgba(251, 191, 36, 0.7);
 }
 .tr-node.tr-current.tr-shown {

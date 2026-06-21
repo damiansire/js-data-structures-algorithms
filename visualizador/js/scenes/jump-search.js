@@ -76,7 +76,7 @@ const STRINGS = {
 const CSS_HREF = './css/scene-jump-search.css';
 if (!document.querySelector(`link[data-scene="jump-search"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'jump-search' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'jump-search' } }),
   );
 }
 
@@ -190,8 +190,8 @@ export default function mountJumpSearch(host, meta) {
       el('span', { class: 'jmp-val mono' }, String(v)),
       el('span', { class: 'jmp-rock' }, '🪨'),
       el('span', { class: 'jmp-treasure' }, '🏆'),
-      el('span', { class: 'jmp-idx mono' }, '#' + i)
-    )
+      el('span', { class: 'jmp-idx mono' }, '#' + i),
+    ),
   );
   // El buscador que salta de piedra en piedra.
   const hopper = el('div', { class: 'jmp-hopper' }, '🐸');
@@ -201,7 +201,7 @@ export default function mountJumpSearch(host, meta) {
     'div',
     { class: 'jmp-head' },
     el('span', { class: 'jmp-target' }, S.crossing, el('span', { class: 'mono' }, String(TARGET))),
-    el('span', { class: 'jmp-step-tag mono' }, `${S.stepTag} = ⌊√${ARRAY.length}⌋ = ${stepSize}`)
+    el('span', { class: 'jmp-step-tag mono' }, `${S.stepTag} = ⌊√${ARRAY.length}⌋ = ${stepSize}`),
   );
 
   const narrator = el('div', { class: 'narrator' }, S.ready);
@@ -213,7 +213,14 @@ export default function mountJumpSearch(host, meta) {
 
   function clearMarks() {
     stones.forEach((s) =>
-      s.classList.remove('jmp-landed', 'jmp-block', 'jmp-probe', 'jmp-found', 'jmp-fail', 'jmp-passed')
+      s.classList.remove(
+        'jmp-landed',
+        'jmp-block',
+        'jmp-probe',
+        'jmp-found',
+        'jmp-fail',
+        'jmp-passed',
+      ),
     );
     hopper.classList.remove('jmp-hop', 'jmp-back');
   }
@@ -309,11 +316,7 @@ export default function mountJumpSearch(host, meta) {
     infoCard(S.cxTitle, el('span', { class: 'big' }, S.cxBig), S.cxSub),
     infoCard(S.preTitle, el('span', { class: 'big' }, S.preBig), S.preSub),
     infoCard(S.targetTitle, el('code', {}, String(TARGET)), S.targetSub(ARRAY.join(', '))),
-    infoCard(
-      'index',
-      el('span', { class: 'big' }, String(result)),
-      `jumpSearch([…], ${TARGET})`
-    )
+    infoCard('index', el('span', { class: 'big' }, String(result)), `jumpSearch([…], ${TARGET})`),
   );
 
   clear(host);
@@ -332,6 +335,6 @@ function infoCard(title, big, sub) {
     big,
     sub
       ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
-      : null
+      : null,
   );
 }

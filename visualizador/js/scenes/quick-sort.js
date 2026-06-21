@@ -27,10 +27,8 @@ const STRINGS = {
       `Is student <span class="mono">${student}</span> ≤ pivot <span class="mono">${pivot}</span>?`,
     swap: 'Yes → I move them to the left of the pivot.',
     keep: 'Yes, and they are already on the right side.',
-    place: (value) =>
-      `The pivot <span class="mono">${value}</span> lands in its final place.`,
-    settled: (value) =>
-      `<span class="mono">${value}</span> is now in its final position ✔`,
+    place: (value) => `The pivot <span class="mono">${value}</span> lands in its final place.`,
+    settled: (value) => `<span class="mono">${value}</span> is now in its final position ✔`,
     done: 'Row sorted from shortest to tallest! ✨',
     card_avg_title: 'Average',
     card_avg_sub: 'worst case O(n²)',
@@ -49,8 +47,7 @@ const STRINGS = {
     keep: 'Sí, y ya está del lado correcto.',
     place: (value) =>
       `El pivote <span class="mono">${value}</span> aterriza en su lugar definitivo.`,
-    settled: (value) =>
-      `<span class="mono">${value}</span> ya está en su posición final ✔`,
+    settled: (value) => `<span class="mono">${value}</span> ya está en su posición final ✔`,
     done: '¡Fila ordenada de menor a mayor! ✨',
     card_avg_title: 'Promedio',
     card_avg_sub: 'peor caso O(n²)',
@@ -121,7 +118,7 @@ export default function mountQuickSort(host) {
       'div',
       { class: 'qs-bar', style: { height: `${h}px` } },
       el('span', { class: 'qs-cap' }, String(v)),
-      el('span', { class: 'qs-spot' })
+      el('span', { class: 'qs-spot' }),
     );
     b._value = v;
     return b;
@@ -148,9 +145,7 @@ export default function mountQuickSort(host) {
     narrator.innerHTML = html;
   }
   function resetVisual() {
-    bars.forEach((b) =>
-      b.classList.remove('qs-pivot', 'qs-scan', 'qs-settled', 'qs-win')
-    );
+    bars.forEach((b) => b.classList.remove('qs-pivot', 'qs-scan', 'qs-settled', 'qs-win'));
     band.style.opacity = '0';
     slots = bars.slice();
     place(true);
@@ -220,7 +215,7 @@ export default function mountQuickSort(host) {
     { class: 'scene-aside' },
     infoCard(S.card_avg_title, el('span', { class: 'big' }, 'O(n log n)'), S.card_avg_sub),
     infoCard(S.card_part_title, el('span', { class: 'big' }, 'Lomuto'), S.card_part_sub),
-    infoCard(S.card_input_title, el('code', {}, `[${VALUES.join(', ')}]`), S.card_input_sub)
+    infoCard(S.card_input_title, el('code', {}, `[${VALUES.join(', ')}]`), S.card_input_sub),
   );
 
   clear(host);
@@ -236,6 +231,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

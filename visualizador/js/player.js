@@ -169,7 +169,7 @@ export function buildTransport(player) {
     resetBtn,
     el('span', { class: 'spacer' }),
     el('label', { class: 'speed' }, '🐢', speedInput, '🐇', speedVal),
-    progress
+    progress,
   );
 
   // sincroniza el botón con el estado del player

@@ -42,7 +42,9 @@
   stroke-width: 2;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
-  transition: stroke 0.4s ease, stroke-width 0.4s ease;
+  transition:
+    stroke 0.4s ease,
+    stroke-width 0.4s ease;
 }
 /* arista por la que se RETROCEDE: se atenúa (camino abandonado) */
 .dfs-edge-back {
@@ -83,11 +85,16 @@
   place-items: center;
   background: radial-gradient(circle at 34% 28%, #44446e, #24243c 70%);
   border: 1.5px solid var(--stroke-strong, rgba(255, 255, 255, 0.22));
-  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7),
+  box-shadow:
+    0 8px 22px -8px rgba(0, 0, 0, 0.7),
     inset 0 3px 8px rgba(255, 255, 255, 0.1);
   z-index: 2;
-  transition: transform 0.35s cubic-bezier(0.34, 1.5, 0.5, 1), opacity 0.3s,
-    box-shadow 0.35s, border-color 0.35s, background 0.35s;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.5, 0.5, 1),
+    opacity 0.3s,
+    box-shadow 0.35s,
+    border-color 0.35s,
+    background 0.35s;
 }
 .dfs-node-val {
   font-family: var(--mono);
@@ -115,7 +122,8 @@
 .dfs-node.dfs-active {
   background: radial-gradient(circle at 34% 28%, #f9a8d4, #be185d 72%);
   border-color: var(--dfs-accent);
-  box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.55),
+  box-shadow:
+    0 0 0 3px rgba(244, 114, 182, 0.55),
     0 0 30px -4px rgba(244, 114, 182, 0.75);
   z-index: 4;
   transform: scale(1.08);
@@ -132,7 +140,8 @@
 
 /* árbol/recorrido terminado: pulso verde */
 .dfs-node.dfs-done {
-  box-shadow: 0 0 0 1.5px rgba(52, 211, 153, 0.6),
+  box-shadow:
+    0 0 0 1.5px rgba(52, 211, 153, 0.6),
     0 8px 24px -8px rgba(52, 211, 153, 0.5);
   animation: dfs-pop 0.5s ease;
 }

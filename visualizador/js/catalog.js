@@ -237,7 +237,10 @@ export const SCENES = [
     category: 'sorting',
     emoji: '🩰',
     title: 'Selection Sort',
-    scene: { en: 'Picking the shortest dancer each round', es: 'Eligiendo al más bajito cada ronda' },
+    scene: {
+      en: 'Picking the shortest dancer each round',
+      es: 'Eligiendo al más bajito cada ronda',
+    },
     description: {
       en: 'Each round scans the unsorted part for the minimum and brings it to the front of the line.',
       es: 'Cada ronda busca el mínimo de la parte sin ordenar y lo trae al frente de la fila.',
@@ -276,7 +279,10 @@ export const SCENES = [
     category: 'sorting',
     emoji: '📬',
     title: 'Radix Sort',
-    scene: { en: 'Sorting mail by digit, pass by pass', es: 'Correo ordenado por dígito, pasada a pasada' },
+    scene: {
+      en: 'Sorting mail by digit, pass by pass',
+      es: 'Correo ordenado por dígito, pasada a pasada',
+    },
     description: {
       en: 'Buckets the numbers by one digit at a time (ones, tens, hundreds), gathering between passes.',
       es: 'Agrupa los números por un dígito a la vez (unidades, decenas, centenas), reuniéndolos entre pasadas.',
@@ -291,7 +297,10 @@ export const SCENES = [
     category: 'search',
     emoji: '🔦',
     title: 'Linear Search',
-    scene: { en: 'A detective checking a lineup', es: 'Un detective revisando una rueda de sospechosos' },
+    scene: {
+      en: 'A detective checking a lineup',
+      es: 'Un detective revisando una rueda de sospechosos',
+    },
     description: {
       en: 'Checks each suspect one by one, left to right, until the target is found (or nobody matches).',
       es: 'Revisa a cada sospechoso uno por uno, de izquierda a derecha, hasta encontrar el objetivo.',
@@ -317,7 +326,10 @@ export const SCENES = [
     category: 'search',
     emoji: '📖',
     title: 'Interpolation Search',
-    scene: { en: "Guessing a name's page in a phone book", es: 'Adivinando la página en una guía telefónica' },
+    scene: {
+      en: "Guessing a name's page in a phone book",
+      es: 'Adivinando la página en una guía telefónica',
+    },
     description: {
       en: 'Estimates where the target likely sits (proportional to its value) instead of always probing the middle.',
       es: 'Estima dónde está probablemente el objetivo (proporcional a su valor) en vez de probar siempre el medio.',
@@ -412,7 +424,10 @@ export const SCENES = [
     category: 'strings',
     emoji: '✏️',
     title: 'Levenshtein',
-    scene: { en: 'Autocorrect morphing one word into another', es: 'El autocorrector transformando una palabra en otra' },
+    scene: {
+      en: 'Autocorrect morphing one word into another',
+      es: 'El autocorrector transformando una palabra en otra',
+    },
     description: {
       en: 'Fills a DP grid of edits (insert, delete, replace) to measure how far one word is from another.',
       es: 'Llena una grilla DP de ediciones (insertar, borrar, reemplazar) para medir qué tan lejos está una palabra de otra.',
@@ -440,7 +455,10 @@ export const SCENES = [
     category: 'math',
     emoji: '🟦',
     title: 'Euclid’s GCD',
-    scene: { en: 'Tiling a rectangle with the biggest square', es: 'Embaldosar un rectángulo con el cuadrado más grande' },
+    scene: {
+      en: 'Tiling a rectangle with the biggest square',
+      es: 'Embaldosar un rectángulo con el cuadrado más grande',
+    },
     description: {
       en: 'Repeatedly carves the largest possible square out of a rectangle; the final tile size is the GCD.',
       es: 'Recorta repetidamente el cuadrado más grande posible de un rectángulo; el último azulejo es el MCD.',
@@ -453,7 +471,10 @@ export const SCENES = [
     category: 'math',
     emoji: '🔢',
     title: 'Sieve of Eratosthenes',
-    scene: { en: 'Crossing out multiples on a number grid', es: 'Tachando múltiplos en una grilla de números' },
+    scene: {
+      en: 'Crossing out multiples on a number grid',
+      es: 'Tachando múltiplos en una grilla de números',
+    },
     description: {
       en: 'Each prime glows and its multiples get crossed out; whatever survives the grid is prime.',
       es: 'Cada primo brilla y sus múltiplos se tachan; lo que sobrevive en la grilla es primo.',
@@ -466,7 +487,10 @@ export const SCENES = [
     category: 'math',
     emoji: '🗼',
     title: 'Tower of Hanoi',
-    scene: { en: 'Moving golden disks between three pegs', es: 'Moviendo discos dorados entre tres varillas' },
+    scene: {
+      en: 'Moving golden disks between three pegs',
+      es: 'Moviendo discos dorados entre tres varillas',
+    },
     description: {
       en: 'A recursive dance: move n−1 disks aside, move the biggest, then move the rest on top of it.',
       es: 'Una danza recursiva: mover n−1 discos a un lado, mover el más grande y luego el resto encima.',

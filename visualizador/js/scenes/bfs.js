@@ -31,8 +31,7 @@ const STRINGS = {
       `Dequeue ${tag(n)} (level <span class="mono">${lvl}</span>): we explore its neighbors.`,
     enqueue: (v, u, lvl) =>
       `Neighbor ${tag(v)} is unvisited → mark it (level <span class="mono">${lvl}</span>), light the edge ${tag(u)}–${tag(v)} and enqueue it.`,
-    skip: (v, u) =>
-      `Neighbor ${tag(v)} is already visited → skip the edge ${tag(u)}–${tag(v)}.`,
+    skip: (v, u) => `Neighbor ${tag(v)} is already visited → skip the edge ${tag(u)}–${tag(v)}.`,
     done: (n) =>
       `Queue empty: every node reached. ${tag(n)} nodes coloured by their ripple distance from A ✨`,
     queueTitle: 'Queue',
@@ -173,7 +172,7 @@ const edgeKey = (a, b) => (a < b ? `${a}|${b}` : `${b}|${a}`);
 const CSS_HREF = './css/scene-bfs.css';
 if (!document.querySelector(`link[data-scene="bfs"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'bfs' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'bfs' } }),
   );
 }
 
@@ -210,7 +209,7 @@ export default function mountBFS(host, meta = {}) {
       'div',
       { class: 'bfs-node', dataset: { id: n.id } },
       el('span', { class: 'bfs-ripple' }),
-      el('span', { class: 'bfs-node-val' }, n.id)
+      el('span', { class: 'bfs-node-val' }, n.id),
     );
     node.style.left = n.x + '%';
     node.style.top = n.y + '%';
@@ -231,7 +230,7 @@ export default function mountBFS(host, meta = {}) {
     { class: 'info-card bfs-queue-card' },
     el('h4', {}, S.queueTitle),
     queueRow,
-    el('div', { class: 'bfs-queue-hint' }, S.queueHint)
+    el('div', { class: 'bfs-queue-hint' }, S.queueHint),
   );
 
   const visitedBig = el('span', { class: 'big' }, '0');
@@ -248,8 +247,8 @@ export default function mountBFS(host, meta = {}) {
           class: 'bfs-legend-dot',
           style: { '--bfs-level': String(lvl), '--bfs-max': String(maxLevel) },
         }),
-        el('span', { class: 'mono' }, String(lvl))
-      )
+        el('span', { class: 'mono' }, String(lvl)),
+      ),
     );
   }
   const levelsCard = el(
@@ -257,7 +256,7 @@ export default function mountBFS(host, meta = {}) {
     { class: 'info-card bfs-levels-card' },
     el('h4', {}, S.levelsTitle),
     legend,
-    el('div', { class: 'bfs-sub' }, S.levelsSub)
+    el('div', { class: 'bfs-sub' }, S.levelsSub),
   );
 
   // ── Helpers de render ──
@@ -391,14 +390,10 @@ export default function mountBFS(host, meta = {}) {
   const aside = el(
     'div',
     { class: 'scene-aside' },
-    infoCard(
-      S.cardAlgo,
-      el('span', { class: 'big' }, 'O(V+E)'),
-      S.cardAlgoSub
-    ),
+    infoCard(S.cardAlgo, el('span', { class: 'big' }, 'O(V+E)'), S.cardAlgoSub),
     queueCard,
     visitedCard,
-    levelsCard
+    levelsCard,
   );
 
   clear(host);
@@ -414,6 +409,6 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { class: 'bfs-sub' }, sub) : null
+    sub ? el('div', { class: 'bfs-sub' }, sub) : null,
   );
 }

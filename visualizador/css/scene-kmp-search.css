@@ -17,11 +17,8 @@
   justify-content: center;
   gap: 30px;
   padding: 28px 30px 64px; /* deja ~56px abajo libre para el narrador */
-  background: radial-gradient(
-      130% 90% at 50% -10%,
-      rgba(251, 146, 60, 0.1),
-      transparent 60%
-    ),
+  background:
+    radial-gradient(130% 90% at 50% -10%, rgba(251, 146, 60, 0.1), transparent 60%),
     linear-gradient(180deg, rgba(251, 146, 60, 0.03), rgba(0, 0, 0, 0.18));
 }
 
@@ -61,9 +58,14 @@
   place-items: center;
   background: linear-gradient(180deg, #34344f, #232338);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 6px 14px -8px rgba(0, 0, 0, 0.7),
+  box-shadow:
+    0 6px 14px -8px rgba(0, 0, 0, 0.7),
     inset 0 2px 6px rgba(255, 255, 255, 0.1);
-  transition: transform 0.25s, box-shadow 0.25s, background 0.25s, filter 0.25s;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s,
+    background 0.25s,
+    filter 0.25s;
 }
 .kmp-tile-ch {
   font-family: var(--mono);
@@ -82,14 +84,16 @@
 
 /* texto: el carácter bajo comparación (parpadeo de evaluación) */
 .kmp-tile.kmp-compare {
-  box-shadow: 0 0 0 2px var(--kmp-orange),
+  box-shadow:
+    0 0 0 2px var(--kmp-orange),
     0 10px 22px -8px rgba(251, 146, 60, 0.6);
   background: linear-gradient(180deg, #3e3344, #2a2233);
 }
 /* coincidencia confirmada → verde */
 .kmp-tile.kmp-matched {
   background: linear-gradient(180deg, rgba(52, 211, 153, 0.28), rgba(52, 211, 153, 0.12));
-  box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.55),
+  box-shadow:
+    0 0 0 1px rgba(52, 211, 153, 0.55),
     0 8px 18px -8px rgba(52, 211, 153, 0.5);
 }
 .kmp-tile.kmp-matched .kmp-tile-ch {
@@ -98,7 +102,9 @@
 /* match completo del patrón en el texto → resaltado dorado */
 .kmp-tile.kmp-found {
   background: linear-gradient(180deg, rgba(251, 191, 36, 0.32), rgba(251, 191, 36, 0.14));
-  box-shadow: 0 0 0 2px var(--amber), 0 0 26px -4px rgba(251, 191, 36, 0.7);
+  box-shadow:
+    0 0 0 2px var(--amber),
+    0 0 26px -4px rgba(251, 191, 36, 0.7);
   animation: kmp-pop 0.5s ease;
 }
 .kmp-tile.kmp-found .kmp-tile-ch {
@@ -242,7 +248,10 @@
   border-radius: 8px;
   background: var(--panel);
   border: 1px solid var(--stroke);
-  transition: background 0.25s, border-color 0.25s, transform 0.25s;
+  transition:
+    background 0.25s,
+    border-color 0.25s,
+    transform 0.25s;
 }
 .kmp-lps-key {
   font-size: 13px;

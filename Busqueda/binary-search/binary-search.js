@@ -9,7 +9,7 @@
  * @returns {number} El índice del elemento, o -1 si no se encuentra.
  */
 function binarySearch(arr, element) {
-    return recursiveSearch(arr, element, 0, arr.length - 1);
+  return recursiveSearch(arr, element, 0, arr.length - 1);
 }
 
 /**
@@ -21,23 +21,23 @@ function binarySearch(arr, element) {
  * @returns {number} El índice del elemento, o -1 si no se encuentra.
  */
 function recursiveSearch(arr, element, bottonIndex, topIndex) {
-    if (bottonIndex > topIndex) {
-        return -1;
-    }
+  if (bottonIndex > topIndex) {
+    return -1;
+  }
 
-    var middle = Math.floor((bottonIndex + topIndex) / 2);
+  var middle = Math.floor((bottonIndex + topIndex) / 2);
 
-    if (arr[middle] === element) {
-        return middle;
-    }
+  if (arr[middle] === element) {
+    return middle;
+  }
 
-    if (arr[middle] > element) {
-        topIndex = middle - 1;
-    } else {
-        bottonIndex = middle + 1;
-    }
+  if (arr[middle] > element) {
+    topIndex = middle - 1;
+  } else {
+    bottonIndex = middle + 1;
+  }
 
-    return recursiveSearch(arr, element, bottonIndex, topIndex);
+  return recursiveSearch(arr, element, bottonIndex, topIndex);
 }
 
 module.exports = { binarySearch };

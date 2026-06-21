@@ -81,7 +81,7 @@ const tag = (v) => `<span class="mono">${v}</span>`;
 const CSS_HREF = './css/scene-kruskal-mst.css';
 if (!document.querySelector(`link[data-scene="kruskal-mst"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'kruskal-mst' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'kruskal-mst' } }),
   );
 }
 
@@ -310,7 +310,7 @@ export default function mountKruskal(host, meta = {}) {
       'div',
       { class: 'krk-node' },
       el('span', { class: 'krk-node-icon' }, '🏝️'),
-      el('span', { class: 'krk-node-id mono' }, n.id)
+      el('span', { class: 'krk-node-id mono' }, n.id),
     );
     node.style.left = leftPct(n.x) + '%';
     node.style.top = topPct(n.y) + '%';
@@ -333,18 +333,13 @@ export default function mountKruskal(host, meta = {}) {
     { class: 'info-card' },
     el('h4', {}, S.cardCostTitle),
     costBig,
-    costSub
+    costSub,
   );
 
   const edgesList = el('div', { class: 'krk-edges-list' });
   const edgesEmpty = el('span', { class: 'krk-edges-empty' }, S.cardEdgesEmpty);
   edgesList.append(edgesEmpty);
-  const edgesCard = el(
-    'div',
-    { class: 'info-card' },
-    el('h4', {}, S.cardEdgesTitle),
-    edgesList
-  );
+  const edgesCard = el('div', { class: 'info-card' }, el('h4', {}, S.cardEdgesTitle), edgesList);
 
   const groupsBig = el('span', { class: 'big' }, String(NODES.length));
   const groupsSub = el('div', { class: 'krk-card-sub' }, S.cardGroupsSub(NODES.length));
@@ -353,7 +348,7 @@ export default function mountKruskal(host, meta = {}) {
     { class: 'info-card' },
     el('h4', {}, S.cardGroupsTitle),
     groupsBig,
-    groupsSub
+    groupsSub,
   );
 
   const legend = el(
@@ -367,8 +362,8 @@ export default function mountKruskal(host, meta = {}) {
       { class: 'krk-legend-items' },
       legendItem('krk-dot-consider', S.legendConsider),
       legendItem('krk-dot-accept', S.legendAccept),
-      legendItem('krk-dot-reject', S.legendReject)
-    )
+      legendItem('krk-dot-reject', S.legendReject),
+    ),
   );
 
   const aside = el('div', { class: 'scene-aside' }, costCard, edgesCard, groupsCard, legend);
@@ -429,8 +424,8 @@ export default function mountKruskal(host, meta = {}) {
           'span',
           { class: 'krk-edge-chip mono' },
           `${c.a}–${c.b}`,
-          el('span', { class: 'krk-edge-chip-w' }, String(c.w))
-        )
+          el('span', { class: 'krk-edge-chip-w' }, String(c.w)),
+        ),
       );
     });
   }
@@ -534,6 +529,6 @@ function legendItem(dotClass, label) {
     'span',
     { class: 'krk-legend-item' },
     el('span', { class: `krk-dot ${dotClass}` }),
-    label
+    label,
   );
 }

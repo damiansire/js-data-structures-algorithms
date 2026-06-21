@@ -112,7 +112,7 @@ export default function mountBubbleSort(host, meta) {
           animationDelay: `${(i * 0.7).toFixed(2)}s`,
           animationDuration: `${(4 + Math.random() * 3).toFixed(2)}s`,
         },
-      })
+      }),
     );
   }
 
@@ -134,7 +134,7 @@ export default function mountBubbleSort(host, meta) {
           '--h': String(h),
         },
       },
-      el('span', { class: 'bs-val' }, String(v))
+      el('span', { class: 'bs-val' }, String(v)),
     );
     b._value = v;
     b._home = i;
@@ -231,11 +231,7 @@ export default function mountBubbleSort(host, meta) {
     { class: 'scene-aside' },
     infoCard(S.card_algo_title, el('span', { class: 'big' }, 'O(n²)'), S.card_algo_sub),
     infoCard(S.card_input_title, el('code', {}, `[${VALUES.join(', ')}]`), S.card_input_sub),
-    infoCard(
-      S.card_trick_title,
-      el('span', { class: 'big' }, 'swapped'),
-      S.card_trick_sub
-    )
+    infoCard(S.card_trick_title, el('span', { class: 'big' }, 'swapped'), S.card_trick_sub),
   );
 
   clear(host);
@@ -259,6 +255,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

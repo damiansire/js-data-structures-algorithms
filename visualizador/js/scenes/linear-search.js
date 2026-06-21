@@ -27,8 +27,7 @@ const STRINGS = {
     lineupLabel: 'POLICE LINEUP',
     check: (i, value) =>
       `Checking suspect #<span class="mono">${i}</span> → <span class="mono">${value}</span>. Does it match?`,
-    miss: (value) =>
-      `<span class="mono">${value}</span> isn't the one. The detective moves on. 🔦`,
+    miss: (value) => `<span class="mono">${value}</span> isn't the one. The detective moves on. 🔦`,
     found: (i, value) =>
       `Match! Suspect #<span class="mono">${i}</span> is <span class="mono">${value}</span>. Returns index <span class="mono">${i}</span>. 🏅`,
     notfound: () =>
@@ -47,8 +46,7 @@ const STRINGS = {
     lineupLabel: 'RUEDA DE RECONOCIMIENTO',
     check: (i, value) =>
       `Reviso al sospechoso #<span class="mono">${i}</span> → <span class="mono">${value}</span>. ¿Coincide?`,
-    miss: (value) =>
-      `<span class="mono">${value}</span> no es. El detective sigue de largo. 🔦`,
+    miss: (value) => `<span class="mono">${value}</span> no es. El detective sigue de largo. 🔦`,
     found: (i, value) =>
       `¡Coincide! El sospechoso #<span class="mono">${i}</span> es <span class="mono">${value}</span>. Devuelve el índice <span class="mono">${i}</span>. 🏅`,
     notfound: () =>
@@ -67,7 +65,7 @@ const STRINGS = {
 const CSS_HREF = './css/scene-linear-search.css';
 if (!document.querySelector(`link[data-scene="linear-search"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'linear-search' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'linear-search' } }),
   );
 }
 
@@ -101,7 +99,7 @@ export default function mountLinearSearch(host, meta) {
       el('div', { class: 'lse-mug' }, '🧑'),
       el('div', { class: 'lse-num mono' }, String(v)),
       el('div', { class: 'lse-tag mono' }, '#' + i),
-      el('div', { class: 'lse-lens' }, '🔍')
+      el('div', { class: 'lse-lens' }, '🔍'),
     );
     return card;
   });
@@ -110,7 +108,7 @@ export default function mountLinearSearch(host, meta) {
     'div',
     { class: 'lse-lineup-wrap' },
     el('span', { class: 'lse-zone-label' }, S.lineupLabel),
-    lineup
+    lineup,
   );
 
   const target = el(
@@ -118,17 +116,11 @@ export default function mountLinearSearch(host, meta) {
     { class: 'lse-target' },
     el('span', { class: 'lse-target-icon' }, '🕵️'),
     S.searching,
-    el('span', { class: 'mono lse-target-val' }, String(TARGET))
+    el('span', { class: 'mono lse-target-val' }, String(TARGET)),
   );
 
   const narrator = el('div', { class: 'narrator' }, S.ready);
-  const canvas = el(
-    'div',
-    { class: 'stage-canvas lse-stage' },
-    target,
-    lineupWrap,
-    narrator
-  );
+  const canvas = el('div', { class: 'stage-canvas lse-stage' }, target, lineupWrap, narrator);
 
   function setNarration(html) {
     narrator.innerHTML = html;
@@ -136,7 +128,7 @@ export default function mountLinearSearch(host, meta) {
 
   function resetVisual() {
     cards.forEach((c) =>
-      c.classList.remove('lse-checking', 'lse-cleared', 'lse-found', 'lse-fail')
+      c.classList.remove('lse-checking', 'lse-cleared', 'lse-found', 'lse-fail'),
     );
     setNarration(S.ready);
   }
@@ -192,7 +184,7 @@ export default function mountLinearSearch(host, meta) {
     { class: 'scene-aside' },
     infoCard(S.cxTitle, el('span', { class: 'big' }, 'O(n)'), S.cxSub),
     infoCard(S.preTitle, el('span', { class: 'big' }, S.preBig), S.preSub),
-    infoCard(S.targetTitle, el('code', {}, String(TARGET)), S.targetSub(ARRAY.join(', ')))
+    infoCard(S.targetTitle, el('code', {}, String(TARGET)), S.targetSub(ARRAY.join(', '))),
   );
 
   clear(host);
@@ -208,6 +200,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

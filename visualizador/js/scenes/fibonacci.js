@@ -22,8 +22,7 @@ const STRINGS = {
     ready: 'Ready to play.',
     ratioSubDefault: 'tends to φ ≈ 1.618',
     ratioSubDiff: (diff) => `φ ≈ 1.61803 · Δ ${diff.toFixed(5)}`,
-    seed: (step) =>
-      `<span class="mono">F(${step.n}) = ${step.side}</span> — series seed.`,
+    seed: (step) => `<span class="mono">F(${step.n}) = ${step.side}</span> — series seed.`,
     grow: (step) =>
       `<span class="mono">F(${step.n}) = ${step.side}</span> = ` +
       `<span class="mono">${step.prev}</span> + <span class="mono">${step.prev2}</span> · ` +
@@ -38,8 +37,7 @@ const STRINGS = {
     ready: 'Listo para reproducir.',
     ratioSubDefault: 'tiende a φ ≈ 1.618',
     ratioSubDiff: (diff) => `φ ≈ 1.61803 · Δ ${diff.toFixed(5)}`,
-    seed: (step) =>
-      `<span class="mono">F(${step.n}) = ${step.side}</span> — semilla de la serie.`,
+    seed: (step) => `<span class="mono">F(${step.n}) = ${step.side}</span> — semilla de la serie.`,
     grow: (step) =>
       `<span class="mono">F(${step.n}) = ${step.side}</span> = ` +
       `<span class="mono">${step.prev}</span> + <span class="mono">${step.prev2}</span> · ` +
@@ -282,7 +280,7 @@ export default function mountFibonacci(host, meta) {
   const ratioSub = el(
     'div',
     { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } },
-    S.ratioSubDefault
+    S.ratioSubDefault,
   );
 
   function updateInfo(step) {
@@ -342,7 +340,7 @@ export default function mountFibonacci(host, meta) {
     { class: 'scene-aside' },
     infoCard(S.cardTermTitle, termOut, S.cardTermSub),
     infoCard(S.cardValueTitle, valOut, S.cardValueSub),
-    infoCard(S.cardRatioTitle, ratioOut, ratioSub)
+    infoCard(S.cardRatioTitle, ratioOut, ratioSub),
   );
 
   clear(host);
@@ -362,6 +360,6 @@ function infoCard(title, big, sub) {
       ? null
       : typeof sub === 'string'
         ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
-        : sub
+        : sub,
   );
 }

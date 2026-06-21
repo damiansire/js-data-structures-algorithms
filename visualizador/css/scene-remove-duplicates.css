@@ -88,7 +88,9 @@
   }
 }
 .rd-chip.rd-chip-new {
-  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.85), 0 6px 18px -6px rgba(52, 211, 153, 0.6);
+  box-shadow:
+    0 0 0 2px rgba(52, 211, 153, 0.85),
+    0 6px 18px -6px rgba(52, 211, 153, 0.6);
 }
 
 /* ─────────────────────────── Etiquetas de zona ───────────────────────────── */
@@ -125,7 +127,9 @@
   align-items: center;
   gap: 2px;
   flex: 0 0 auto;
-  transition: transform 0.35s ease, opacity 0.35s ease;
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease;
 }
 .rd-person-val {
   font-size: 13px;
@@ -145,7 +149,9 @@
 }
 .rd-person.rd-evaluating .rd-person-val {
   border-color: var(--amber);
-  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.7), 0 0 20px -4px rgba(251, 191, 36, 0.6);
+  box-shadow:
+    0 0 0 2px rgba(251, 191, 36, 0.7),
+    0 0 20px -4px rgba(251, 191, 36, 0.6);
   color: var(--amber);
 }
 
@@ -197,7 +203,9 @@
   font-size: 46px;
   line-height: 1;
   filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
-  transition: transform 0.25s ease, filter 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    filter 0.25s ease;
 }
 .rd-guard.rd-guard-ok {
   transform: translateY(-3px) scale(1.06);
@@ -209,9 +217,16 @@
   animation: rd-shake 0.4s;
 }
 @keyframes rd-shake {
-  0%, 100% { transform: translateX(-4px); }
-  25% { transform: translateX(-10px); }
-  75% { transform: translateX(2px); }
+  0%,
+  100% {
+    transform: translateX(-4px);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
 }
 
 .rd-door {
@@ -224,7 +239,9 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  transition: border-color 0.35s, box-shadow 0.35s;
+  transition:
+    border-color 0.35s,
+    box-shadow 0.35s;
 }
 .rd-door-label {
   font-family: var(--mono);
@@ -232,7 +249,9 @@
   font-weight: 800;
   letter-spacing: 2px;
   color: var(--ink-faint);
-  transition: color 0.35s, text-shadow 0.35s;
+  transition:
+    color 0.35s,
+    text-shadow 0.35s;
 }
 .rd-door-light {
   position: absolute;
@@ -244,13 +263,17 @@
   border-radius: 50%;
   background: #2a2a40;
   box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.6);
-  transition: background 0.3s, box-shadow 0.3s;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
 }
 
 /* Puerta verde — entra */
 .rd-door.rd-open-ok {
   border-color: var(--green);
-  box-shadow: 0 0 34px -4px rgba(52, 211, 153, 0.6), inset 0 0 40px -10px rgba(52, 211, 153, 0.5);
+  box-shadow:
+    0 0 34px -4px rgba(52, 211, 153, 0.6),
+    inset 0 0 40px -10px rgba(52, 211, 153, 0.5);
 }
 .rd-door.rd-open-ok .rd-door-light {
   background: var(--green);
@@ -264,7 +287,9 @@
 /* Puerta roja — expulsado */
 .rd-door.rd-open-bad {
   border-color: var(--rose);
-  box-shadow: 0 0 34px -4px rgba(251, 113, 133, 0.6), inset 0 0 40px -10px rgba(251, 113, 133, 0.5);
+  box-shadow:
+    0 0 34px -4px rgba(251, 113, 133, 0.6),
+    inset 0 0 40px -10px rgba(251, 113, 133, 0.5);
 }
 .rd-door.rd-open-bad .rd-door-light {
   background: var(--rose);
@@ -278,7 +303,9 @@
   animation: rd-door-pop 0.55s ease;
 }
 @keyframes rd-door-pop {
-  40% { transform: scale(1.05); }
+  40% {
+    transform: scale(1.05);
+  }
 }
 
 /* ─────────────────────────── Admitidos (salida) ──────────────────────────── */

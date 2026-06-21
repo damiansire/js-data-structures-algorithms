@@ -30,12 +30,10 @@ const STRINGS = {
       `Round <span class="mono">${i + 1}</span>: searching for the shortest dancer in the unsorted part.`,
     scan: (value, min) =>
       `Is dancer <span class="mono">${value}</span> shorter than the current pick <span class="mono">${min}</span>?`,
-    newMin: (value) =>
-      `Yes! <span class="mono">${value}</span> is the new shortest so far 👑`,
+    newMin: (value) => `Yes! <span class="mono">${value}</span> is the new shortest so far 👑`,
     swap: (value, pos) =>
       `Bring the shortest <span class="mono">${value}</span> to the front of the line (slot <span class="mono">${pos}</span>).`,
-    settled: (value) =>
-      `<span class="mono">${value}</span> is locked into its final position ✔`,
+    settled: (value) => `<span class="mono">${value}</span> is locked into its final position ✔`,
     done: 'Line-up sorted from shortest to tallest! ✨',
     card_avg_title: 'Average',
     card_avg_sub: 'always O(n²)',
@@ -54,8 +52,7 @@ const STRINGS = {
       `¡Sí! <span class="mono">${value}</span> es la nueva más baja hasta ahora 👑`,
     swap: (value, pos) =>
       `Traigo a la más baja <span class="mono">${value}</span> al frente de la fila (lugar <span class="mono">${pos}</span>).`,
-    settled: (value) =>
-      `<span class="mono">${value}</span> queda fija en su posición final ✔`,
+    settled: (value) => `<span class="mono">${value}</span> queda fija en su posición final ✔`,
     done: '¡Fila ordenada de más baja a más alta! ✨',
     card_avg_title: 'Promedio',
     card_avg_sub: 'siempre O(n²)',
@@ -70,7 +67,7 @@ const STRINGS = {
 const CSS_HREF = './css/scene-selection-sort.css';
 if (!document.querySelector(`link[data-scene="selection-sort"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'selection-sort' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'selection-sort' } }),
   );
 }
 
@@ -130,7 +127,7 @@ export default function mountSelectionSort(host, meta) {
       'div',
       { class: 'ss-bar', style: { height: `${h}px` } },
       el('span', { class: 'ss-cap' }, String(v)),
-      el('span', { class: 'ss-crown' }, '👑')
+      el('span', { class: 'ss-crown' }, '👑'),
     );
     b._value = v;
     return b;
@@ -168,9 +165,7 @@ export default function mountSelectionSort(host, meta) {
   }
 
   function resetVisual() {
-    bars.forEach((b) =>
-      b.classList.remove('ss-scan', 'ss-min', 'ss-settled', 'ss-win')
-    );
+    bars.forEach((b) => b.classList.remove('ss-scan', 'ss-min', 'ss-settled', 'ss-win'));
     boundary.style.opacity = '0';
     marker.style.opacity = '0';
     slots = bars.slice();
@@ -238,7 +233,7 @@ export default function mountSelectionSort(host, meta) {
     { class: 'scene-aside' },
     infoCard(S.card_avg_title, el('span', { class: 'big' }, 'O(n²)'), S.card_avg_sub),
     infoCard(S.card_swaps_title, el('span', { class: 'big' }, 'O(n)'), S.card_swaps_sub),
-    infoCard(S.card_input_title, el('code', {}, `[${VALUES.join(', ')}]`), S.card_input_sub)
+    infoCard(S.card_input_title, el('code', {}, `[${VALUES.join(', ')}]`), S.card_input_sub),
   );
 
   clear(host);
@@ -254,6 +249,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

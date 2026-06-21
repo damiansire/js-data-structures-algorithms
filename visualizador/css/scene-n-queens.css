@@ -28,14 +28,18 @@
   border-radius: 12px;
   overflow: hidden;
   border: 2px solid var(--stroke-strong, rgba(255, 255, 255, 0.18));
-  box-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 0, 0, 0.4);
+  box-shadow:
+    0 24px 60px -28px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(0, 0, 0, 0.4);
 }
 
 .nq-cell {
   position: relative;
   display: grid;
   place-items: center;
-  transition: background 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease;
 }
 .nq-light {
   background: #2a2c44;
@@ -52,22 +56,29 @@
   opacity: 0;
   transform: scale(0.3);
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.55));
-  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.3, 1.5, 0.5, 1);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s cubic-bezier(0.3, 1.5, 0.5, 1);
   pointer-events: none;
 }
 
 /* ─────────────────────────── PROBAR (parpadeo) ───────────────────────────── */
 .nq-cell.nq-trying {
   background: color-mix(in srgb, var(--nq-accent) 32%, #1b1c30);
-  box-shadow: inset 0 0 0 3px var(--nq-accent),
+  box-shadow:
+    inset 0 0 0 3px var(--nq-accent),
     inset 0 0 22px -4px color-mix(in srgb, var(--nq-accent) 70%, transparent);
   animation: nq-flash 0.7s ease infinite;
   z-index: 2;
 }
 @keyframes nq-flash {
-  0%, 100% { box-shadow: inset 0 0 0 3px var(--nq-accent); }
+  0%,
+  100% {
+    box-shadow: inset 0 0 0 3px var(--nq-accent);
+  }
   50% {
-    box-shadow: inset 0 0 0 3px var(--nq-accent),
+    box-shadow:
+      inset 0 0 0 3px var(--nq-accent),
       inset 0 0 26px -2px color-mix(in srgb, var(--nq-accent) 85%, transparent);
   }
 }
@@ -75,15 +86,23 @@
 /* ─────────────────────────── CONFLICTO (rojo) ────────────────────────────── */
 .nq-cell.nq-conflict {
   background: color-mix(in srgb, var(--rose) 40%, #1b1c30);
-  box-shadow: inset 0 0 0 3px var(--rose),
+  box-shadow:
+    inset 0 0 0 3px var(--rose),
     inset 0 0 24px -4px color-mix(in srgb, var(--rose) 80%, transparent);
   animation: nq-buzz 0.4s ease;
   z-index: 3;
 }
 @keyframes nq-buzz {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-3px); }
-  75% { transform: translateX(3px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
 }
 .nq-cell.nq-conflict::after {
   content: '✕';
@@ -96,7 +115,8 @@
 
 /* La reina que ataca se resalta para explicar el porqué. */
 .nq-cell.nq-attacker {
-  box-shadow: inset 0 0 0 3px var(--rose),
+  box-shadow:
+    inset 0 0 0 3px var(--rose),
     inset 0 0 22px -6px color-mix(in srgb, var(--rose) 70%, transparent);
   z-index: 2;
 }
@@ -122,14 +142,21 @@
   animation: nq-vanish 0.36s ease forwards;
 }
 @keyframes nq-vanish {
-  0% { opacity: 1; transform: scale(1) rotate(0); }
-  100% { opacity: 0; transform: scale(0.4) rotate(24deg) translateY(-10px); }
+  0% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.4) rotate(24deg) translateY(-10px);
+  }
 }
 
 /* ─────────────────────────── SOLUCIÓN (festejo) ──────────────────────────── */
 .nq-cell.nq-win {
   background: color-mix(in srgb, var(--amber) 26%, #1b1c30);
-  box-shadow: inset 0 0 0 3px var(--amber),
+  box-shadow:
+    inset 0 0 0 3px var(--amber),
     inset 0 0 26px -6px color-mix(in srgb, var(--amber) 70%, transparent);
 }
 .nq-cell.nq-win .nq-queen {
@@ -140,9 +167,15 @@
   animation: nq-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
 }
 @keyframes nq-pop {
-  0% { transform: scale(1); }
-  45% { transform: scale(1.28); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.28);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* ─────────────────────────── Responsivo angosto ──────────────────────────── */

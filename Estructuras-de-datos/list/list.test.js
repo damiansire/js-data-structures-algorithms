@@ -1,4 +1,4 @@
-const { List, Node } = require("./list");
+const { List, Node } = require('./list');
 
 // Recorre la lista desde head y devuelve los datos en orden.
 function toArray(list) {
@@ -11,8 +11,8 @@ function toArray(list) {
   return out;
 }
 
-describe("List.delete", () => {
-  test("decrementa length al borrar un elemento existente", () => {
+describe('List.delete', () => {
+  test('decrementa length al borrar un elemento existente', () => {
     const l = new List();
     l.push(1);
     l.push(2);
@@ -24,7 +24,7 @@ describe("List.delete", () => {
     expect(toArray(l)).toEqual([1, 3]);
   });
 
-  test("no cambia length al borrar un elemento inexistente", () => {
+  test('no cambia length al borrar un elemento inexistente', () => {
     const l = new List();
     l.push(1);
     l.push(2);
@@ -33,7 +33,7 @@ describe("List.delete", () => {
     expect(toArray(l)).toEqual([1, 2]);
   });
 
-  test("borrar la cola deja this.last sincronizado: el siguiente push encadena bien", () => {
+  test('borrar la cola deja this.last sincronizado: el siguiente push encadena bien', () => {
     const l = new List();
     l.push(1);
     l.push(2);
@@ -51,7 +51,7 @@ describe("List.delete", () => {
     expect(l.getLastElement()).toBe(l.last);
   });
 
-  test("borrar la cabeza actualiza head y last cuando queda un solo nodo", () => {
+  test('borrar la cabeza actualiza head y last cuando queda un solo nodo', () => {
     const l = new List();
     l.push(1);
     l.push(2);
@@ -65,7 +65,7 @@ describe("List.delete", () => {
     expect(l.last.data).toBe(5);
   });
 
-  test("borrar el único elemento deja la lista vacía y reutilizable", () => {
+  test('borrar el único elemento deja la lista vacía y reutilizable', () => {
     const l = new List();
     l.push(7);
     l.delete(7);
@@ -77,13 +77,13 @@ describe("List.delete", () => {
     expect(l.last.data).toBe(8);
   });
 
-  test("delete sobre lista vacía devuelve null", () => {
+  test('delete sobre lista vacía devuelve null', () => {
     const l = new List();
     expect(l.delete(1)).toBeNull();
     expect(l.length).toBe(0);
   });
 
-  test("delete devuelve el dato eliminado", () => {
+  test('delete devuelve el dato eliminado', () => {
     const l = new List();
     l.push(1);
     l.push(2);
@@ -92,8 +92,8 @@ describe("List.delete", () => {
   });
 });
 
-describe("List.push", () => {
-  test("encadena los elementos en orden de inserción", () => {
+describe('List.push', () => {
+  test('encadena los elementos en orden de inserción', () => {
     const l = new List();
     l.push(1);
     l.push(2);
@@ -104,12 +104,12 @@ describe("List.push", () => {
   });
 });
 
-describe("List.getLastElement", () => {
-  test("lista vacía devuelve null", () => {
+describe('List.getLastElement', () => {
+  test('lista vacía devuelve null', () => {
     expect(new List().getLastElement()).toBeNull();
   });
 
-  test("devuelve el último nodo", () => {
+  test('devuelve el último nodo', () => {
     const l = new List();
     l.push(1);
     l.push(2);
@@ -118,8 +118,8 @@ describe("List.getLastElement", () => {
   });
 });
 
-describe("List.getElementByIndex", () => {
-  test("devuelve el nodo en la posición pedida (base 0)", () => {
+describe('List.getElementByIndex', () => {
+  test('devuelve el nodo en la posición pedida (base 0)', () => {
     const l = new List();
     l.push(10);
     l.push(20);
@@ -128,21 +128,21 @@ describe("List.getElementByIndex", () => {
     expect(l.getElementByIndex(2).data).toBe(30);
   });
 
-  test("índice negativo devuelve null", () => {
+  test('índice negativo devuelve null', () => {
     const l = new List();
     l.push(1);
     expect(l.getElementByIndex(-1)).toBeNull();
   });
 
-  test("índice fuera de rango devuelve null", () => {
+  test('índice fuera de rango devuelve null', () => {
     const l = new List();
     l.push(1);
     expect(l.getElementByIndex(5)).toBeNull();
   });
 });
 
-describe("List.find", () => {
-  test("encuentra el primer nodo con el valor", () => {
+describe('List.find', () => {
+  test('encuentra el primer nodo con el valor', () => {
     const l = new List();
     l.push(1);
     l.push(2);
@@ -150,15 +150,15 @@ describe("List.find", () => {
     expect(l.find(2).data).toBe(2);
   });
 
-  test("devuelve null si el valor no existe", () => {
+  test('devuelve null si el valor no existe', () => {
     const l = new List();
     l.push(1);
     expect(l.find(99)).toBeNull();
   });
 });
 
-describe("List.deleteByNode", () => {
-  test("elimina un nodo intermedio copiando el dato del siguiente", () => {
+describe('List.deleteByNode', () => {
+  test('elimina un nodo intermedio copiando el dato del siguiente', () => {
     const l = new List();
     l.push(1);
     l.push(2);
@@ -169,7 +169,7 @@ describe("List.deleteByNode", () => {
     expect(l.length).toBe(2);
   });
 
-  test("eliminar el penúltimo nodo deja this.last sincronizado", () => {
+  test('eliminar el penúltimo nodo deja this.last sincronizado', () => {
     const l = new List();
     l.push(1);
     l.push(2);
@@ -180,7 +180,7 @@ describe("List.deleteByNode", () => {
     expect(l.last.data).toBe(3);
   });
 
-  test("no puede eliminar la cola (no hay siguiente del cual copiar): devuelve null", () => {
+  test('no puede eliminar la cola (no hay siguiente del cual copiar): devuelve null', () => {
     const l = new List();
     l.push(1);
     l.push(2);
@@ -189,20 +189,20 @@ describe("List.deleteByNode", () => {
   });
 });
 
-describe("List.print", () => {
-  test("imprime cada dato en orden", () => {
+describe('List.print', () => {
+  test('imprime cada dato en orden', () => {
     const l = new List();
-    l.push("a");
-    l.push("b");
-    const spy = jest.spyOn(console, "log").mockImplementation(() => {});
+    l.push('a');
+    l.push('b');
+    const spy = jest.spyOn(console, 'log').mockImplementation(() => {});
     l.print();
-    expect(spy.mock.calls.map((c) => c[0])).toEqual(["a", "b"]);
+    expect(spy.mock.calls.map((c) => c[0])).toEqual(['a', 'b']);
     spy.mockRestore();
   });
 });
 
-describe("List Node", () => {
-  test("se construye con next en null", () => {
+describe('List Node', () => {
+  test('se construye con next en null', () => {
     const n = new Node(3);
     expect(n.data).toBe(3);
     expect(n.next).toBeNull();

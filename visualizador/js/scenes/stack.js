@@ -108,7 +108,7 @@ export default function mountStack(host) {
     'div',
     { class: 'stk-lifo' },
     'LIFO',
-    el('small', {}, S.lifoLine1, el('br'), S.lifoLine2)
+    el('small', {}, S.lifoLine1, el('br'), S.lifoLine2),
   );
   canvas.append(lifoTag);
 
@@ -131,7 +131,7 @@ export default function mountStack(host) {
           background: `linear-gradient(180deg, ${c1}, ${c2})`,
         },
       },
-      el('span', {}, String(node.data))
+      el('span', {}, String(node.data)),
     );
     return p;
   }
@@ -186,7 +186,7 @@ export default function mountStack(host) {
         syncStats();
         if (stack.isEmpty()) setNarration(S.emptyAgain);
       },
-      { once: true }
+      { once: true },
     );
   }
 
@@ -213,7 +213,7 @@ export default function mountStack(host) {
     pushBtn,
     popBtn,
     el('span', { class: 'spacer' }),
-    clearBtn
+    clearBtn,
   );
 
   const statLen = el('span', { class: 'big' }, '0');
@@ -226,7 +226,7 @@ export default function mountStack(host) {
     { class: 'scene-aside' },
     infoCard('length()', statLen, S.cardLengthSub),
     infoCard('peek()', statTop, S.cardPeekSub),
-    infoCard('isEmpty()', statEmpty, S.cardEmptySub)
+    infoCard('isEmpty()', statEmpty, S.cardEmptySub),
   );
 
   clear(host);
@@ -246,6 +246,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }

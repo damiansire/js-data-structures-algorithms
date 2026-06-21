@@ -79,7 +79,7 @@ const STRINGS = {
 const CSS_HREF = './css/scene-counting-sort.css';
 if (!document.querySelector(`link[data-scene="counting-sort"]`)) {
   document.head.append(
-    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'counting-sort' } })
+    el('link', { rel: 'stylesheet', href: CSS_HREF, dataset: { scene: 'counting-sort' } }),
   );
 }
 
@@ -128,7 +128,7 @@ export default function mountCountingSort(host, meta = {}) {
     'div',
     { class: 'cs-zone cs-input-wrap' },
     el('span', { class: 'cs-zone-label' }, S.inputLabel),
-    inputRow
+    inputRow,
   );
 
   // ── Casilleros / palomares etiquetados 0..K, cada uno con LED ───────────
@@ -141,7 +141,7 @@ export default function mountCountingSort(host, meta = {}) {
       { class: 'cs-box' },
       el('div', { class: 'cs-box-led' }, led),
       el('div', { class: 'cs-box-hole' }, el('span', { class: 'cs-box-label' }, String(v))),
-      el('div', { class: 'cs-box-lip' })
+      el('div', { class: 'cs-box-lip' }),
     );
     box._value = v;
     boxes.push(box);
@@ -152,7 +152,7 @@ export default function mountCountingSort(host, meta = {}) {
     'div',
     { class: 'cs-zone cs-box-wrap' },
     el('span', { class: 'cs-zone-label' }, S.mailboxLabel),
-    boxRow
+    boxRow,
   );
 
   // ── Fila de salida ordenada (se llena en la fase 2) ─────────────────────
@@ -161,7 +161,7 @@ export default function mountCountingSort(host, meta = {}) {
     'div',
     { class: 'cs-zone cs-output-wrap' },
     el('span', { class: 'cs-zone-label cs-zone-ok' }, S.outputLabel),
-    outputRow
+    outputRow,
   );
 
   // ── Indicador de fase ───────────────────────────────────────────────────
@@ -179,7 +179,7 @@ export default function mountCountingSort(host, meta = {}) {
     boxWrap,
     outputWrap,
     flyer,
-    narrator
+    narrator,
   );
 
   function setNarration(html) {
@@ -287,8 +287,12 @@ export default function mountCountingSort(host, meta = {}) {
     { class: 'scene-aside' },
     infoCard(S.cardAlgoTitle, el('span', { class: 'big' }, 'O(n+k)'), S.cardAlgoSub),
     infoCard(S.cardComplexityTitle, el('span', { class: 'big' }, 'stable'), S.cardComplexitySub),
-    infoCard(S.cardInputTitle, el('code', {}, `[${INPUT.join(', ')}]`), S.cardInputSub(INPUT.length)),
-    infoCard(S.cardOutputTitle, el('code', {}, `[${output.join(', ')}]`), S.cardOutputSub)
+    infoCard(
+      S.cardInputTitle,
+      el('code', {}, `[${INPUT.join(', ')}]`),
+      S.cardInputSub(INPUT.length),
+    ),
+    infoCard(S.cardOutputTitle, el('code', {}, `[${output.join(', ')}]`), S.cardOutputSub),
   );
 
   clear(host);
@@ -303,6 +307,8 @@ function infoCard(title, big, sub) {
     { class: 'info-card' },
     el('h4', {}, title),
     big,
-    sub ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub) : null
+    sub
+      ? el('div', { style: { marginTop: '6px', fontSize: '12px', color: '#76749a' } }, sub)
+      : null,
   );
 }
