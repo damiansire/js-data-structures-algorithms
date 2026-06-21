@@ -24,6 +24,24 @@ describe('mergeSort', () => {
         mergeSort(arr, 0, arr.length - 1);
         expect(arr).toEqual([1, 2, 3, 4, 5]);
     });
+
+    it('debería ordenar un array en orden inverso', () => {
+        const arr = [9, 7, 5, 3, 1];
+        mergeSort(arr, 0, arr.length - 1);
+        expect(arr).toEqual([1, 3, 5, 7, 9]);
+    });
+
+    it('debería manejar duplicados y números negativos', () => {
+        const arr = [3, -1, 3, 0, -1, 2, -8];
+        mergeSort(arr, 0, arr.length - 1);
+        expect(arr).toEqual([-8, -1, -1, 0, 2, 3, 3]);
+    });
+
+    it('debería manejar un array con todos los elementos iguales', () => {
+        const arr = [7, 7, 7, 7];
+        mergeSort(arr, 0, arr.length - 1);
+        expect(arr).toEqual([7, 7, 7, 7]);
+    });
 });
 
 describe('merge', () => {

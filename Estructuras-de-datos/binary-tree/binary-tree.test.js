@@ -49,6 +49,17 @@ describe("BinaryTree", () => {
     );
   });
 
+  test("findNodeByXpath lanza Error de dominio si un tramo intermedio no existe", () => {
+    // El segmento intermedio "fantasma" no es hijo de la raíz: debe lanzar el
+    // Error de dominio documentado, no un TypeError opaco.
+    const tree = new BinaryTree();
+    tree.insert("raiz");
+    tree.insert("izq", "raiz", "left");
+    expect(() => tree.findNodeByXpath("raiz/fantasma/izq")).toThrow(
+      /No se encontro ningun nodo en la ruta/
+    );
+  });
+
   test("foundChild encuentra el hijo correcto por valor", () => {
     const tree = new BinaryTree();
     tree.insert("raiz");

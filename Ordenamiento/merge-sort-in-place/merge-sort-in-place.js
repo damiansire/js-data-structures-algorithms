@@ -42,24 +42,24 @@ function merge(arr, beginSubArr1, endSubArr1, endSubArr2) {
 
     let indexSubArr1 = 0;
     let indexSubArr2 = 0;
+    let index = beginSubArr1;
 
-    for (let index = beginSubArr1; index <= endSubArr2; index++) {
+    // Patrón canónico de tres bucles: comparar y copiar el menor mientras
+    // ambos subarrays tengan elementos, luego volcar el resto del que quede.
+    while (indexSubArr1 < subArr1Length && indexSubArr2 < subArr2Length) {
         if (subArr1[indexSubArr1] <= subArr2[indexSubArr2]) {
-            arr[index] = subArr1[indexSubArr1];
-            indexSubArr1++;
+            arr[index++] = subArr1[indexSubArr1++];
+        } else {
+            arr[index++] = subArr2[indexSubArr2++];
         }
-        else if (subArr1[indexSubArr1] > subArr2[indexSubArr2]) {
-            arr[index] = subArr2[indexSubArr2];
-            indexSubArr2++;
-        }
-        else if (subArr1[indexSubArr1] === undefined) {
-            arr[index] = subArr2[indexSubArr2];
-            indexSubArr2++;
-        }
-        else if (subArr2[indexSubArr2] === undefined) {
-            arr[index] = subArr1[indexSubArr1];
-            indexSubArr1++;
-        }
+    }
+
+    while (indexSubArr1 < subArr1Length) {
+        arr[index++] = subArr1[indexSubArr1++];
+    }
+
+    while (indexSubArr2 < subArr2Length) {
+        arr[index++] = subArr2[indexSubArr2++];
     }
 }
 

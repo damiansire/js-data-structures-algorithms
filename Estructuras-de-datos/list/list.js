@@ -126,12 +126,17 @@
     }
 
 
-    let myList = new List();
+module.exports = { List, Node };
+
+// Demo de uso: solo corre si se ejecuta este archivo directamente
+// (node list.js), no al importarlo como módulo.
+if (require.main === module) {
+    const myList = new List();
     myList.push(1)
     myList.push(4)
     myList.push(6)
     myList.push(8)
     myList.push(3)
     myList.push(2)
-
-module.exports = { List, Node };
+    myList.print()
+}

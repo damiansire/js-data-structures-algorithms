@@ -17,8 +17,10 @@ const config = {
   // Automatically clear mock calls, instances, contexts and results before every test
   clearMocks: true,
 
-  // Indicates whether the coverage information should be collected while executing the test
-  collectCoverage: true,
+  // Indicates whether the coverage information should be collected while executing the test.
+  // Se deja en false para que `npm test` sea rápido; la cobertura se recolecta
+  // solo con `npm run coverage` (jest --coverage), que activa esta opción por flag.
+  collectCoverage: false,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   collectCoverageFrom: [

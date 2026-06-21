@@ -49,10 +49,18 @@ class Stack {
     }
 
     /**
+     * Devuelve el valor del tope sin desapilarlo. O(1).
+     * @returns {*} El dato en el tope, o null si la pila está vacía.
+     */
+    peek() {
+        return this.top === null ? null : this.top.data;
+    }
+
+    /**
      * Devuelve el nodo del tope sin desapilarlo. O(1).
      * @returns {Node|null} El nodo en el tope, o null si la pila está vacía.
      */
-    peek() {
+    peekNode() {
         return this.top;
     }
 
@@ -88,13 +96,15 @@ class Stack {
     }
 
     /**
-     * Desapila el elemento del tope. O(1).
+     * Desapila el elemento del tope y devuelve su dato. O(1).
      * @throws {Error} Si la pila está vacía.
-     * @returns {void}
+     * @returns {*} El dato que estaba en el tope.
      */
     pop() {
         if (this.top != null) {
+            const data = this.top.data;
             this.top = this.top.prev
+            return data;
         } else {
             throw new Error("No se puede hacer pop() sobre una pila vacia")
         }

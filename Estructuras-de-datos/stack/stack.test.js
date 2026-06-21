@@ -15,27 +15,33 @@ describe("Stack", () => {
     s.push(3);
     expect(s.isEmpty()).toBe(false);
     expect(s.length()).toBe(3);
-    expect(s.peek()).toBeInstanceOf(Node);
-    expect(s.peek().data).toBe(3);
+    expect(s.peek()).toBe(3);
   });
 
-  test("pop quita el último elemento apilado", () => {
+  test("peekNode expone el nodo interno del tope", () => {
+    const s = new Stack();
+    s.push(3);
+    expect(s.peekNode()).toBeInstanceOf(Node);
+    expect(s.peekNode().data).toBe(3);
+  });
+
+  test("pop devuelve y quita el último elemento apilado (LIFO)", () => {
     const s = new Stack();
     s.push("a");
     s.push("b");
-    s.pop();
+    expect(s.pop()).toBe("b");
     expect(s.length()).toBe(1);
-    expect(s.peek().data).toBe("a");
+    expect(s.peek()).toBe("a");
   });
 
   test("pop hasta vaciar deja la pila reutilizable", () => {
     const s = new Stack();
     s.push(10);
-    s.pop();
+    expect(s.pop()).toBe(10);
     expect(s.isEmpty()).toBe(true);
     expect(s.peek()).toBeNull();
     s.push(20);
-    expect(s.peek().data).toBe(20);
+    expect(s.peek()).toBe(20);
     expect(s.length()).toBe(1);
   });
 

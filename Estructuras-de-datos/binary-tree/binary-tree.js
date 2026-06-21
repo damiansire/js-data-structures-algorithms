@@ -68,6 +68,9 @@ class BinaryTree {
         let routes = path.split("/")
         for (let routeIndex = 0; routeIndex < routes.length - 1; routeIndex++) {
             actualNode = this.foundChild(actualNode, routes[routeIndex + 1]);
+            if (!actualNode) {
+                throw new Error(`No se encontro ningun nodo en la ruta: ${path}`)
+            }
         }
         if (actualNode.value === routes[routes.length - 1]) {
             return actualNode;
@@ -96,19 +99,24 @@ class BinaryTree {
     }
 }
 
-let systemFile = new BinaryTree();
-systemFile.insert("informacion");
-systemFile.insert("dia", "informacion", "left");
-systemFile.insert("noche", "informacion", "right");
-systemFile.insert("datos", "informacion/dia", "left");
-systemFile.insert("comida.xls", "informacion/dia/datos", "left");
-systemFile.insert("mediciones.txt", "informacion/dia/datos", "right");
-systemFile.insert("gastos.txt", "informacion/noche", "left");
-systemFile.insert("restaurants", "informacion/noche", "right");
-systemFile.insert("mcdonalds.txt", "informacion/noche/restaurants", "left");
-systemFile.insert("tequeños.txt", "informacion/noche/restaurants", "right");
-
 module.exports = { BinaryTree, BinaryTreeNode };
+
+// Demo de uso: solo corre si se ejecuta este archivo directamente
+// (node binary-tree.js), no al importarlo como módulo.
+if (require.main === module) {
+    const systemFile = new BinaryTree();
+    systemFile.insert("informacion");
+    systemFile.insert("dia", "informacion", "left");
+    systemFile.insert("noche", "informacion", "right");
+    systemFile.insert("datos", "informacion/dia", "left");
+    systemFile.insert("comida.xls", "informacion/dia/datos", "left");
+    systemFile.insert("mediciones.txt", "informacion/dia/datos", "right");
+    systemFile.insert("gastos.txt", "informacion/noche", "left");
+    systemFile.insert("restaurants", "informacion/noche", "right");
+    systemFile.insert("mcdonalds.txt", "informacion/noche/restaurants", "left");
+    systemFile.insert("tequeños.txt", "informacion/noche/restaurants", "right");
+    systemFile.recorrer();
+}
 
 
 // find(value)
