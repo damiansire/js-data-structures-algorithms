@@ -1,0 +1,255 @@
+/* ===========================================================================
+   Caesar Cipher — "Un anillo decodificador giratorio".
+   Prefijo de clases: cae-*  ·  usa las variables de tema de styles.css.
+   Acento de categoría (strings): #fb923c (naranja).
+   =========================================================================== */
+
+.cae-stage {
+  --cae-accent: #fb923c;
+  --cae-accent-soft: rgba(251, 146, 60, 0.16);
+  min-height: 460px;
+  display: grid;
+  grid-template-columns: minmax(320px, 380px) 1fr;
+  grid-template-areas: 'wheel strip';
+  align-items: center;
+  gap: 18px 28px;
+  padding-bottom: 64px; /* aire para que el narrador no pise la escena */
+}
+
+/* ─────────────────────────── La rueda (dos anillos) ──────────────────────── */
+.cae-wheel {
+  grid-area: wheel;
+  position: relative;
+  width: 380px;
+  height: 380px;
+  margin: 0 auto;
+  justify-self: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(251, 146, 60, 0.1), transparent 62%),
+    rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--stroke);
+}
+
+.cae-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+.cae-ring-outer {
+  border: 1px dashed rgba(251, 146, 60, 0.35);
+  margin: 14px;
+}
+.cae-ring-inner {
+  border: 1px dashed rgba(167, 139, 250, 0.4);
+  margin: 62px;
+  transform: rotate(var(--ring-rot, 0deg));
+  transition: transform 0.6s cubic-bezier(0.3, 1.2, 0.5, 1);
+}
+
+/* Cada letra se coloca alrededor del centro con --ang y --rad. */
+.cae-letter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 50%;
+  transform: rotate(var(--ang)) translateY(calc(-1 * var(--rad))) rotate(calc(-1 * var(--ang)));
+  transition: color 0.25s, background 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+/* contrarrota las letras del anillo interno para que queden legibles */
+.cae-ring-inner .cae-letter-inner {
+  transform:
+    rotate(var(--ang)) translateY(calc(-1 * var(--rad)))
+    rotate(calc(-1 * var(--ang) - var(--ring-rot, 0deg)));
+}
+.cae-letter-outer {
+  color: var(--ink-dim);
+}
+.cae-letter-inner {
+  color: var(--ink-faint);
+}
+
+/* Letra resaltada (la que se está cifrando / su cifra) */
+.cae-letter-outer.cae-hot {
+  color: #1a0f05;
+  background: var(--cae-accent);
+  box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.5), 0 0 18px -2px rgba(251, 146, 60, 0.85);
+  transform: rotate(var(--ang)) translateY(calc(-1 * var(--rad))) rotate(calc(-1 * var(--ang))) scale(1.22);
+}
+.cae-ring-inner .cae-letter-inner.cae-hot {
+  color: #0a0820;
+  background: var(--violet);
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.55), 0 0 18px -2px rgba(167, 139, 250, 0.9);
+  transform:
+    rotate(var(--ang)) translateY(calc(-1 * var(--rad)))
+    rotate(calc(-1 * var(--ang) - var(--ring-rot, 0deg))) scale(1.22);
+}
+
+/* Centro de la rueda: muestra el shift */
+.cae-hub {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 96px;
+  height: 96px;
+  margin: -48px 0 0 -48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  background: radial-gradient(circle at 50% 35%, #20141f, #120c1a);
+  border: 1px solid var(--stroke-strong);
+  box-shadow: inset 0 0 24px -6px rgba(251, 146, 60, 0.5);
+  z-index: 3;
+}
+.cae-hub-shift {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--cae-accent);
+  line-height: 1;
+  text-shadow: 0 0 14px rgba(251, 146, 60, 0.6);
+}
+.cae-hub-label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}
+
+/* Puntero que marca la alineación entre anillos (arriba) */
+.cae-pointer {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 14px solid var(--stroke-strong);
+  z-index: 4;
+  transition: border-top-color 0.25s, filter 0.25s;
+}
+.cae-pointer.cae-pointer-on {
+  border-top-color: var(--cae-accent);
+  filter: drop-shadow(0 0 8px rgba(251, 146, 60, 0.9));
+}
+
+/* Etiquetas de los anillos */
+.cae-ring-tag {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+  z-index: 2;
+}
+.cae-tag-outer {
+  top: 22px;
+  color: var(--cae-accent);
+}
+.cae-tag-inner {
+  top: 70px;
+  color: var(--violet);
+}
+
+/* ─────────────────────────── Tira del mensaje + cifrado ──────────────────── */
+.cae-strip {
+  grid-area: strip;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: center;
+}
+.cae-strip-line {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cae-strip-label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.cae-strip-label-out {
+  color: var(--cae-accent);
+}
+.cae-strip-arrow {
+  font-size: 18px;
+  color: var(--ink-faint);
+  text-align: left;
+  padding-left: 6px;
+}
+.cae-strip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cae-cell {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 40px;
+  border-radius: 9px;
+  font-size: 18px;
+  font-weight: 700;
+  border: 1px solid var(--stroke);
+  background: var(--panel);
+  color: var(--ink-dim);
+  transition: border-color 0.25s, color 0.25s, background 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+.cae-cell-space {
+  opacity: 0.45;
+}
+.cae-cell-plain.cae-active {
+  border-color: var(--cae-accent);
+  color: var(--cae-accent);
+  background: var(--cae-accent-soft);
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.4), 0 8px 18px -8px rgba(251, 146, 60, 0.7);
+}
+.cae-cell-cipher.cae-filled {
+  border-color: rgba(167, 139, 250, 0.5);
+  color: var(--violet);
+  background: rgba(167, 139, 250, 0.1);
+}
+.cae-cell-cipher.cae-pop {
+  animation: cae-pop 0.4s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+@keyframes cae-pop {
+  0% {
+    transform: translateY(-12px) scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ─────────────────────────── Responsivo angosto ──────────────────────────── */
+@media (max-width: 760px) {
+  .cae-stage {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'wheel'
+      'strip';
+    justify-items: center;
+  }
+  .cae-strip {
+    align-self: start;
+  }
+}

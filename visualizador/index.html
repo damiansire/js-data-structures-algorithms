@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualizador de Algoritmos · El Catálogo de Escenas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/scenes.css" />
+    <link rel="stylesheet" href="./css/scene-pachinko.css" />
+    <link rel="stylesheet" href="./css/scene-tree.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🫧</text></svg>"
+    />
+  </head>
+  <body>
+    <div class="aurora" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="brand" href="#/">
+        <span class="brand-mark">◐</span>
+        <span class="brand-text">
+          <strong>Algoritmos</strong>
+          <em id="brand-sub">The Scene Catalog</em>
+        </span>
+      </a>
+      <nav class="topnav">
+        <button id="lang-toggle" class="lang-toggle" type="button" title="Language / Idioma">
+          <span class="lang-flag">🌐</span><span id="lang-label">EN</span>
+        </button>
+        <a
+          id="nav-repo"
+          href="https://github.com/damiansire/javascript-estructura-de-datos-y-algoritmos"
+          target="_blank"
+          rel="noopener"
+          >Repo ↗</a
+        >
+      </nav>
+    </header>
+
+    <main id="app" class="app"><!-- el router pinta acá --></main>
+
+    <footer class="footer">
+      <span id="footer-text">Vanilla JS · no build · animations faithful to the repo code</span>
+    </footer>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>

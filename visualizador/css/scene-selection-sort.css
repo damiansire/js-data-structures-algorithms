@@ -1,0 +1,131 @@
+/* ===========================================================================
+   Selection Sort — "Una profesora eligiendo a la bailarina más bajita".
+   Prefijo de clases: ss-*  ·  usa las variables de tema de styles.css.
+   Acento de categoría: violeta (#a78bfa = var(--violet)).
+   =========================================================================== */
+
+.ss-stage {
+  min-height: 460px;
+}
+
+/* Piso sobre el que apoyan las bailarinas-barra */
+.ss-floor {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 64px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+}
+
+/* Banda sombreada sobre la parte SIN ordenar (de i hasta el final) */
+.ss-boundary {
+  position: absolute;
+  bottom: 66px;
+  top: 40px;
+  border-radius: 14px;
+  background: rgba(167, 139, 250, 0.06);
+  border: 1px dashed rgba(167, 139, 250, 0.4);
+  opacity: 0;
+  transition: left 0.45s cubic-bezier(0.3, 0.8, 0.3, 1), width 0.45s, opacity 0.3s;
+  pointer-events: none;
+}
+
+/* Marcador que recorre la fila buscando el mínimo */
+.ss-marker {
+  position: absolute;
+  bottom: 14px;
+  transform: translateX(-50%);
+  opacity: 0;
+  z-index: 5;
+  transition: left 0.4s cubic-bezier(0.34, 1.3, 0.5, 1), opacity 0.3s;
+  pointer-events: none;
+}
+.ss-marker-tip {
+  display: block;
+  font-size: 22px;
+  line-height: 1;
+  filter: drop-shadow(0 4px 6px rgba(167, 139, 250, 0.6));
+  animation: ss-bob 1.1s ease-in-out infinite;
+}
+@keyframes ss-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* ─────────────────────────── Bailarinas-barra ───────────────────────────── */
+.ss-bar {
+  position: absolute;
+  bottom: 66px;
+  width: 46px;
+  transform: translateX(-50%);
+  border-radius: 9px 9px 4px 4px;
+  background: linear-gradient(180deg, #3a3a5c, #26263f);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 6px;
+  transition: left 0.5s cubic-bezier(0.34, 1.3, 0.5, 1), filter 0.3s, box-shadow 0.3s,
+    background 0.3s, transform 0.3s;
+  will-change: left;
+}
+.ss-bar.no-anim {
+  transition: none;
+}
+.ss-cap {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Corona que aparece sobre el mínimo provisorio */
+.ss-crown {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%) translateY(6px) scale(0.5);
+  font-size: 20px;
+  line-height: 1;
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.3s;
+  pointer-events: none;
+}
+
+/* Barra bajo escaneo (la candidata que estamos comparando) */
+.ss-bar.ss-scan {
+  background: linear-gradient(180deg, #5b3aa6, #3d2873);
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.75);
+  z-index: 3;
+}
+
+/* Barra que es el mínimo provisorio → coronada */
+.ss-bar.ss-min {
+  background: linear-gradient(180deg, #b8860b, #7a5a06);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.9), 0 0 30px -6px rgba(251, 191, 36, 0.7);
+  z-index: 4;
+}
+.ss-bar.ss-min .ss-crown {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px) scale(1);
+}
+
+/* Barra ya ordenada (queda fija a la izquierda) */
+.ss-bar.ss-settled {
+  background: linear-gradient(180deg, #1f7a5a, #14543d);
+  box-shadow: 0 0 0 1.5px rgba(52, 211, 153, 0.7);
+}
+.ss-bar.ss-settled .ss-crown {
+  opacity: 0;
+}
+
+/* Celebración final */
+.ss-bar.ss-win {
+  animation: ss-pop 0.5s ease;
+}
+@keyframes ss-pop {
+  40% {
+    transform: translateX(-50%) translateY(-14px) scale(1.05);
+  }
+}

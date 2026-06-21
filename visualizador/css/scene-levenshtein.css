@@ -1,0 +1,280 @@
+/* ===========================================================================
+   Levenshtein edit distance — "Autocorrect morphing one word into another".
+   Class prefix: lev-*  ·  uses the theme variables from styles.css.
+   Category accent: #fb923c (strings / orange).
+   =========================================================================== */
+
+.lev-stage {
+  --lev-accent: #fb923c;
+  --lev-accent-soft: rgba(251, 146, 60, 0.16);
+  --lev-cell: 44px;
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 64px; /* aire para que el narrador no pise la grilla */
+}
+
+/* ─────────────────────────── Palabras en transición ──────────────────────── */
+.lev-words {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 3px;
+}
+.lev-word {
+  padding: 4px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--stroke);
+  background: var(--panel);
+}
+.lev-word-a {
+  color: var(--cyan, #22d3ee);
+}
+.lev-word-b {
+  color: var(--lev-accent);
+  border-color: rgba(251, 146, 60, 0.4);
+  background: var(--lev-accent-soft);
+}
+.lev-arrow {
+  font-size: 22px;
+  color: var(--ink-faint);
+}
+
+/* ─────────────────────────── La grilla DP ────────────────────────────────── */
+.lev-grid-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+  padding: 4px;
+}
+.lev-grid {
+  display: grid;
+  /* 1 columna de cabecera de fila + (N+1) columnas de celdas */
+  grid-template-columns: var(--lev-cell) repeat(var(--lev-cols, 8), var(--lev-cell));
+  gap: 6px;
+}
+
+/* Cabeceras (letras de las palabras en los ejes) */
+.lev-col-head,
+.lev-row-head {
+  display: grid;
+  place-items: center;
+  height: var(--lev-cell);
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.lev-col-head {
+  color: var(--lev-accent); /* eje horizontal = palabra destino */
+}
+.lev-row-head {
+  color: var(--cyan, #22d3ee); /* eje vertical = palabra origen */
+}
+.lev-corner-head {
+  height: var(--lev-cell);
+}
+.lev-empty-head {
+  color: var(--ink-faint) !important;
+  font-weight: 600;
+}
+
+/* Celdas del DP */
+.lev-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: var(--lev-cell);
+  border-radius: 9px;
+  border: 1px solid var(--stroke);
+  background: var(--panel);
+  transition: background 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+.lev-cell .lev-val {
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.lev-cell.lev-filled .lev-val,
+.lev-cell.lev-seeded .lev-val {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Borde sembrado (fila/columna base) */
+.lev-cell.lev-border {
+  background: rgba(255, 255, 255, 0.02);
+  border-style: dashed;
+}
+.lev-cell.lev-seeded {
+  border-color: var(--stroke-strong);
+}
+.lev-cell.lev-seeded .lev-val {
+  color: var(--ink-dim);
+}
+
+/* Celda recién rellenada */
+.lev-cell.lev-filled {
+  border-color: rgba(251, 146, 60, 0.4);
+  background: linear-gradient(180deg, var(--lev-accent-soft), rgba(251, 146, 60, 0.04));
+}
+
+/* Celda activa (la que se está calculando) */
+.lev-cell.lev-active {
+  border-color: var(--lev-accent);
+  box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.7), 0 0 22px -4px rgba(251, 146, 60, 0.6);
+  transform: scale(1.08);
+  z-index: 2;
+}
+
+/* Coincidencia de letras → verde sutil */
+.lev-cell.lev-match {
+  border-color: rgba(52, 211, 153, 0.5);
+  background: linear-gradient(180deg, rgba(52, 211, 153, 0.16), rgba(52, 211, 153, 0.04));
+}
+.lev-cell.lev-match .lev-val {
+  color: #c9ffe9;
+}
+
+/* Vecinas de las que depende la celda activa */
+.lev-cell.lev-dep-up {
+  box-shadow: inset 0 0 0 2px rgba(167, 139, 250, 0.85); /* delete → violeta */
+}
+.lev-cell.lev-dep-left {
+  box-shadow: inset 0 0 0 2px rgba(34, 211, 238, 0.85); /* insert → cyan */
+}
+.lev-cell.lev-dep-diag {
+  box-shadow: inset 0 0 0 2px rgba(251, 191, 36, 0.9); /* replace/match → ámbar */
+}
+
+/* La respuesta: celda inferior-derecha */
+.lev-cell.lev-answer {
+  border-color: var(--lev-accent);
+  background: linear-gradient(180deg, rgba(251, 146, 60, 0.4), rgba(251, 146, 60, 0.12));
+  box-shadow: 0 0 0 2px var(--lev-accent), 0 0 30px -2px rgba(251, 146, 60, 0.8);
+  animation: lev-answer-pop 0.6s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+.lev-cell.lev-answer .lev-val {
+  color: #fff;
+  font-size: 18px;
+}
+@keyframes lev-answer-pop {
+  40% {
+    transform: scale(1.25);
+  }
+}
+
+/* Camino óptimo (backtrack) */
+.lev-cell.lev-path {
+  border-color: rgba(251, 146, 60, 0.8);
+  box-shadow: inset 0 0 0 2px rgba(251, 146, 60, 0.6);
+}
+
+/* ─────────────────────────── Leyenda de dependencias ─────────────────────── */
+.lev-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 11px;
+  color: var(--ink-dim);
+}
+.lev-leg {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.lev-leg::before {
+  content: '';
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+}
+.lev-leg-up::before {
+  background: rgba(167, 139, 250, 0.95);
+}
+.lev-leg-left::before {
+  background: rgba(34, 211, 238, 0.95);
+}
+.lev-leg-diag::before {
+  background: rgba(251, 191, 36, 0.95);
+}
+
+/* ─────────────────────────── Aside: distancia + operaciones ──────────────── */
+.lev-dist-num {
+  font-family: var(--mono);
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--ink-faint);
+  transition: color 0.3s;
+}
+.lev-dist-num.lev-dist-live {
+  color: var(--lev-accent);
+  text-shadow: 0 0 18px rgba(251, 146, 60, 0.55);
+}
+
+.lev-ops-card .lev-ops {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.lev-ops-wait {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-faint);
+}
+.lev-op {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: var(--panel-strong);
+  animation: lev-op-in 0.35s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+@keyframes lev-op-in {
+  0% {
+    transform: translateY(-8px) scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+.lev-op-match {
+  color: var(--green);
+  border-color: rgba(52, 211, 153, 0.4);
+}
+.lev-op-replace {
+  color: var(--amber);
+  border-color: rgba(251, 191, 36, 0.4);
+}
+.lev-op-delete {
+  color: var(--violet);
+  border-color: rgba(167, 139, 250, 0.4);
+}
+.lev-op-insert {
+  color: var(--cyan, #22d3ee);
+  border-color: rgba(34, 211, 238, 0.4);
+}
+
+/* ─────────────────────────── Responsivo angosto ──────────────────────────── */
+@media (max-width: 560px) {
+  .lev-stage {
+    --lev-cell: 36px;
+  }
+  .lev-words {
+    font-size: 17px;
+    letter-spacing: 2px;
+  }
+}

@@ -1,0 +1,318 @@
+/* ===========================================================================
+   Remove Duplicates — "El guardia de un club VIP con su lista (Set)".
+   Prefijo de clases: rd-*  ·  usa las variables de tema de styles.css.
+   =========================================================================== */
+
+.rd-stage {
+  min-height: 460px;
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  grid-template-rows: auto auto 1fr;
+  grid-template-areas:
+    'set    queue'
+    'set    gate'
+    'set    admitted';
+  gap: 18px 24px;
+  align-content: start;
+  padding-bottom: 64px; /* aire para que el narrador no pise las zonas */
+}
+
+/* ─────────────────────────── Lista del guardia (Set) ─────────────────────── */
+.rd-set {
+  grid-area: set;
+  align-self: stretch;
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(167, 139, 250, 0.1), rgba(34, 211, 238, 0.05));
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rd-set-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom: 1px dashed var(--stroke);
+  padding-bottom: 10px;
+}
+.rd-set-icon {
+  font-size: 18px;
+}
+.rd-set-tag {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--violet);
+  background: rgba(167, 139, 250, 0.14);
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+.rd-set-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-content: flex-start;
+}
+.rd-set-empty {
+  font-size: 12px;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.rd-chip {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 8px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #07101a;
+  background: var(--grad);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 6px 16px -8px rgba(34, 211, 238, 0.7);
+  animation: rd-chip-in 0.4s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+@keyframes rd-chip-in {
+  0% {
+    transform: translateY(-14px) scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+.rd-chip.rd-chip-new {
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.85), 0 6px 18px -6px rgba(52, 211, 153, 0.6);
+}
+
+/* ─────────────────────────── Etiquetas de zona ───────────────────────────── */
+.rd-zone-label {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 6px;
+}
+.rd-zone-ok {
+  color: var(--green);
+}
+
+/* ─────────────────────────── La fila (entrada) ───────────────────────────── */
+.rd-queue-wrap {
+  grid-area: queue;
+}
+.rd-queue {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  min-height: 78px;
+  padding: 6px 4px;
+  border-radius: 14px;
+  border: 1px dashed var(--stroke);
+  background: rgba(255, 255, 255, 0.02);
+}
+.rd-person {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+.rd-person-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--panel-strong, rgba(255, 255, 255, 0.07));
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  padding: 1px 8px;
+}
+.rd-person-body {
+  font-size: 30px;
+  line-height: 1;
+}
+.rd-person.rd-evaluating {
+  transform: translateY(-6px) scale(1.08);
+}
+.rd-person.rd-evaluating .rd-person-val {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.7), 0 0 20px -4px rgba(251, 191, 36, 0.6);
+  color: var(--amber);
+}
+
+/* Expulsión: sale volando de una patada hacia la derecha-arriba. */
+.rd-person.rd-expelled {
+  animation: rd-eject 0.6s cubic-bezier(0.4, 0, 0.7, 0.4) forwards;
+}
+@keyframes rd-eject {
+  0% {
+    transform: translate(0, 0) rotate(0);
+    opacity: 1;
+  }
+  20% {
+    transform: translate(-8px, 4px) rotate(-8deg);
+  }
+  100% {
+    transform: translate(420px, -90px) rotate(46deg);
+    opacity: 0;
+  }
+}
+
+/* Admitido: aterriza en la zona del club. */
+.rd-admitted-in {
+  animation: rd-admit 0.5s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+@keyframes rd-admit {
+  0% {
+    transform: translateY(-26px) scale(0.7);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ─────────────────────────── Guardia + puerta ────────────────────────────── */
+.rd-gate {
+  grid-area: gate;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 4px 0;
+}
+.rd-guard {
+  font-size: 46px;
+  line-height: 1;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+.rd-guard.rd-guard-ok {
+  transform: translateY(-3px) scale(1.06);
+  filter: drop-shadow(0 6px 14px rgba(52, 211, 153, 0.6));
+}
+.rd-guard.rd-guard-bad {
+  transform: translateX(-4px);
+  filter: drop-shadow(0 6px 14px rgba(251, 113, 133, 0.6));
+  animation: rd-shake 0.4s;
+}
+@keyframes rd-shake {
+  0%, 100% { transform: translateX(-4px); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(2px); }
+}
+
+.rd-door {
+  position: relative;
+  width: 92px;
+  height: 150px;
+  border-radius: 12px 12px 6px 6px;
+  background: linear-gradient(180deg, #1e1e34, #14142440);
+  border: 2px solid var(--stroke-strong, rgba(255, 255, 255, 0.18));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  transition: border-color 0.35s, box-shadow 0.35s;
+}
+.rd-door-label {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  transition: color 0.35s, text-shadow 0.35s;
+}
+.rd-door-light {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #2a2a40;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.6);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+/* Puerta verde — entra */
+.rd-door.rd-open-ok {
+  border-color: var(--green);
+  box-shadow: 0 0 34px -4px rgba(52, 211, 153, 0.6), inset 0 0 40px -10px rgba(52, 211, 153, 0.5);
+}
+.rd-door.rd-open-ok .rd-door-light {
+  background: var(--green);
+  box-shadow: 0 0 16px 4px rgba(52, 211, 153, 0.8);
+}
+.rd-door.rd-open-ok .rd-door-label {
+  color: #c9ffe9;
+  text-shadow: 0 0 12px rgba(52, 211, 153, 0.7);
+}
+
+/* Puerta roja — expulsado */
+.rd-door.rd-open-bad {
+  border-color: var(--rose);
+  box-shadow: 0 0 34px -4px rgba(251, 113, 133, 0.6), inset 0 0 40px -10px rgba(251, 113, 133, 0.5);
+}
+.rd-door.rd-open-bad .rd-door-light {
+  background: var(--rose);
+  box-shadow: 0 0 16px 4px rgba(251, 113, 133, 0.85);
+}
+.rd-door.rd-open-bad .rd-door-label {
+  color: #ffd6dd;
+  text-shadow: 0 0 12px rgba(251, 113, 133, 0.7);
+}
+.rd-door.rd-done {
+  animation: rd-door-pop 0.55s ease;
+}
+@keyframes rd-door-pop {
+  40% { transform: scale(1.05); }
+}
+
+/* ─────────────────────────── Admitidos (salida) ──────────────────────────── */
+.rd-admitted-wrap {
+  grid-area: admitted;
+  align-self: start;
+}
+.rd-admitted {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 78px;
+  padding: 6px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  background: linear-gradient(180deg, rgba(52, 211, 153, 0.07), rgba(52, 211, 153, 0.02));
+}
+.rd-admitted .rd-person.rd-evaluating {
+  transform: none; /* en el club ya no se evalúan */
+}
+.rd-admitted .rd-person .rd-person-val {
+  border-color: rgba(52, 211, 153, 0.5);
+  color: #c9ffe9;
+}
+
+/* ─────────────────────────── Responsivo angosto ──────────────────────────── */
+@media (max-width: 720px) {
+  .rd-stage {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'set'
+      'queue'
+      'gate'
+      'admitted';
+  }
+}

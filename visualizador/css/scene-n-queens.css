@@ -1,0 +1,153 @@
+/* ===========================================================================
+   N-Queens — "Colocar reinas en un tablero sin que se ataquen".
+   Prefijo de clases: nq-*  ·  usa las variables de tema de styles.css.
+   Acento de categoría (math / sky): #38bdf8.
+   =========================================================================== */
+
+.nq-stage {
+  min-height: 460px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  padding-bottom: 64px; /* aire para que el narrador no pise el tablero */
+  --nq-accent: #38bdf8;
+}
+
+.nq-board-wrap {
+  display: grid;
+  place-items: center;
+}
+
+/* ─────────────────────────── Tablero 6×6 ─────────────────────────────────── */
+.nq-board {
+  --nq-size: clamp(46px, 8.4vw, 62px);
+  display: grid;
+  grid-template-columns: repeat(6, var(--nq-size));
+  grid-template-rows: repeat(6, var(--nq-size));
+  gap: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid var(--stroke-strong, rgba(255, 255, 255, 0.18));
+  box-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+.nq-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+.nq-light {
+  background: #2a2c44;
+}
+.nq-dark {
+  background: #1b1c30;
+}
+
+/* La reina vive en cada casilla; oculta hasta que se coloca. */
+.nq-queen {
+  font-size: calc(var(--nq-size) * 0.62);
+  line-height: 1;
+  color: #fbbf24;
+  opacity: 0;
+  transform: scale(0.3);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.55));
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.3, 1.5, 0.5, 1);
+  pointer-events: none;
+}
+
+/* ─────────────────────────── PROBAR (parpadeo) ───────────────────────────── */
+.nq-cell.nq-trying {
+  background: color-mix(in srgb, var(--nq-accent) 32%, #1b1c30);
+  box-shadow: inset 0 0 0 3px var(--nq-accent),
+    inset 0 0 22px -4px color-mix(in srgb, var(--nq-accent) 70%, transparent);
+  animation: nq-flash 0.7s ease infinite;
+  z-index: 2;
+}
+@keyframes nq-flash {
+  0%, 100% { box-shadow: inset 0 0 0 3px var(--nq-accent); }
+  50% {
+    box-shadow: inset 0 0 0 3px var(--nq-accent),
+      inset 0 0 26px -2px color-mix(in srgb, var(--nq-accent) 85%, transparent);
+  }
+}
+
+/* ─────────────────────────── CONFLICTO (rojo) ────────────────────────────── */
+.nq-cell.nq-conflict {
+  background: color-mix(in srgb, var(--rose) 40%, #1b1c30);
+  box-shadow: inset 0 0 0 3px var(--rose),
+    inset 0 0 24px -4px color-mix(in srgb, var(--rose) 80%, transparent);
+  animation: nq-buzz 0.4s ease;
+  z-index: 3;
+}
+@keyframes nq-buzz {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+.nq-cell.nq-conflict::after {
+  content: '✕';
+  position: absolute;
+  font-size: calc(var(--nq-size) * 0.5);
+  font-weight: 800;
+  color: #ffd6dd;
+  text-shadow: 0 0 10px rgba(251, 113, 133, 0.8);
+}
+
+/* La reina que ataca se resalta para explicar el porqué. */
+.nq-cell.nq-attacker {
+  box-shadow: inset 0 0 0 3px var(--rose),
+    inset 0 0 22px -6px color-mix(in srgb, var(--rose) 70%, transparent);
+  z-index: 2;
+}
+.nq-cell.nq-attacker .nq-queen {
+  color: var(--rose);
+  filter: drop-shadow(0 0 10px rgba(251, 113, 133, 0.85));
+}
+
+/* ─────────────────────────── COLOCAR (reina dorada) ──────────────────────── */
+.nq-cell.nq-placed {
+  background: color-mix(in srgb, var(--amber) 14%, #1b1c30);
+}
+.nq-cell.nq-placed .nq-queen {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ─────────────────────────── RETROCEDER (fade out) ───────────────────────── */
+.nq-cell.nq-removing {
+  background: color-mix(in srgb, var(--rose) 22%, #1b1c30);
+}
+.nq-cell.nq-removing .nq-queen {
+  animation: nq-vanish 0.36s ease forwards;
+}
+@keyframes nq-vanish {
+  0% { opacity: 1; transform: scale(1) rotate(0); }
+  100% { opacity: 0; transform: scale(0.4) rotate(24deg) translateY(-10px); }
+}
+
+/* ─────────────────────────── SOLUCIÓN (festejo) ──────────────────────────── */
+.nq-cell.nq-win {
+  background: color-mix(in srgb, var(--amber) 26%, #1b1c30);
+  box-shadow: inset 0 0 0 3px var(--amber),
+    inset 0 0 26px -6px color-mix(in srgb, var(--amber) 70%, transparent);
+}
+.nq-cell.nq-win .nq-queen {
+  opacity: 1;
+  transform: scale(1);
+  color: #ffe08a;
+  filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.85));
+  animation: nq-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+@keyframes nq-pop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.28); }
+  100% { transform: scale(1); }
+}
+
+/* ─────────────────────────── Responsivo angosto ──────────────────────────── */
+@media (max-width: 720px) {
+  .nq-board {
+    --nq-size: clamp(40px, 13vw, 56px);
+  }
+}

@@ -1,0 +1,349 @@
+/* ===========================================================================
+   Escena: Letter Count — cinta transportadora industrial con cestas.
+   Prefijo de clases: lc-  · usa las variables de tema de styles.css.
+   =========================================================================== */
+
+.lc-stage {
+  min-height: 460px;
+  display: block;
+  background: radial-gradient(
+      130% 90% at 50% -10%,
+      rgba(167, 139, 250, 0.1),
+      transparent 60%
+    ),
+    linear-gradient(180deg, rgba(34, 211, 238, 0.03), rgba(0, 0, 0, 0.18));
+}
+
+/* Tolva / boca de descarga sobre la cinta */
+.lc-chute {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 86px;
+  height: 30px;
+  background: linear-gradient(180deg, #2a2a44, #15152a);
+  border: 1px solid var(--stroke);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  box-shadow: inset 0 6px 14px -8px rgba(255, 255, 255, 0.35);
+  z-index: 4;
+}
+.lc-chute::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  transform: translateX(-50%);
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 10px solid #15152a;
+}
+
+/* ── La cinta transportadora ────────────────────────────────────────────── */
+.lc-belt {
+  position: absolute;
+  top: 78px;
+  left: 36px;
+  right: 36px;
+  height: 92px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #1b1b2e, #111120);
+  border: 1px solid var(--stroke);
+  box-shadow: 0 16px 34px -16px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+/* textura rayada en movimiento (rodillos girando) */
+.lc-belt-tread {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.06) 0 14px,
+    rgba(255, 255, 255, 0.015) 14px 28px
+  );
+  background-size: 56px 100%;
+  opacity: 0.7;
+}
+.lc-belt.lc-running .lc-belt-tread {
+  animation: lc-tread 0.7s linear infinite;
+}
+@keyframes lc-tread {
+  to {
+    background-position: 56px 0;
+  }
+}
+
+/* rodillos en los extremos */
+.lc-roller {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 16px;
+  background: radial-gradient(circle at 50% 50%, #3a3a5c, #1a1a2c);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.lc-roller-l {
+  left: 0;
+  border-radius: 12px 4px 4px 12px;
+}
+.lc-roller-r {
+  right: 0;
+  border-radius: 4px 12px 12px 4px;
+}
+
+/* tira de tiles (los caracteres del string) */
+.lc-belt-strip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transform: translateX(50%);
+  transition: transform 0.5s cubic-bezier(0.3, 0.8, 0.3, 1);
+  will-change: transform;
+  padding: 0 30px;
+}
+.lc-tile {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 56px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #34344f, #232338);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 6px 14px -8px rgba(0, 0, 0, 0.7),
+    inset 0 2px 6px rgba(255, 255, 255, 0.12);
+  transition: transform 0.3s, box-shadow 0.3s, filter 0.3s, opacity 0.3s;
+}
+.lc-tile-ch {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.lc-tile-space .lc-tile-ch {
+  color: var(--ink-faint);
+}
+.lc-tile.lc-active {
+  transform: translateY(-4px) scale(1.08);
+  box-shadow: 0 0 0 2px var(--cyan), 0 12px 26px -8px rgba(34, 211, 238, 0.6);
+  z-index: 3;
+}
+.lc-tile.lc-done {
+  opacity: 0.3;
+  filter: saturate(0.5);
+}
+
+/* ── Letra que cae de la cinta a la cesta ───────────────────────────────── */
+.lc-falling {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  margin-left: -20px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 800;
+  color: #07101a;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+.lc-falling.lc-count {
+  background: linear-gradient(180deg, var(--cyan), #0c8aa0);
+  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.6), 0 8px 20px -6px rgba(34, 211, 238, 0.7);
+}
+.lc-falling.lc-space {
+  background: linear-gradient(180deg, #4a4a66, #2a2a3e);
+  color: var(--ink-faint);
+  box-shadow: 0 0 0 1px var(--stroke);
+}
+.lc-falling.lc-go {
+  animation: lc-fall 0.5s cubic-bezier(0.5, 0, 0.7, 0.5) forwards;
+}
+@keyframes lc-fall {
+  0% {
+    transform: translateY(var(--y0)) scale(0.7);
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+    transform: translateY(var(--y0)) scale(1);
+  }
+  100% {
+    transform: translateY(var(--y1)) scale(0.9);
+    opacity: 0;
+  }
+}
+
+/* ── Fila de cestas etiquetadas ─────────────────────────────────────────── */
+.lc-baskets {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  bottom: 70px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.lc-basket {
+  position: relative;
+  width: 78px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s;
+}
+
+/* contador LED tipo display digital */
+.lc-basket-led {
+  width: 56px;
+  height: 30px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  background: #07090f;
+  border: 1px solid var(--stroke);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+  margin-bottom: 6px;
+}
+.lc-led {
+  font-family: var(--mono);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--green);
+  text-shadow: 0 0 8px rgba(52, 211, 153, 0.7), 0 0 2px rgba(52, 211, 153, 0.9);
+  letter-spacing: 1px;
+}
+.lc-led.lc-tick {
+  animation: lc-led-tick 0.4s ease;
+}
+@keyframes lc-led-tick {
+  0% {
+    transform: scale(1);
+    color: #fff;
+    text-shadow: 0 0 14px #fff;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* cuerpo de la cesta (rejilla) */
+.lc-basket-body {
+  width: 72px;
+  height: 64px;
+  border-radius: 6px 6px 12px 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #2a2a44, #1a1a2e);
+  border: 1px solid var(--stroke);
+  border-top: 2px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 -8px 18px -8px rgba(0, 0, 0, 0.8);
+  position: relative;
+  overflow: hidden;
+}
+.lc-basket-body::before {
+  content: '';
+  position: absolute;
+  inset: 8px 8px 6px;
+  border-radius: 4px;
+  background: repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.08) 0 2px,
+      transparent 2px 9px
+    ),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px 9px);
+  opacity: 0.6;
+}
+.lc-basket-label {
+  position: relative;
+  font-family: var(--mono);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--violet);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+.lc-basket-lip {
+  width: 80px;
+  height: 8px;
+  margin-top: -2px;
+  border-radius: 0 0 6px 6px;
+  background: linear-gradient(180deg, #3a3a5c, #232338);
+  border: 1px solid var(--stroke);
+  border-top: none;
+}
+
+.lc-basket.lc-receive {
+  transform: translateY(3px);
+}
+.lc-basket.lc-receive .lc-basket-body {
+  box-shadow: 0 0 0 2px var(--cyan), inset 0 -8px 18px -8px rgba(0, 0, 0, 0.8);
+}
+.lc-basket.lc-win .lc-basket-body {
+  box-shadow: 0 0 0 2px var(--amber), 0 0 30px -4px rgba(251, 191, 36, 0.7);
+  animation: lc-win-pop 0.5s ease;
+}
+.lc-basket.lc-win .lc-basket-label {
+  color: var(--amber);
+}
+.lc-basket.lc-win .lc-led {
+  color: var(--amber);
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.8);
+}
+@keyframes lc-win-pop {
+  40% {
+    transform: translateY(-8px) scale(1.06);
+  }
+}
+
+/* rejilla de descarte de espacios */
+.lc-trash {
+  width: 78px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.85;
+  transition: transform 0.3s, opacity 0.3s;
+}
+.lc-trash-grate {
+  width: 72px;
+  height: 30px;
+  border-radius: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    #2a2a3e 0 5px,
+    #14141f 5px 10px
+  );
+  border: 1px solid var(--stroke);
+  box-shadow: inset 0 -6px 12px -6px rgba(0, 0, 0, 0.8);
+}
+.lc-trash-label {
+  font-size: 10px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.lc-trash.lc-receive {
+  transform: translateY(3px);
+  opacity: 1;
+}
+.lc-trash.lc-receive .lc-trash-grate {
+  box-shadow: 0 0 0 2px rgba(118, 116, 154, 0.7),
+    inset 0 -6px 12px -6px rgba(0, 0, 0, 0.8);
+}

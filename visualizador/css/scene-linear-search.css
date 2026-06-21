@@ -1,0 +1,199 @@
+/* ===========================================================================
+   Linear Search — "Un detective revisando una rueda de reconocimiento".
+   Prefijo de clases: lse-*  ·  usa las variables de tema de styles.css.
+   Acento de categoría (búsqueda / verde): #34d399 → var(--green).
+   =========================================================================== */
+
+.lse-stage {
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  align-content: start;
+  padding-bottom: 64px; /* aire para que el narrador (~56px) no pise la escena */
+}
+
+/* ─────────────────────────── Objetivo del detective ──────────────────────── */
+.lse-target {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  font-size: 14px;
+  color: var(--ink-dim);
+  border: 1px solid var(--stroke);
+  background: linear-gradient(180deg, rgba(52, 211, 153, 0.08), rgba(52, 211, 153, 0.02));
+  border-radius: 999px;
+  padding: 7px 16px;
+}
+.lse-target-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+.lse-target-val {
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--green);
+  background: rgba(52, 211, 153, 0.14);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  border-radius: 8px;
+  padding: 1px 9px;
+}
+
+/* ─────────────────────────── Etiqueta de zona ────────────────────────────── */
+.lse-zone-label {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 10px;
+}
+
+/* ─────────────────────────── La rueda de reconocimiento ──────────────────── */
+.lse-lineup-wrap {
+  flex: 1 1 auto;
+}
+.lse-lineup {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 18px 14px 14px;
+  border-radius: 16px;
+  border: 1px dashed var(--stroke);
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.03),
+      rgba(255, 255, 255, 0.03) 30px,
+      rgba(255, 255, 255, 0.015) 30px,
+      rgba(255, 255, 255, 0.015) 60px
+    );
+}
+
+/* Ficha / mugshot de cada sospechoso */
+.lse-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: 86px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--stroke-strong);
+  background: linear-gradient(180deg, #1c1c30, #14142440);
+  transition: transform 0.3s ease, border-color 0.3s, box-shadow 0.3s, filter 0.35s, opacity 0.35s;
+}
+.lse-mug {
+  font-size: 34px;
+  line-height: 1;
+  filter: grayscale(0.15);
+  transition: filter 0.35s;
+}
+.lse-num {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ink);
+  background: var(--panel-strong, rgba(255, 255, 255, 0.07));
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  padding: 2px 12px;
+  transition: color 0.3s, border-color 0.3s;
+}
+.lse-tag {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--ink-faint);
+}
+
+/* La lupa/foco que aparece sobre la ficha en revisión */
+.lse-lens {
+  position: absolute;
+  top: -16px;
+  right: -10px;
+  font-size: 26px;
+  opacity: 0;
+  transform: scale(0.4) rotate(-20deg);
+  transition: opacity 0.25s, transform 0.3s cubic-bezier(0.3, 1.5, 0.5, 1);
+  pointer-events: none;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+}
+
+/* ── Estado: en revisión (lupa encima, iluminado) ─────────────────────────── */
+.lse-card.lse-checking {
+  transform: translateY(-8px) scale(1.06);
+  border-color: var(--amber);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.55), 0 14px 30px -10px rgba(251, 191, 36, 0.5);
+  z-index: 2;
+}
+.lse-card.lse-checking .lse-mug {
+  filter: grayscale(0);
+}
+.lse-card.lse-checking .lse-num {
+  color: var(--amber);
+  border-color: var(--amber);
+}
+.lse-card.lse-checking .lse-lens {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+  animation: lse-lens-bob 0.9s ease-in-out infinite alternate;
+}
+@keyframes lse-lens-bob {
+  from { transform: translateY(0) rotate(-4deg); }
+  to   { transform: translateY(-4px) rotate(6deg); }
+}
+
+/* ── Estado: descartado (revisado y no coincide → gris/apagado) ───────────── */
+.lse-card.lse-cleared {
+  filter: grayscale(1) brightness(0.7);
+  opacity: 0.5;
+  border-color: var(--stroke);
+  box-shadow: none;
+}
+
+/* ── Estado: encontrado (se ilumina en dorado) ────────────────────────────── */
+.lse-card.lse-found {
+  filter: none;
+  opacity: 1;
+  transform: translateY(-10px) scale(1.1);
+  border-color: var(--green);
+  background: linear-gradient(180deg, rgba(52, 211, 153, 0.22), rgba(52, 211, 153, 0.06));
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.85), 0 0 38px -4px rgba(52, 211, 153, 0.7);
+  animation: lse-found-pop 0.55s cubic-bezier(0.3, 1.5, 0.5, 1);
+  z-index: 3;
+}
+.lse-card.lse-found .lse-mug {
+  filter: grayscale(0);
+}
+.lse-card.lse-found .lse-num {
+  color: #c9ffe9;
+  border-color: var(--green);
+  text-shadow: 0 0 12px rgba(52, 211, 153, 0.7);
+}
+@keyframes lse-found-pop {
+  0%   { transform: translateY(-8px) scale(1.06); }
+  45%  { transform: translateY(-14px) scale(1.18); }
+  100% { transform: translateY(-10px) scale(1.1); }
+}
+
+/* ── Estado: nadie coincide (todos apagados → retorna -1) ─────────────────── */
+.lse-card.lse-fail {
+  filter: grayscale(1) brightness(0.55);
+  opacity: 0.42;
+}
+
+/* ─────────────────────────── Responsivo angosto ──────────────────────────── */
+@media (max-width: 720px) {
+  .lse-lineup {
+    justify-content: center;
+  }
+  .lse-card {
+    width: 72px;
+  }
+  .lse-mug {
+    font-size: 28px;
+  }
+}

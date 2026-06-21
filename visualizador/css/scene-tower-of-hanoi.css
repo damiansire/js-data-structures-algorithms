@@ -1,0 +1,178 @@
+/* ===========================================================================
+   Tower of Hanoi — "Moving golden disks between three pegs".
+   Prefijo de clases: toh-*  ·  usa las variables de tema de styles.css.
+   Acento de categoría (math/sky): #38bdf8.
+   =========================================================================== */
+
+.toh-stage {
+  --toh-accent: #38bdf8;
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-end;
+  padding-bottom: 64px; /* aire para que el narrador (~56px) no pise las clavijas */
+}
+
+/* ───────────────────────── Contador de movimientos ───────────────────────── */
+.toh-move-tag {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--stroke);
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.08);
+}
+.toh-move-count {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--toh-accent);
+  line-height: 1;
+}
+.toh-move-min {
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+/* ─────────────────────────────── Las tres clavijas ───────────────────────── */
+.toh-pegs {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: end;
+  padding: 0 6px;
+  max-width: 760px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.toh-peg {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 300px;
+  padding-bottom: 4px;
+  border-radius: 14px;
+  transition: background 0.25s ease;
+}
+.toh-peg.toh-active {
+  background: radial-gradient(120% 80% at 50% 100%, rgba(56, 189, 248, 0.14), transparent 70%);
+}
+
+/* La varilla vertical de la clavija */
+.toh-rod {
+  position: absolute;
+  bottom: 38px;
+  width: 8px;
+  height: 230px;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, #6b7280, #3b4252);
+  box-shadow: inset 0 0 0 1px var(--stroke-strong);
+}
+
+/* La pila de discos (se apilan de abajo hacia arriba) */
+.toh-stack {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column-reverse; /* primer hijo = base (abajo) */
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  gap: 4px;
+  padding-bottom: 38px; /* deja espacio para la base */
+}
+
+/* La base/plataforma de cada clavija */
+.toh-peg-base {
+  position: absolute;
+  bottom: 30px;
+  width: 96%;
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #4b5168, #2c3144);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+
+.toh-peg-label {
+  position: absolute;
+  bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.toh-peg-letter {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--toh-accent);
+}
+.toh-peg-role {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  color: var(--ink-faint);
+}
+
+/* ─────────────────────────────────── Discos ─────────────────────────────── */
+.toh-disk {
+  position: relative;
+  height: 26px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+.toh-disk-cap {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(15, 23, 42, 0.78);
+}
+
+/* Animación de aterrizaje: el disco "cae" sobre la nueva clavija */
+@keyframes toh-drop {
+  0% {
+    transform: translateY(-150px) scale(1.04);
+    opacity: 0.85;
+  }
+  70% {
+    transform: translateY(6px) scale(1);
+    opacity: 1;
+  }
+  85% {
+    transform: translateY(-3px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.toh-disk.toh-land {
+  animation: toh-drop 0.42s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+/* Respeta la preferencia de menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .toh-disk.toh-land {
+    animation: none;
+  }
+}
+
+/* ──────────────────────────────── Responsive ────────────────────────────── */
+@media (max-width: 560px) {
+  .toh-pegs {
+    gap: 12px;
+  }
+  .toh-peg-role {
+    display: none;
+  }
+}

@@ -1,0 +1,214 @@
+/* ===========================================================================
+   Heap Sort — "Una pirámide de torneo".
+   Prefijo de clases: hs-*  ·  usa las variables de tema de styles.css.
+   El array se dibuja como un max-heap (pirámide): la raíz arriba, los hijos i
+   en 2i+1 / 2i+2. Aristas con un <svg> overlay. Debajo, la cola ordenada.
+   Acento de categoría: violeta #a78bfa.
+   =========================================================================== */
+
+.hs-stage {
+  min-height: 460px;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 14px;
+  overflow: hidden;
+  padding-bottom: 60px; /* aire para que el narrador (~56px) no pise nada */
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(167, 139, 250, 0.14), transparent 60%),
+    linear-gradient(180deg, rgba(34, 211, 238, 0.03), rgba(124, 58, 237, 0.06));
+}
+
+/* ── Columna del heap (la pirámide) ──────────────────────────────────────── */
+.hs-heap-col {
+  position: relative;
+  min-height: 300px;
+}
+
+/* Zona de juego de la pirámide: capas absolutas alineadas. */
+.hs-pyramid,
+.hs-edges {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  top: 30px;
+  bottom: 6px;
+}
+
+/* ── Etiquetas de zona ───────────────────────────────────────────────────── */
+.hs-zone-label {
+  position: relative;
+  z-index: 3;
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 6px;
+}
+.hs-zone-ok {
+  color: var(--green);
+}
+
+/* ── Aristas (SVG overlay, viewBox 0..100 en x e y) ──────────────────────── */
+.hs-edges {
+  pointer-events: none;
+  z-index: 1;
+  /* el SVG inline necesita width/height EXPLÍCITOS para mapear el viewBox 0..100;
+     con insets left/right/top/bottom su tamaño intrínseco colapsa y las aristas se
+     sueltan. Anclamos con left/top y damos tamaño calculado (mismo box que .hs-pyramid). */
+  right: auto;
+  bottom: auto;
+  width: calc(100% - 48px);
+  height: calc(100% - 36px);
+  display: block;
+}
+.hs-edge {
+  stroke: rgba(167, 139, 250, 0.5);
+  stroke-width: 2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 0.3s, opacity 0.3s;
+}
+.hs-edge.hs-edge-out {
+  stroke: rgba(255, 255, 255, 0.06);
+  opacity: 0.4;
+}
+
+/* ── Nodos (círculos posicionados en % sobre .hs-pyramid) ────────────────── */
+.hs-node {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  margin: -24px 0 0 -24px; /* centra en (left,top) */
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 34% 28%, #4a4a78, #26263f 70%);
+  border: 1.5px solid var(--stroke-strong, rgba(255, 255, 255, 0.22));
+  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7),
+    inset 0 3px 8px rgba(255, 255, 255, 0.12);
+  z-index: 2;
+  transition: transform 0.32s cubic-bezier(0.34, 1.5, 0.5, 1),
+    opacity 0.32s, box-shadow 0.3s, border-color 0.3s, background 0.3s;
+}
+.hs-node-val {
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+/* Padre bajo comparación (el "veterano" que defiende su lugar). */
+.hs-node.hs-parent {
+  background: radial-gradient(circle at 34% 28%, #7c5cff, #4a2fb0 72%);
+  border-color: var(--violet);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.85),
+    0 0 30px -4px rgba(167, 139, 250, 0.7);
+  z-index: 4;
+}
+/* Hijo más fuerte que entra al duelo. */
+.hs-node.hs-child {
+  background: radial-gradient(circle at 34% 28%, #b8860b, #7a5a06 72%);
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.85),
+    0 0 28px -4px rgba(251, 191, 36, 0.7);
+  z-index: 3;
+}
+.hs-node.hs-parent .hs-node-val,
+.hs-node.hs-child .hs-node-val {
+  color: #fff;
+}
+
+/* Intercambio: pequeño pop al cambiar de lugar el campeón. */
+.hs-node.hs-swap {
+  animation: hs-pop 0.4s ease;
+  z-index: 5;
+}
+@keyframes hs-pop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+
+/* Extracción: la raíz y el último nodo se cruzan. */
+.hs-node.hs-extract {
+  background: radial-gradient(circle at 34% 28%, #34d399, #0f9b6c 72%);
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.85),
+    0 0 30px -4px rgba(52, 211, 153, 0.7);
+  z-index: 5;
+}
+.hs-node.hs-extract .hs-node-val {
+  color: #04130d;
+}
+
+/* Nodo ya fuera del heap (su valor cayó a la cola ordenada). */
+.hs-node.hs-out {
+  transform: scale(0.74);
+  opacity: 0.22;
+  box-shadow: none;
+  filter: grayscale(0.6);
+}
+.hs-node.hs-out .hs-node-val {
+  color: var(--ink-faint);
+}
+
+/* ── Cola ordenada (la salida ascendente) ────────────────────────────────── */
+.hs-sorted-wrap {
+  align-self: end;
+}
+.hs-sorted {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 50px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  background: linear-gradient(180deg, rgba(52, 211, 153, 0.08), rgba(52, 211, 153, 0.02));
+}
+.hs-sorted-chip {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 8px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #04130d;
+  background: linear-gradient(135deg, #34d399, #22d3ee);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 6px 16px -8px rgba(52, 211, 153, 0.7);
+  opacity: 0;
+  transform: translateY(-18px) scale(0.6);
+  transition: transform 0.42s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.42s,
+    box-shadow 0.3s;
+}
+.hs-sorted-chip.hs-sorted-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.hs-sorted-chip.hs-sorted-win {
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.85),
+    0 6px 18px -6px rgba(52, 211, 153, 0.6);
+}
+
+/* ── Responsivo angosto ──────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .hs-pyramid,
+  .hs-edges {
+    left: 10px;
+    right: 10px;
+  }
+  .hs-node {
+    width: 42px;
+    height: 42px;
+    margin: -21px 0 0 -21px;
+  }
+  .hs-node-val {
+    font-size: 14px;
+  }
+}

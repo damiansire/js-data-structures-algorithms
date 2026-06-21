@@ -1,0 +1,107 @@
+/* ===========================================================================
+   Escena: Fibonacci — la espiral áurea (teselación clásica).
+   Prefijo de clases: fib-*. Usa las variables del tema (var(--violet), etc.).
+   La escena enlaza esta hoja en runtime (no se toca index.html).
+   =========================================================================== */
+
+.fib-stage {
+  /* lienzo más alto: la espiral está limitada por la altura, así que crece */
+  min-height: 660px;
+  display: block;
+  background: radial-gradient(
+      120% 120% at 70% 20%,
+      rgba(167, 139, 250, 0.08),
+      transparent 55%
+    ),
+    radial-gradient(120% 120% at 20% 90%, rgba(34, 211, 238, 0.07), transparent 55%);
+}
+
+/* El SVG ocupa casi todo el canvas; se deja ~56px abajo para el narrador. */
+.fib-svg {
+  position: absolute;
+  inset: 12px 12px 54px 12px;
+  width: calc(100% - 24px);
+  height: calc(100% - 66px);
+  overflow: visible;
+}
+
+/* ── Cada celda: cuadrado + arco + número ──────────────────────────────── */
+.fib-cell {
+  opacity: 0;
+}
+.fib-cell.show {
+  opacity: 1;
+}
+.fib-cell.anim {
+  animation: fib-pop 0.55s cubic-bezier(0.34, 1.45, 0.5, 1) both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes fib-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Cuadrado con gradiente del tema y borde nítido (no escala con el viewBox). */
+.fib-square {
+  fill: url(#fibGradSq);
+  stroke: var(--violet);
+  stroke-opacity: 0.55;
+  stroke-width: 1.4px;
+  vector-effect: non-scaling-stroke;
+  paint-order: stroke;
+}
+
+/* ── Arco: trazo animado de la espiral (stroke-dashoffset) ─────────────── */
+.fib-arc {
+  fill: none;
+  stroke: url(#fibGradArc);
+  stroke-width: 2.4px;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 3px rgba(251, 191, 36, 0.45));
+  /* longitud generosa para cubrir el cuarto de círculo a cualquier escala */
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+}
+.fib-cell.anim .fib-arc {
+  animation: fib-draw 0.85s ease 0.18s forwards;
+}
+@keyframes fib-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+/* Si ya está mostrada sin animación (reposición tras un retroceso), trazo lleno. */
+.fib-cell.show:not(.anim) .fib-arc {
+  stroke-dashoffset: 0;
+}
+
+/* ── Número del término dentro del cuadrado ────────────────────────────── */
+.fib-num {
+  fill: var(--ink);
+  font-family: var(--mono);
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: central;
+  paint-order: stroke;
+  stroke: rgba(8, 10, 24, 0.6);
+  stroke-width: 0.5px;
+  pointer-events: none;
+}
+
+/* El cuadrado más grande (último) lleva un realce extra al aparecer. */
+.fib-cell:last-of-type .fib-square {
+  stroke: var(--cyan);
+  stroke-opacity: 0.8;
+}

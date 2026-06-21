@@ -1,0 +1,224 @@
+/* ===========================================================================
+   LSD Radix Sort — "Clasificando el correo, dígito por dígito".
+   Prefijo de clases: rx-*  ·  usa las variables de tema de styles.css.
+   Acento de categoría: violeta (#a78bfa = var(--violet)).
+   =========================================================================== */
+
+.rx-stage {
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  align-content: start;
+  padding-bottom: 64px; /* aire para que el narrador no pise las zonas */
+}
+
+/* ─────────────────────────── Etiquetas de zona ───────────────────────────── */
+.rx-zone-label {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 8px;
+}
+.rx-zone-accent {
+  color: var(--violet);
+}
+
+/* ─────────────────────────── La fila de correo ───────────────────────────── */
+.rx-row-wrap {
+  flex: 0 0 auto;
+}
+.rx-row {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: 76px;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px dashed var(--stroke);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Una carta de correo */
+.rx-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  padding: 8px 10px 6px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(167, 139, 250, 0.12), rgba(167, 139, 250, 0.04));
+  border: 1px solid var(--stroke);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.rx-card-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+.rx-card-num {
+  display: inline-flex;
+  gap: 1px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--ink-dim);
+}
+.rx-digit {
+  display: inline-block;
+  padding: 0 2px;
+  border-radius: 5px;
+  transition: color 0.25s, background 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+/* Dígito actualmente bajo examen */
+.rx-digit.rx-digit-on {
+  color: #1a0f2e;
+  background: var(--violet);
+  box-shadow: 0 0 14px -2px rgba(167, 139, 250, 0.9);
+  transform: translateY(-1px) scale(1.12);
+}
+
+/* Carta de origen resaltada mientras se reparte */
+.rx-card.rx-active {
+  transform: translateY(-6px) scale(1.06);
+  border-color: var(--violet);
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.55), 0 10px 24px -10px rgba(167, 139, 250, 0.7);
+}
+
+/* Recolectada: pequeño pop al rearmar la fila */
+.rx-card.rx-gathered {
+  animation: rx-pop 0.4s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+@keyframes rx-pop {
+  0% {
+    transform: translateY(-12px) scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Final ordenado: brillo verde en cascada */
+.rx-card.rx-sorted {
+  animation: rx-win 0.5s ease both;
+  border-color: rgba(52, 211, 153, 0.6);
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.45), 0 10px 24px -10px rgba(52, 211, 153, 0.6);
+}
+@keyframes rx-win {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ─────────────────────────── Los 10 casilleros ───────────────────────────── */
+.rx-bins-wrap {
+  flex: 1 1 auto;
+}
+.rx-bins {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 6px;
+  align-items: stretch;
+}
+.rx-bin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 4px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+}
+.rx-bin-label {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink-faint);
+  background: var(--panel-strong, rgba(255, 255, 255, 0.07));
+  border: 1px solid var(--stroke);
+  transition: color 0.3s, background 0.3s, border-color 0.3s;
+}
+.rx-bin-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  min-height: 96px;
+  align-items: center;
+}
+
+/* Casillero activo (recibiendo una carta) */
+.rx-bin.rx-bin-hot {
+  border-color: var(--violet);
+  background: linear-gradient(180deg, rgba(167, 139, 250, 0.14), rgba(167, 139, 250, 0.03));
+  box-shadow: 0 0 22px -6px rgba(167, 139, 250, 0.65);
+}
+.rx-bin.rx-bin-hot .rx-bin-label {
+  color: #1a0f2e;
+  background: var(--violet);
+  border-color: var(--violet);
+}
+
+/* Carta depositada dentro de un casillero (versión compacta) */
+.rx-bin-body .rx-card {
+  flex-direction: row;
+  gap: 4px;
+  padding: 4px 6px;
+  width: 100%;
+  justify-content: center;
+}
+.rx-bin-body .rx-card-icon {
+  font-size: 13px;
+}
+.rx-bin-body .rx-card-num {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+/* Caída de la carta al casillero */
+.rx-card.rx-drop {
+  animation: rx-drop 0.42s cubic-bezier(0.4, 1.2, 0.5, 1) both;
+}
+@keyframes rx-drop {
+  0% {
+    transform: translateY(-30px) scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ─────────────────────────── Responsivo angosto ──────────────────────────── */
+@media (max-width: 720px) {
+  .rx-bins {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .rx-card-num {
+    font-size: 14px;
+  }
+}

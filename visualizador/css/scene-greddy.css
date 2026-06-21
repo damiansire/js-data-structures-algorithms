@@ -1,0 +1,245 @@
+/* ===========================================================================
+   Escena Greedy — Caja registradora dando vuelto.
+   Prefijo de clases: gr-*  (no toca scenes.css ni styles.css)
+   =========================================================================== */
+
+.gr-stage {
+  min-height: 460px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 26px 22px 64px; /* banda inferior libre para el narrador */
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.05), rgba(167, 139, 250, 0.07));
+}
+
+/* ── Caja registradora ─────────────────────────────────────────────────────── */
+.gr-register {
+  width: min(640px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ── Display LED del restante ──────────────────────────────────────────────── */
+.gr-display {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 16px 22px;
+  border-radius: 14px;
+  background: radial-gradient(120% 140% at 50% 0%, #11261f, #08130f 70%);
+  border: 1px solid var(--stroke);
+  box-shadow: inset 0 0 28px -6px rgba(52, 211, 153, 0.45), 0 10px 30px -14px rgba(0, 0, 0, 0.8);
+}
+.gr-led-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  align-self: center;
+  margin-right: auto;
+}
+.gr-led-cur,
+.gr-led-value {
+  font-family: var(--mono);
+  color: var(--green);
+  text-shadow: 0 0 12px rgba(52, 211, 153, 0.7);
+  font-weight: 600;
+  line-height: 1;
+}
+.gr-led-cur {
+  font-size: 22px;
+}
+.gr-led-value {
+  font-size: 44px;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s, text-shadow 0.3s;
+  animation: gr-flicker 0.28s ease;
+}
+@keyframes gr-flicker {
+  0% { opacity: 0.35; transform: translateY(-2px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.gr-display.gr-zero .gr-led-value,
+.gr-display.gr-zero .gr-led-cur {
+  color: var(--amber);
+  text-shadow: 0 0 14px rgba(251, 191, 36, 0.8);
+}
+.gr-display.gr-done {
+  box-shadow: inset 0 0 30px -4px rgba(251, 191, 36, 0.6), 0 0 36px -6px rgba(251, 191, 36, 0.5);
+}
+
+/* ── Cuerpo: denominaciones + bandeja ──────────────────────────────────────── */
+.gr-register-body {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(220px, 1.2fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.gr-denoms {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+}
+.gr-denom-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s, opacity 0.3s;
+}
+.gr-denom-tag {
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.gr-denom-row.gr-active {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.55);
+  box-shadow: 0 0 24px -8px rgba(251, 191, 36, 0.7);
+  transform: translateX(4px);
+}
+.gr-denom-row.gr-active .gr-denom-tag {
+  color: var(--amber);
+}
+.gr-denom-row.gr-exhausted {
+  opacity: 0.42;
+  filter: grayscale(0.55);
+  border-color: rgba(255, 113, 133, 0.4);
+}
+
+/* ── Piezas: billetes (rectángulo) y monedas (círculo) ─────────────────────── */
+.gr-piece {
+  display: grid;
+  place-items: center;
+  color: #08130f;
+  font-weight: 800;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.7), inset 0 2px 6px rgba(255, 255, 255, 0.45);
+  flex: none;
+}
+.gr-piece-face {
+  font-family: var(--mono);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+/* Billete: rectángulo verde, más grande = más valor */
+.gr-bill {
+  width: 86px;
+  height: 44px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #6ee7b7, #34d399 60%, #10b981);
+}
+.gr-bill .gr-piece-face {
+  font-size: 16px;
+}
+/* Moneda: círculo ámbar, más chica = menos valor */
+.gr-coin {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fde68a, #fbbf24 60%, #d97706);
+}
+.gr-coin .gr-piece-face {
+  font-size: 13px;
+}
+
+/* ── Bandeja de vuelto entregado ───────────────────────────────────────────── */
+.gr-tray {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--stroke);
+  box-shadow: inset 0 14px 30px -22px rgba(0, 0, 0, 0.9);
+}
+.gr-tray-label {
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.gr-tray-inner {
+  flex: 1;
+  min-height: 180px;
+  max-height: 230px;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 8px;
+  padding: 6px 2px;
+}
+
+/* Caída animada de la pieza hacia la bandeja */
+.gr-piece.gr-drop {
+  animation: gr-drop 0.55s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+@keyframes gr-drop {
+  0% {
+    transform: translateY(-220px) rotate(-12deg) scale(0.85);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  78% {
+    transform: translateY(0) rotate(4deg) scale(1.08);
+  }
+  100% {
+    transform: translateY(0) rotate(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ── Conteo de piezas en el aside ──────────────────────────────────────────── */
+.gr-count-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.gr-count-empty {
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+.gr-count-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+.gr-dot {
+  width: 10px;
+  height: 10px;
+  flex: none;
+}
+.gr-dot-bill {
+  border-radius: 3px;
+  background: linear-gradient(135deg, #6ee7b7, #10b981);
+}
+.gr-dot-coin {
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fde68a, #d97706);
+}
+
+/* ── Responsive: apilar columnas en angosto ────────────────────────────────── */
+@media (max-width: 560px) {
+  .gr-register-body {
+    grid-template-columns: 1fr;
+  }
+}

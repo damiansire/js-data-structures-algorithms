@@ -1,0 +1,313 @@
+/* ===========================================================================
+   Escena: Linked List — "Un tren de carga".
+   Cada nodo = un VAGÓN; el puntero next = el ENGANCHE (cadena + flechita →).
+   Prefijo `ll-`. Usa las variables del tema global.
+   =========================================================================== */
+
+.ll-stage {
+  min-height: 460px;
+  display: flex;
+  align-items: center;
+  padding-bottom: 64px; /* aire para que el narrador global (abajo) no pise el tren */
+  background:
+    radial-gradient(120% 80% at 50% 120%, rgba(34, 211, 238, 0.06), transparent 60%),
+    linear-gradient(180deg, rgba(167, 139, 250, 0.05), transparent 40%);
+  overflow-x: auto;
+}
+
+/* Tren completo: locomotora + riel de vagones */
+.ll-train {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  width: 100%;
+  min-height: 200px;
+  padding: 0 6px;
+}
+
+/* ── Locomotora (representa el puntero head al frente del tren) ───── */
+.ll-loco {
+  position: relative;
+  flex: 0 0 auto;
+  width: 96px;
+  height: 96px;
+  border-radius: 16px 22px 12px 12px;
+  background: linear-gradient(160deg, #2a2a44, #15152a);
+  border: 1px solid var(--stroke-strong);
+  box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.7), inset 0 2px 8px rgba(255, 255, 255, 0.08);
+  display: grid;
+  place-items: center;
+  margin-right: 2px;
+}
+.ll-loco-face {
+  font-size: 46px;
+  line-height: 1;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
+}
+.ll-loco-smoke {
+  position: absolute;
+  top: -10px;
+  left: 22px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  filter: blur(2px);
+  animation: ll-smoke 2.4s ease-in-out infinite;
+}
+@keyframes ll-smoke {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  30% { opacity: 0.6; }
+  100% { transform: translateY(-46px) translateX(-10px) scale(1.5); opacity: 0; }
+}
+
+/* Riel donde viven vagones y enganches */
+.ll-rail {
+  display: flex;
+  align-items: flex-end;
+  flex: 1 1 auto;
+}
+
+/* ── Vagón = nodo ─────────────────────────────────────────────────── */
+.ll-car {
+  position: relative;
+  flex: 0 0 auto;
+  width: 92px;
+  height: 78px;
+  border-radius: 12px 12px 8px 8px;
+  display: grid;
+  place-items: center;
+  color: #07101a;
+  font-weight: 800;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 10px 22px -8px rgba(0, 0, 0, 0.7),
+    inset 0 3px 10px rgba(255, 255, 255, 0.4),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.18);
+  transition: box-shadow 0.3s, transform 0.3s, filter 0.3s;
+}
+.ll-car-val {
+  font-family: var(--mono);
+  font-size: 24px;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+/* ruedas */
+.ll-car-wheels {
+  position: absolute;
+  bottom: -11px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 14px;
+}
+.ll-car-wheels i {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #4a4a66, #111120 70%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.35);
+}
+
+.ll-car.is-head {
+  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.85),
+    0 10px 22px -8px rgba(0, 0, 0, 0.7), inset 0 3px 10px rgba(255, 255, 255, 0.4);
+}
+.ll-car.is-last {
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.9),
+    0 10px 22px -8px rgba(0, 0, 0, 0.7), inset 0 3px 10px rgba(255, 255, 255, 0.4);
+}
+.ll-car.is-head.is-last {
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.95),
+    0 10px 22px -8px rgba(0, 0, 0, 0.7), inset 0 3px 10px rgba(255, 255, 255, 0.4);
+}
+
+/* Banderines head / last sobre el vagón */
+.ll-flag {
+  position: absolute;
+  top: -26px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #07101a;
+}
+.ll-flag-head {
+  left: -4px;
+  background: var(--cyan);
+  box-shadow: 0 4px 10px -3px rgba(34, 211, 238, 0.7);
+}
+.ll-flag-last {
+  right: -4px;
+  background: var(--green);
+  box-shadow: 0 4px 10px -3px rgba(52, 211, 153, 0.7);
+}
+.ll-car.is-head.is-last .ll-flag-head { left: 50%; transform: translateX(-115%); }
+.ll-car.is-head.is-last .ll-flag-last { right: 50%; transform: translateX(115%); }
+
+/* ── Enganche = puntero next (cadena + flechita) ──────────────────── */
+.ll-link {
+  position: relative;
+  flex: 0 0 auto;
+  width: 46px;
+  height: 78px;
+  display: grid;
+  place-items: center;
+  align-self: flex-end;
+}
+.ll-link-chain {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 6px;
+  transform: translateY(-50%);
+  border-radius: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.55) 0 5px,
+    rgba(255, 255, 255, 0.12) 5px 10px
+  );
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+.ll-link-arrow {
+  position: relative;
+  z-index: 2;
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  background: rgba(8, 8, 18, 0.85);
+  border: 1px solid var(--stroke-strong);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+}
+.ll-link-label {
+  position: absolute;
+  bottom: -2px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+/* La cola: next = null */
+.ll-link.is-null .ll-link-chain {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(118, 116, 154, 0.5) 0 4px,
+    transparent 4px 9px
+  );
+}
+.ll-link.is-null .ll-link-arrow {
+  color: var(--ink-faint);
+  border-style: dashed;
+}
+.ll-link.is-null .ll-link-label {
+  color: var(--green);
+}
+
+/* Enganche recién creado: pulso de acople */
+.ll-link-join .ll-link-arrow {
+  animation: ll-couple 0.6s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+.ll-link-join .ll-link-chain {
+  animation: ll-chain-snap 0.6s ease;
+}
+@keyframes ll-couple {
+  0% { transform: scale(0.2) rotate(-90deg); color: var(--amber); }
+  60% { transform: scale(1.35) rotate(10deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+@keyframes ll-chain-snap {
+  0% { transform: translateY(-50%) scaleX(0.1); opacity: 0; }
+  60% { transform: translateY(-50%) scaleX(1.08); opacity: 1; }
+  100% { transform: translateY(-50%) scaleX(1); }
+}
+
+/* ── Vagón que CAE desde arriba con rebote al engancharse ─────────── */
+.ll-fall {
+  animation: ll-drop 0.62s cubic-bezier(0.3, 1.55, 0.5, 1);
+}
+@keyframes ll-drop {
+  0% { transform: translateY(-300px) rotate(-6deg); opacity: 0; }
+  55% { opacity: 1; }
+  72% { transform: translateY(0) scaleY(0.82) scaleX(1.08); }
+  86% { transform: translateY(-14px); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* ── Vagón que se desengancha y SALE ──────────────────────────────── */
+.ll-leave {
+  animation: ll-depart-tail 0.5s cubic-bezier(0.4, 0, 0.7, 0.4) forwards;
+  z-index: 1;
+}
+@keyframes ll-depart-tail {
+  to { transform: translate(160px, -40px) rotate(16deg); opacity: 0; }
+}
+.ll-leave-front {
+  animation: ll-depart-head 0.5s cubic-bezier(0.4, 0, 0.7, 0.4) forwards;
+  z-index: 1;
+}
+@keyframes ll-depart-head {
+  to { transform: translate(-160px, -40px) rotate(-16deg); opacity: 0; }
+}
+/* Cadena que se rompe al borrar */
+.ll-link-break .ll-link-chain {
+  animation: ll-break 0.5s ease forwards;
+}
+.ll-link-break .ll-link-arrow {
+  animation: ll-arrow-fade 0.5s ease forwards;
+}
+@keyframes ll-break {
+  to { transform: translateY(-50%) scaleX(0.1); opacity: 0; }
+}
+@keyframes ll-arrow-fade {
+  to { transform: scale(0.3) rotate(60deg); opacity: 0; color: var(--rose); }
+}
+
+.ll-empty {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-faint);
+  padding: 0 18px 28px;
+  align-self: center;
+}
+
+/* ── Leyenda flotante (qué es head / last) ────────────────────────── */
+.ll-legends {
+  position: absolute;
+  top: 22px;
+  right: 26px;
+  display: flex;
+  gap: 10px;
+}
+.ll-legend {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 11px;
+}
+.ll-legend b {
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 1px 8px;
+  border-radius: 6px;
+  color: #07101a;
+}
+.ll-legend small {
+  color: var(--ink-faint);
+  margin-top: 2px;
+}
+.ll-legend-head b { background: var(--cyan); }
+.ll-legend-last b { background: var(--green); }
+
+@media (max-width: 560px) {
+  .ll-legends { display: none; }
+  .ll-car { width: 78px; }
+  .ll-link { width: 38px; }
+}

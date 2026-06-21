@@ -1,0 +1,245 @@
+/* ===========================================================================
+   Topological Sort (Kahn) — "Vestirse en el orden correcto".
+   Prefijo de clases: tsg-*  ·  usa las variables de tema de styles.css.
+   Acento de categoría (grafos): #f472b6 (rosa).
+   El DAG arriba (nodos = prendas, aristas dirigidas con flecha); abajo la
+   lista numerada del orden en que uno se viste.
+   =========================================================================== */
+
+.tsg-stage {
+  --tsg-accent: #f472b6;
+  --tsg-accent-soft: rgba(244, 114, 182, 0.16);
+  min-height: 460px;
+  display: block;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(244, 114, 182, 0.12), transparent 60%),
+    linear-gradient(180deg, rgba(244, 114, 182, 0.04), rgba(124, 58, 237, 0.05));
+}
+
+/* Zona del grafo. Deja ~56px libres abajo para el narrador y la lista de orden. */
+.tsg-board,
+.tsg-edges {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  top: 22px;
+  bottom: 150px; /* deja lugar para la fila de orden + el narrador */
+}
+
+/* ── Aristas (SVG overlay, viewBox 0..100 en x e y) ───────────────────────── */
+.tsg-edges {
+  pointer-events: none;
+  z-index: 1;
+}
+.tsg-edge {
+  stroke: rgba(244, 114, 182, 0.6);
+  stroke-width: 2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  transition: opacity 0.45s ease;
+}
+.tsg-arrowhead {
+  fill: rgba(244, 114, 182, 0.8);
+}
+.tsg-edge.tsg-edge-gone {
+  stroke-dasharray: 4 4;
+}
+
+/* ── Nodos (círculos posicionados en % sobre .tsg-board) ──────────────────── */
+.tsg-node {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  margin: -35px 0 0 -35px; /* centra en (left,top) */
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  background: radial-gradient(circle at 34% 28%, #3a3358, #232038 72%);
+  border: 1.5px solid var(--stroke-strong, rgba(255, 255, 255, 0.2));
+  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7),
+    inset 0 3px 8px rgba(255, 255, 255, 0.1);
+  z-index: 2;
+  transition: transform 0.35s cubic-bezier(0.34, 1.5, 0.5, 1), opacity 0.4s,
+    box-shadow 0.35s, border-color 0.35s, background 0.35s;
+}
+.tsg-emoji {
+  font-size: 26px;
+  line-height: 1;
+}
+.tsg-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: var(--ink-dim);
+  max-width: 64px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* badge de in-degree, arriba a la derecha del nodo */
+.tsg-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink);
+  background: #2a2740;
+  border: 1.5px solid var(--stroke-strong, rgba(255, 255, 255, 0.22));
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.6);
+  transition: background 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+/* nodo con in-degree 0: listo para ponerse (brilla) */
+.tsg-node.tsg-ready {
+  border-color: var(--tsg-accent);
+  box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.55),
+    0 0 30px -4px rgba(244, 114, 182, 0.7);
+  z-index: 3;
+}
+.tsg-node.tsg-ready .tsg-badge {
+  background: var(--tsg-accent);
+  border-color: #fff;
+  color: #2a0a1c;
+  box-shadow: 0 0 12px 2px rgba(244, 114, 182, 0.7);
+}
+.tsg-node.tsg-ready .tsg-label {
+  color: var(--ink);
+}
+
+/* el momento de ponerse la prenda: un pop */
+.tsg-node.tsg-pick {
+  animation: tsg-pop 0.5s ease;
+  border-color: var(--tsg-accent);
+  box-shadow: 0 0 0 4px rgba(244, 114, 182, 0.7),
+    0 0 40px -2px rgba(244, 114, 182, 0.8);
+  z-index: 5;
+}
+@keyframes tsg-pop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+/* prenda recién liberada (llegó a in-degree 0 por quitar una arista) */
+.tsg-node.tsg-freed {
+  animation: tsg-freed 0.6s ease;
+}
+@keyframes tsg-freed {
+  0%, 100% { transform: scale(1); }
+  40% { transform: scale(1.12); }
+}
+
+/* prenda ya puesta: se atenúa en el tablero */
+.tsg-node.tsg-done {
+  opacity: 0.34;
+  border-color: rgba(52, 211, 153, 0.5);
+  box-shadow: 0 0 0 1.5px rgba(52, 211, 153, 0.4);
+}
+.tsg-node.tsg-done .tsg-badge {
+  background: rgba(52, 211, 153, 0.25);
+  border-color: rgba(52, 211, 153, 0.6);
+  color: #c9ffe9;
+}
+
+/* ── Lista de orden (la salida numerada) ──────────────────────────────────── */
+.tsg-order-wrap {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  bottom: 64px; /* arriba del narrador */
+  z-index: 4;
+}
+.tsg-zone-label {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--tsg-accent);
+  margin-bottom: 6px;
+}
+.tsg-order {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(244, 114, 182, 0.3);
+  background: linear-gradient(180deg, rgba(244, 114, 182, 0.08), rgba(244, 114, 182, 0.02));
+}
+.tsg-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 999px;
+  background: var(--panel-strong, rgba(255, 255, 255, 0.07));
+  border: 1px solid var(--stroke);
+  opacity: 0;
+  transform: translateY(-10px) scale(0.8);
+  transition: transform 0.4s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.35s,
+    box-shadow 0.35s, border-color 0.35s;
+}
+.tsg-chip.tsg-chip-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.tsg-chip-num {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 800;
+  color: #2a0a1c;
+  background: var(--tsg-accent);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.tsg-chip-emoji {
+  font-size: 18px;
+  line-height: 1;
+}
+.tsg-chip-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.tsg-chip.tsg-chip-win {
+  border-color: rgba(52, 211, 153, 0.6);
+  box-shadow: 0 0 0 1.5px rgba(52, 211, 153, 0.5),
+    0 6px 18px -8px rgba(52, 211, 153, 0.5);
+}
+
+/* código del orden en el aside */
+.tsg-order-code {
+  display: block;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* ── Responsivo angosto ───────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .tsg-node {
+    width: 58px;
+    height: 58px;
+    margin: -29px 0 0 -29px;
+  }
+  .tsg-emoji {
+    font-size: 22px;
+  }
+}

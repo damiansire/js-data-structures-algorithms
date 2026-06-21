@@ -1,0 +1,158 @@
+/* ===========================================================================
+   Escena: Árbol GENERAL (n-ario) — organigrama que se despliega en abanico.
+   Prefijo de clases: tr-
+   =========================================================================== */
+
+.tr-stage {
+  min-height: 460px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-bottom: 56px; /* aire para que el narrador no pise las tarjetas */
+}
+
+/* contenedor con scroll horizontal por si el árbol no entra a lo ancho */
+.tr-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  justify-content: center;
+}
+.tr-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+.tr-scroll::-webkit-scrollbar-thumb {
+  background: var(--stroke-strong);
+  border-radius: 8px;
+}
+
+/* plano absoluto donde viven líneas (svg) y tarjetas (divs) */
+.tr-plane {
+  position: relative;
+  margin: 0 auto;
+  flex: none;
+}
+
+/* ── Líneas padre→hijo (svg overlay) ─────────────────────────────────────── */
+.tr-links {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.tr-link {
+  fill: none;
+  stroke: var(--stroke-strong);
+  stroke-width: 2;
+  stroke-linecap: round;
+  /* truco de "dibujado": se revela con dashoffset */
+  stroke-dasharray: 240;
+  stroke-dashoffset: 240;
+  opacity: 0;
+  transition: stroke-dashoffset 0.55s cubic-bezier(0.3, 0.8, 0.3, 1), opacity 0.4s,
+    stroke 0.4s;
+}
+.tr-link.tr-link-shown {
+  opacity: 1;
+  stroke-dashoffset: 0;
+}
+.tr-link.tr-link-active {
+  stroke: color-mix(in srgb, var(--cyan) 70%, transparent);
+}
+
+/* ── Tarjetas-nodo ───────────────────────────────────────────────────────── */
+.tr-node {
+  position: absolute;
+  transform: translate(-50%, -50%) scale(0.55);
+  transform-origin: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 150px;
+  padding: 9px 13px;
+  border-radius: 13px;
+  background: linear-gradient(180deg, #2a2a44, #1d1d33);
+  border: 1px solid var(--stroke);
+  color: var(--ink);
+  box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  opacity: 0;
+  z-index: 2;
+  transition: transform 0.5s cubic-bezier(0.34, 1.4, 0.5, 1), opacity 0.4s,
+    box-shadow 0.35s, border-color 0.35s, background 0.35s, filter 0.35s;
+  will-change: transform, opacity;
+}
+.tr-node.tr-shown {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.tr-ico {
+  font-size: 18px;
+  line-height: 1;
+}
+.tr-label {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* raíz: acento violeta */
+.tr-node.tr-root {
+  background: linear-gradient(180deg, #3a2d5c, #2a2046);
+  border-color: color-mix(in srgb, var(--violet) 55%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--violet) 40%, transparent),
+    0 12px 28px -10px rgba(124, 58, 237, 0.6);
+}
+
+/* hojas: tono apenas más tenue */
+.tr-node.tr-leaf-node .tr-label {
+  color: var(--ink-dim);
+}
+
+/* despliegue en abanico: pequeño rebote al aparecer desde el padre */
+.tr-node.tr-fan {
+  animation: tr-fan-in 0.55s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+@keyframes tr-fan-in {
+  0% {
+    transform: translate(-50%, -50%) scale(0.4) translateY(-26px);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* nodo que ya fue expandido: marca verde sutil */
+.tr-node.tr-expanded {
+  border-color: color-mix(in srgb, var(--green) 35%, var(--stroke));
+}
+
+/* nodo visitado (terminado): leve atenuación */
+.tr-node.tr-visited {
+  filter: saturate(0.9);
+}
+
+/* nodo ACTUAL bajo el cursor del recorrido: foco ámbar */
+.tr-node.tr-current {
+  z-index: 6;
+  border-color: var(--amber);
+  background: linear-gradient(180deg, #4a3a12, #352a0d);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--amber) 85%, transparent),
+    0 0 34px -4px rgba(251, 191, 36, 0.7);
+}
+.tr-node.tr-current.tr-shown {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+.tr-node.tr-current .tr-label {
+  color: var(--ink);
+}

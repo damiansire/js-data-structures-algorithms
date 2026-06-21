@@ -1,0 +1,256 @@
+/* ===========================================================================
+   Escena BFS — "Ondas en un estanque". Todas las clases con prefijo bfs-.
+   Grafo no dirigido fijo: nodos como círculos absolutos en %, aristas en un
+   <svg> overlay (viewBox 0..100). Los nodos se colorean por NIVEL/distancia
+   desde el origen; cada onda se expande nivel por nivel.
+   Accent de categoría (grafos): #f472b6 (rosa).
+   =========================================================================== */
+
+.bfs-stage {
+  --bfs-accent: #f472b6;
+  min-height: 460px;
+  display: block;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% 8%, rgba(244, 114, 182, 0.12), transparent 58%),
+    linear-gradient(180deg, rgba(56, 189, 248, 0.04), rgba(244, 114, 182, 0.06));
+}
+
+/* Zona de juego: deja una banda inferior amplia (~92px) para que el pill del
+   narrador NO tape la fila inferior de nodos. .bfs-board y .bfs-edges comparten
+   EXACTAMENTE el mismo box (mismos left/top + mismos width/height). */
+.bfs-board,
+.bfs-edges {
+  position: absolute;
+  left: 30px;
+  top: 24px;
+  /* width/height EXPLÍCITOS en vez de insets right/bottom: así el <svg> tiene
+     dimensiones intrínsecas reales y su viewBox 0..100 mapea 1:1 al box. Un SVG
+     inline dimensionado sólo por insets right/bottom puede colapsar ese mapeo y
+     las aristas quedan cortas/desfasadas respecto al centro de los nodos. */
+  width: calc(100% - 60px); /* left 30px + right 30px */
+  height: calc(100% - 116px); /* top 24px + bottom 92px */
+}
+
+/* ── Aristas (SVG overlay) ─────────────────────────────────────────────── */
+.bfs-edges {
+  pointer-events: none;
+  z-index: 1;
+}
+.bfs-edge {
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 0.35s ease, stroke-width 0.35s ease;
+}
+/* arista recorrida por BFS: encendida de forma permanente */
+.bfs-edge.bfs-edge-on {
+  stroke: rgba(244, 114, 182, 0.6);
+  stroke-width: 3;
+}
+/* arista que se está recorriendo en este paso */
+.bfs-edge.bfs-edge-active {
+  stroke: var(--bfs-accent);
+  stroke-width: 4;
+  filter: drop-shadow(0 0 4px rgba(244, 114, 182, 0.8));
+}
+/* arista hacia un nodo ya visitado: parpadeo tenue y se descarta */
+.bfs-edge.bfs-skip {
+  animation: bfs-skip-flash 0.5s ease;
+}
+@keyframes bfs-skip-flash {
+  0%,
+  100% {
+    stroke: rgba(255, 255, 255, 0.14);
+  }
+  40% {
+    stroke: rgba(148, 163, 184, 0.7);
+    stroke-width: 3;
+  }
+}
+
+/* ── Nodos (círculos posicionados en % sobre .bfs-board) ───────────────── */
+/* El color de relleno se deriva del nivel BFS via hue: del rosa (nivel 0)
+   hacia el cian (niveles lejanos). --bfs-level y --bfs-max los fija el JS. */
+.bfs-node {
+  --bfs-level: 0;
+  --bfs-max: 1;
+  --bfs-hue: calc(330deg - (var(--bfs-level) / max(var(--bfs-max), 1)) * 150deg);
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  margin: -25px 0 0 -25px; /* centra en (left,top) */
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 34% 28%, #3b3b5c, #232338 72%);
+  border: 1.5px solid var(--stroke-strong, rgba(255, 255, 255, 0.2));
+  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7),
+    inset 0 3px 8px rgba(255, 255, 255, 0.1);
+  z-index: 2;
+  transition: background 0.4s ease, border-color 0.3s ease, box-shadow 0.3s ease,
+    transform 0.3s cubic-bezier(0.34, 1.5, 0.5, 1);
+}
+.bfs-node-val {
+  position: relative;
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ink-dim);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+  z-index: 2;
+}
+
+/* el origen siempre tiene un anillo distintivo */
+.bfs-node.bfs-source {
+  border-color: rgba(244, 114, 182, 0.55);
+}
+
+/* nodo visitado: se pinta según su nivel (onda) */
+.bfs-node.bfs-visited {
+  background: radial-gradient(
+    circle at 34% 28%,
+    hsl(var(--bfs-hue) 85% 68%),
+    hsl(var(--bfs-hue) 70% 46%) 72%
+  );
+  border-color: hsl(var(--bfs-hue) 90% 78%);
+  box-shadow: 0 0 0 1.5px hsl(var(--bfs-hue) 80% 60% / 0.5),
+    0 10px 26px -8px hsl(var(--bfs-hue) 80% 50% / 0.55);
+}
+.bfs-node.bfs-visited .bfs-node-val {
+  color: #1a1026;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.35);
+}
+
+/* nodo recién dequeued: lo estamos explorando ahora */
+.bfs-node.bfs-dequeued {
+  transform: scale(1.12);
+  box-shadow: 0 0 0 3px var(--bfs-accent),
+    0 0 30px -4px rgba(244, 114, 182, 0.7);
+  z-index: 5;
+}
+
+/* nodo activo (resaltado del paso) */
+.bfs-node.bfs-active {
+  z-index: 4;
+}
+.bfs-node.bfs-frontier {
+  transform: scale(1.08);
+}
+
+/* árbol BFS completo: pequeño brillo final */
+.bfs-node.bfs-win {
+  border-color: rgba(52, 211, 153, 0.7);
+  box-shadow: 0 0 0 1.5px rgba(52, 211, 153, 0.55),
+    0 8px 24px -8px rgba(52, 211, 153, 0.45),
+    0 0 18px -2px hsl(var(--bfs-hue) 80% 55% / 0.5);
+}
+
+/* ── Onda (ripple) que emana del nodo al visitarse ─────────────────────── */
+.bfs-ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+.bfs-node.bfs-ping .bfs-ripple {
+  animation: bfs-ping 0.9s cubic-bezier(0.2, 0.6, 0.3, 1);
+}
+@keyframes bfs-ping {
+  0% {
+    box-shadow: 0 0 0 0 rgba(244, 114, 182, 0.55);
+    opacity: 1;
+  }
+  100% {
+    box-shadow: 0 0 0 26px rgba(244, 114, 182, 0);
+    opacity: 0;
+  }
+}
+
+/* ── Aside: la cola en vivo ────────────────────────────────────────────── */
+.bfs-queue-card .bfs-queue {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  min-height: 34px;
+  margin-top: 4px;
+}
+.bfs-chip {
+  --bfs-level: 0;
+  --bfs-max: 1;
+  --bfs-hue: calc(330deg - (var(--bfs-level) / max(var(--bfs-max), 1)) * 150deg);
+  display: inline-grid;
+  place-items: center;
+  min-width: 26px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #1a1026;
+  background: hsl(var(--bfs-hue) 80% 64%);
+  border: 1px solid hsl(var(--bfs-hue) 85% 76%);
+  box-shadow: 0 4px 10px -4px hsl(var(--bfs-hue) 80% 50% / 0.6);
+  animation: bfs-chip-in 0.3s ease;
+}
+@keyframes bfs-chip-in {
+  from {
+    transform: translateY(-6px) scale(0.8);
+    opacity: 0;
+  }
+}
+/* el frente de la cola (próximo a dequeue) */
+.bfs-chip.bfs-chip-front {
+  outline: 2px solid var(--bfs-accent);
+  outline-offset: 2px;
+}
+.bfs-queue-empty {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+.bfs-queue-hint {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--ink-faint);
+  font-family: var(--mono);
+}
+
+.bfs-sub {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+
+/* ── Leyenda de niveles ────────────────────────────────────────────────── */
+.bfs-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 4px;
+}
+.bfs-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+.bfs-legend-dot {
+  --bfs-level: 0;
+  --bfs-max: 1;
+  --bfs-hue: calc(330deg - (var(--bfs-level) / max(var(--bfs-max), 1)) * 150deg);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 34% 28%,
+    hsl(var(--bfs-hue) 85% 68%),
+    hsl(var(--bfs-hue) 70% 46%) 72%
+  );
+  border: 1px solid hsl(var(--bfs-hue) 90% 78%);
+}

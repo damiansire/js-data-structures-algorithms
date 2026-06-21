@@ -1,0 +1,237 @@
+/* ===========================================================================
+   Escena DFS — Depth-First Search. Todas las clases con prefijo dfs-.
+   Metáfora: explorar un laberinto con el hilo de Ariadna. Un hilo brillante
+   sigue el camino al bajar a fondo; en un callejón sin salida RETROCEDE,
+   atenuando la arista. Nodos en left%/top%; aristas en un <svg> overlay.
+   Acento de categoría (grafos): #f472b6 (rosa).
+   =========================================================================== */
+
+.dfs-stage {
+  --dfs-accent: #f472b6; /* acento de categoría: grafos / rosa */
+  --dfs-thread: #fb7185;
+  --dfs-visited: #34d399;
+  min-height: 460px;
+  display: block;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(244, 114, 182, 0.12), transparent 60%),
+    linear-gradient(180deg, rgba(244, 114, 182, 0.03), rgba(124, 58, 237, 0.06));
+}
+
+/* Zona de juego: el SVG y los nodos comparten EXACTAMENTE el mismo box (mismos
+   insets) y el <svg> lleva width/height 100% explícitos, así el viewBox 0..100
+   mapea 1:1 a los centros de los nodos (left%/top%). Deja ~70px abajo para el
+   narrador; las posiciones y de los nodos quedan en el ~80% superior. */
+.dfs-board,
+.dfs-edges {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  top: 24px;
+  bottom: 78px;
+}
+
+/* ── Aristas base del grafo (SVG overlay, viewBox 0..100 en x e y) ─────────── */
+.dfs-edges {
+  pointer-events: none;
+  z-index: 1;
+}
+/* Subida de contraste para que se vea el "laberinto" (era casi invisible). */
+.dfs-edge {
+  stroke: rgba(255, 255, 255, 0.42);
+  stroke-width: 2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 0.4s ease, stroke-width 0.4s ease;
+}
+/* arista por la que se RETROCEDE: se atenúa (camino abandonado) */
+.dfs-edge-back {
+  stroke: rgba(244, 114, 182, 0.28);
+  stroke-width: 2;
+}
+
+/* ── Hilo de Ariadna: UNA polilínea continua por los centros del camino ────── */
+.dfs-thread {
+  stroke: var(--dfs-thread);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  fill: none;
+  filter: drop-shadow(0 0 4px rgba(251, 113, 133, 0.85));
+}
+/* animación de "tendido" del hilo al avanzar (se re-dispara por clase) */
+.dfs-thread.dfs-thread-draw {
+  stroke-dasharray: 320;
+  stroke-dashoffset: 320;
+  animation: dfs-thread-draw 0.5s ease forwards;
+}
+@keyframes dfs-thread-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── Nodos (círculos posicionados en % sobre .dfs-board) ──────────────────── */
+.dfs-node {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px; /* centra en (left,top) */
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 34% 28%, #44446e, #24243c 70%);
+  border: 1.5px solid var(--stroke-strong, rgba(255, 255, 255, 0.22));
+  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7),
+    inset 0 3px 8px rgba(255, 255, 255, 0.1);
+  z-index: 2;
+  transition: transform 0.35s cubic-bezier(0.34, 1.5, 0.5, 1), opacity 0.3s,
+    box-shadow 0.35s, border-color 0.35s, background 0.35s;
+}
+.dfs-node-val {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+/* nodo de origen: anillo rosa sutil cuando aún no se visitó */
+.dfs-source {
+  border-color: rgba(244, 114, 182, 0.55);
+}
+
+/* nodo visitado: se colorea (verde) */
+.dfs-node.dfs-visited {
+  background: radial-gradient(circle at 34% 28%, #34d399, #0f7a5a 72%);
+  border-color: rgba(52, 211, 153, 0.7);
+}
+.dfs-node.dfs-visited .dfs-node-val {
+  color: #052b20;
+}
+
+/* nodo activo: el extremo del hilo, resaltado en rosa */
+.dfs-node.dfs-active {
+  background: radial-gradient(circle at 34% 28%, #f9a8d4, #be185d 72%);
+  border-color: var(--dfs-accent);
+  box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.55),
+    0 0 30px -4px rgba(244, 114, 182, 0.75);
+  z-index: 4;
+  transform: scale(1.08);
+}
+.dfs-node.dfs-active .dfs-node-val {
+  color: #fff;
+}
+
+/* nodo callejón sin salida (explorado, sin más salidas): punteado tenue */
+.dfs-node.dfs-dead {
+  border-style: dashed;
+  border-color: rgba(244, 114, 182, 0.45);
+}
+
+/* árbol/recorrido terminado: pulso verde */
+.dfs-node.dfs-done {
+  box-shadow: 0 0 0 1.5px rgba(52, 211, 153, 0.6),
+    0 8px 24px -8px rgba(52, 211, 153, 0.5);
+  animation: dfs-pop 0.5s ease;
+}
+@keyframes dfs-pop {
+  0% {
+    transform: scale(1);
+  }
+  55% {
+    transform: scale(1.16);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ── Panel lateral: la pila / camino actual (en vivo) ─────────────────────── */
+.dfs-stack-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 4px;
+}
+.dfs-stack-empty {
+  font-size: 12px;
+  color: var(--ink-faint, #76749a);
+  font-style: italic;
+}
+.dfs-stack-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: var(--panel, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--stroke, rgba(255, 255, 255, 0.08));
+  animation: dfs-stack-in 0.25s ease;
+}
+@keyframes dfs-stack-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.dfs-stack-top {
+  border-color: var(--dfs-accent);
+  background: rgba(244, 114, 182, 0.12);
+  box-shadow: 0 0 14px -4px rgba(244, 114, 182, 0.6);
+}
+.dfs-stack-id {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink, #f4f3ff);
+}
+.dfs-stack-tip {
+  font-size: 11px;
+  color: var(--dfs-accent);
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+/* orden de visita (chips) */
+.dfs-order-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+.dfs-order-chip {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #052b20;
+  background: radial-gradient(circle at 34% 28%, #34d399, #0f7a5a 72%);
+  border: 1px solid rgba(52, 211, 153, 0.5);
+  animation: dfs-stack-in 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dfs-node,
+  .dfs-edge,
+  .dfs-thread,
+  .dfs-edge-back,
+  .dfs-stack-item,
+  .dfs-order-chip,
+  .dfs-node.dfs-done {
+    animation: none !important;
+    transition: none !important;
+  }
+  .dfs-thread.dfs-thread-draw {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+}

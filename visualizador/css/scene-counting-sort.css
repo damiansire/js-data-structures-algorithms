@@ -1,0 +1,300 @@
+/* ===========================================================================
+   Escena: Counting Sort — casilleros tipo palomar (pigeonhole mailboxes).
+   Prefijo de clases: cs-  · usa las variables de tema de styles.css.
+   Acento de categoría: #a78bfa (--violet).
+   =========================================================================== */
+
+.cs-stage {
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 22px 26px 64px; /* ~56px inferior libres para el narrador */
+  background: radial-gradient(
+      130% 90% at 50% -10%,
+      rgba(167, 139, 250, 0.12),
+      transparent 60%
+    ),
+    linear-gradient(180deg, rgba(34, 211, 238, 0.03), rgba(0, 0, 0, 0.18));
+}
+
+/* ── Indicador de fase ───────────────────────────────────────────────────── */
+.cs-phase {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  min-height: 22px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--stroke);
+  transition: color 0.3s, border-color 0.3s, background 0.3s;
+  z-index: 5;
+}
+.cs-phase-count {
+  color: var(--cyan);
+  border-color: rgba(34, 211, 238, 0.5);
+  background: rgba(34, 211, 238, 0.08);
+}
+.cs-phase-emit {
+  color: var(--green);
+  border-color: rgba(52, 211, 153, 0.5);
+  background: rgba(52, 211, 153, 0.08);
+}
+
+/* ── Zonas (entrada / casilleros / salida) ──────────────────────────────── */
+.cs-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cs-zone-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.cs-zone-ok {
+  color: var(--green);
+}
+
+/* ── Fila de entrada ─────────────────────────────────────────────────────── */
+.cs-input-row,
+.cs-output-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 44px;
+  align-items: center;
+}
+.cs-item {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ink);
+  background: linear-gradient(180deg, #34344f, #232338);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 6px 14px -8px rgba(0, 0, 0, 0.7),
+    inset 0 2px 6px rgba(255, 255, 255, 0.12);
+  transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s, filter 0.3s;
+}
+.cs-item.cs-active {
+  transform: translateY(-4px) scale(1.08);
+  box-shadow: 0 0 0 2px var(--cyan), 0 12px 26px -8px rgba(34, 211, 238, 0.6);
+  z-index: 3;
+}
+.cs-item.cs-done {
+  opacity: 0.28;
+  filter: saturate(0.5);
+}
+
+/* ── Fila de casilleros / palomares ─────────────────────────────────────── */
+.cs-box-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.cs-box {
+  position: relative;
+  width: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s;
+}
+
+/* contador LED tipo display digital */
+.cs-box-led {
+  width: 52px;
+  height: 28px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  background: #07090f;
+  border: 1px solid var(--stroke);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+  margin-bottom: 6px;
+}
+.cs-led {
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--green);
+  text-shadow: 0 0 8px rgba(52, 211, 153, 0.7), 0 0 2px rgba(52, 211, 153, 0.9);
+  letter-spacing: 1px;
+}
+.cs-led.cs-tick {
+  animation: cs-led-tick 0.4s ease;
+}
+@keyframes cs-led-tick {
+  0% {
+    color: #fff;
+    text-shadow: 0 0 14px #fff;
+  }
+  100% {
+    color: var(--green);
+  }
+}
+
+/* hueco del palomar (la boca del casillero) */
+.cs-box-hole {
+  width: 66px;
+  height: 60px;
+  border-radius: 8px 8px 10px 10px;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(120% 120% at 50% 0%, #2a2a44, #12121f 75%);
+  border: 1px solid var(--stroke);
+  border-top: 2px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 8px 18px -6px rgba(0, 0, 0, 0.9);
+  position: relative;
+  overflow: hidden;
+}
+.cs-box-hole::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 36px;
+  border-radius: 50% 50% 45% 45%;
+  background: radial-gradient(circle at 50% 35%, #0a0a14, #050509);
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.9);
+}
+.cs-box-label {
+  position: relative;
+  z-index: 1;
+  align-self: flex-end;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--violet);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+.cs-box-lip {
+  width: 74px;
+  height: 7px;
+  margin-top: -2px;
+  border-radius: 0 0 6px 6px;
+  background: linear-gradient(180deg, #3a3a5c, #232338);
+  border: 1px solid var(--stroke);
+  border-top: none;
+}
+
+.cs-box.cs-receive {
+  transform: translateY(3px);
+}
+.cs-box.cs-receive .cs-box-hole {
+  box-shadow: 0 0 0 2px var(--cyan), inset 0 8px 18px -6px rgba(0, 0, 0, 0.9);
+}
+.cs-box.cs-emptying .cs-box-hole {
+  box-shadow: 0 0 0 2px var(--green), inset 0 8px 18px -6px rgba(0, 0, 0, 0.9);
+}
+.cs-box.cs-emptying {
+  transform: translateY(-3px);
+}
+.cs-box.cs-empty {
+  opacity: 0.5;
+  filter: saturate(0.6);
+}
+.cs-box.cs-empty .cs-led {
+  color: var(--ink-faint);
+  text-shadow: none;
+}
+
+/* ── Fila de salida ordenada ────────────────────────────────────────────── */
+.cs-out-item {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 800;
+  color: #07101a;
+  background: linear-gradient(180deg, var(--green), #119e72);
+  box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.5),
+    0 8px 18px -8px rgba(52, 211, 153, 0.6);
+  opacity: 0;
+  transform: translateY(8px) scale(0.8);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.cs-out-item.cs-out-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.cs-out-item.cs-out-win {
+  animation: cs-out-pop 0.45s ease;
+}
+@keyframes cs-out-pop {
+  40% {
+    transform: translateY(-6px) scale(1.12);
+    box-shadow: 0 0 0 2px var(--amber), 0 10px 22px -6px rgba(251, 191, 36, 0.7);
+  }
+}
+
+/* ── El ítem que vuela entre zonas ──────────────────────────────────────── */
+.cs-flyer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 800;
+  color: #07101a;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+.cs-flyer.cs-count {
+  background: linear-gradient(180deg, var(--cyan), #0c8aa0);
+  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.6),
+    0 8px 20px -6px rgba(34, 211, 238, 0.7);
+}
+.cs-flyer.cs-emit {
+  background: linear-gradient(180deg, var(--green), #119e72);
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.6),
+    0 8px 20px -6px rgba(52, 211, 153, 0.7);
+}
+.cs-flyer.cs-go {
+  animation: cs-fly 0.46s cubic-bezier(0.45, 0, 0.55, 1) forwards;
+}
+@keyframes cs-fly {
+  0% {
+    transform: translate(var(--x0), var(--y0)) scale(0.7);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    transform: translate(var(--x0), var(--y0)) scale(1);
+  }
+  100% {
+    transform: translate(var(--x1), var(--y1)) scale(0.85);
+    opacity: 0;
+  }
+}

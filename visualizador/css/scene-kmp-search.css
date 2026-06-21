@@ -1,0 +1,283 @@
+/* ===========================================================================
+   Escena: KMP String Matching — "Una regla que nunca retrocede".
+   Prefijo de clases: kmp-*  ·  usa las variables de tema de styles.css.
+   Acento de categoría (strings): #fb923c (naranja).
+   =========================================================================== */
+
+.kmp-stage {
+  /* tamaño de cada tile y separación: la regla se alinea al grid del texto */
+  --kmp-tw: 52px; /* ancho del tile */
+  --kmp-gap: 10px; /* separación entre tiles */
+  --kmp-step: calc(var(--kmp-tw) + var(--kmp-gap)); /* paso por índice */
+  --kmp-orange: #fb923c;
+
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  padding: 28px 30px 64px; /* deja ~56px abajo libre para el narrador */
+  background: radial-gradient(
+      130% 90% at 50% -10%,
+      rgba(251, 146, 60, 0.1),
+      transparent 60%
+    ),
+    linear-gradient(180deg, rgba(251, 146, 60, 0.03), rgba(0, 0, 0, 0.18));
+}
+
+/* ── Filas (texto / patrón) ─────────────────────────────────────────────── */
+.kmp-rowwrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.kmp-rowlabel {
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 600;
+}
+.kmp-row {
+  position: relative;
+  display: flex;
+  gap: var(--kmp-gap);
+  align-items: center;
+}
+
+/* la fila del patrón reserva una sola "pista" donde la regla se desliza */
+.kmp-pat-row {
+  min-height: 64px;
+}
+
+/* ── Tiles de letra ─────────────────────────────────────────────────────── */
+.kmp-tile {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--kmp-tw);
+  height: 56px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #34344f, #232338);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 6px 14px -8px rgba(0, 0, 0, 0.7),
+    inset 0 2px 6px rgba(255, 255, 255, 0.1);
+  transition: transform 0.25s, box-shadow 0.25s, background 0.25s, filter 0.25s;
+}
+.kmp-tile-ch {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+}
+.kmp-tile-idx {
+  position: absolute;
+  bottom: 3px;
+  right: 5px;
+  font-size: 9px;
+  color: var(--ink-faint);
+}
+
+/* texto: el carácter bajo comparación (parpadeo de evaluación) */
+.kmp-tile.kmp-compare {
+  box-shadow: 0 0 0 2px var(--kmp-orange),
+    0 10px 22px -8px rgba(251, 146, 60, 0.6);
+  background: linear-gradient(180deg, #3e3344, #2a2233);
+}
+/* coincidencia confirmada → verde */
+.kmp-tile.kmp-matched {
+  background: linear-gradient(180deg, rgba(52, 211, 153, 0.28), rgba(52, 211, 153, 0.12));
+  box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.55),
+    0 8px 18px -8px rgba(52, 211, 153, 0.5);
+}
+.kmp-tile.kmp-matched .kmp-tile-ch {
+  color: var(--green);
+}
+/* match completo del patrón en el texto → resaltado dorado */
+.kmp-tile.kmp-found {
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.32), rgba(251, 191, 36, 0.14));
+  box-shadow: 0 0 0 2px var(--amber), 0 0 26px -4px rgba(251, 191, 36, 0.7);
+  animation: kmp-pop 0.5s ease;
+}
+.kmp-tile.kmp-found .kmp-tile-ch {
+  color: var(--amber);
+}
+@keyframes kmp-pop {
+  40% {
+    transform: translateY(-6px) scale(1.08);
+  }
+}
+
+/* ── La regla (el patrón que se desliza) ────────────────────────────────── */
+.kmp-ruler {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  gap: var(--kmp-gap);
+  align-items: center;
+  /* se desliza hacia la derecha por --kmp-shift posiciones del texto */
+  transform: translateX(calc(var(--kmp-shift, 0) * var(--kmp-step)));
+  transition: transform 0.42s cubic-bezier(0.34, 0.85, 0.3, 1);
+  will-change: transform;
+}
+.kmp-ruler.kmp-no-anim {
+  transition: none;
+}
+/* durante el salto hacia adelante, un leve realce naranja sobre la regla */
+.kmp-ruler.kmp-shifting .kmp-pat-tile {
+  border-color: var(--kmp-orange);
+}
+
+/* tiles del patrón: una franja superior los distingue como "la regla" */
+.kmp-pat-tile {
+  background: linear-gradient(180deg, #3a2f24, #2a2018);
+  border: 1px solid rgba(251, 146, 60, 0.45);
+}
+.kmp-pat-tile::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  border-radius: 9px 9px 0 0;
+  background: linear-gradient(90deg, var(--kmp-orange), rgba(251, 146, 60, 0.4));
+}
+.kmp-pat-tile .kmp-tile-ch {
+  color: #ffd9b3;
+}
+.kmp-pat-tile.kmp-matched {
+  background: linear-gradient(180deg, rgba(52, 211, 153, 0.3), rgba(52, 211, 153, 0.12));
+  border-color: rgba(52, 211, 153, 0.6);
+}
+.kmp-pat-tile.kmp-matched::before {
+  background: linear-gradient(90deg, var(--green), rgba(52, 211, 153, 0.4));
+}
+.kmp-pat-tile.kmp-matched .kmp-tile-ch {
+  color: var(--green);
+}
+
+/* ── Punteros i (texto) y j (patrón) ────────────────────────────────────── */
+.kmp-cursor {
+  position: absolute;
+  top: -16px;
+  width: var(--kmp-tw);
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  transition: transform 0.42s cubic-bezier(0.34, 0.85, 0.3, 1);
+  z-index: 5;
+}
+.kmp-cursor::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+}
+.kmp-cursor-tag {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+/* i: vive en la fila del texto y se mueve por índices del texto */
+.kmp-cursor-i {
+  transform: translateX(calc(var(--kmp-i, 0) * var(--kmp-step)));
+}
+.kmp-cursor-i .kmp-cursor-tag {
+  color: #07101a;
+  background: var(--cyan);
+  box-shadow: 0 0 12px -2px rgba(34, 211, 238, 0.7);
+}
+.kmp-cursor-i::after {
+  border-top: 7px solid var(--cyan);
+}
+
+/* j: vive dentro de la regla y se mueve por índices del patrón.
+   Aparece DEBAJO de la regla (apuntando hacia arriba). */
+.kmp-cursor-j {
+  top: auto;
+  bottom: -16px;
+  transform: translateX(calc(var(--kmp-j, 0) * var(--kmp-step)));
+}
+.kmp-cursor-j::after {
+  top: auto;
+  bottom: 14px;
+  border-top: none;
+  border-bottom: 7px solid var(--kmp-orange);
+}
+.kmp-cursor-j .kmp-cursor-tag {
+  color: #1a0f05;
+  background: var(--kmp-orange);
+  box-shadow: 0 0 12px -2px rgba(251, 146, 60, 0.7);
+}
+
+/* cuando el puntero queda fuera de rango (i=n o j=m) se atenúa */
+.kmp-cursor.kmp-cursor-end {
+  opacity: 0.35;
+}
+
+/* ── Tabla LPS en el aside (función de fallo) ───────────────────────────── */
+.kmp-lps-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0 2px;
+}
+.kmp-lps-cell {
+  flex: 1 1 0;
+  min-width: 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 5px 0 6px;
+  border-radius: 8px;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  transition: background 0.25s, border-color 0.25s, transform 0.25s;
+}
+.kmp-lps-key {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffd9b3;
+}
+.kmp-lps-val {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ink-faint);
+}
+.kmp-lps-cell.kmp-lps-set {
+  background: rgba(251, 146, 60, 0.12);
+  border-color: rgba(251, 146, 60, 0.45);
+}
+.kmp-lps-cell.kmp-lps-set .kmp-lps-val {
+  color: var(--kmp-orange, #fb923c);
+}
+.kmp-lps-cell.kmp-lps-fresh {
+  animation: kmp-lps-pop 0.4s ease;
+}
+@keyframes kmp-lps-pop {
+  40% {
+    transform: translateY(-4px) scale(1.08);
+    border-color: var(--kmp-orange, #fb923c);
+  }
+}
+
+/* ── Responsive: tiles algo más chicos en pantallas angostas ────────────── */
+@media (max-width: 720px) {
+  .kmp-stage {
+    --kmp-tw: 38px;
+    --kmp-gap: 7px;
+  }
+  .kmp-tile-ch {
+    font-size: 18px;
+  }
+}

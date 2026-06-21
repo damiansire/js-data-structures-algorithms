@@ -1,0 +1,162 @@
+/* ===========================================================================
+   Escena Pachinko — árbol binario / BST. Todas las clases con prefijo pk-.
+   La raíz arriba; las bolitas caen y se desvían izquierda/derecha hasta
+   materializarse como nodos. Aristas dibujadas con un <svg> overlay.
+   =========================================================================== */
+
+.pk-stage {
+  min-height: 460px;
+  display: block;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(167, 139, 250, 0.12), transparent 60%),
+    linear-gradient(180deg, rgba(34, 211, 238, 0.03), rgba(124, 58, 237, 0.06));
+}
+
+/* Zona de juego: deja ~56px libres abajo para el narrador. */
+.pk-board,
+.pk-edges {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  top: 22px;
+  bottom: 78px; /* banda extra para que el narrador no toque el último nivel */
+}
+
+/* ── Aristas (SVG overlay, viewBox 0..100 en x e y) ───────────────────────── */
+.pk-edges {
+  pointer-events: none;
+  z-index: 1;
+}
+.pk-edge {
+  stroke: rgba(34, 211, 238, 0.55);
+  stroke-width: 2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: pk-draw 0.5s ease forwards;
+}
+@keyframes pk-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── Nodos (círculos posicionados en % sobre .pk-board) ───────────────────── */
+.pk-node {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px; /* centra en (left,top) */
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 34% 28%, #4a4a78, #26263f 70%);
+  border: 1.5px solid var(--stroke-strong, rgba(255, 255, 255, 0.22));
+  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7),
+    inset 0 3px 8px rgba(255, 255, 255, 0.12);
+  z-index: 2;
+  transform: scale(0.2);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.34, 1.5, 0.5, 1), opacity 0.3s,
+    box-shadow 0.3s, border-color 0.3s, background 0.3s;
+}
+.pk-node.pk-pop {
+  transform: scale(1);
+  opacity: 1;
+}
+.pk-node-val {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+/* nodo bajo comparación */
+.pk-node.pk-hit {
+  background: radial-gradient(circle at 34% 28%, #b8860b, #7a5a06 72%);
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.85),
+    0 0 32px -4px rgba(251, 191, 36, 0.7);
+  z-index: 4;
+}
+.pk-node.pk-hit .pk-node-val {
+  color: #fff;
+}
+
+/* árbol terminado */
+.pk-node.pk-win {
+  border-color: rgba(52, 211, 153, 0.7);
+  box-shadow: 0 0 0 1.5px rgba(52, 211, 153, 0.6),
+    0 8px 24px -8px rgba(52, 211, 153, 0.4);
+}
+
+/* ── Bolita que cae ───────────────────────────────────────────────────────── */
+/* .pk-ball es sólo la caja de coordenadas: comparte el mismo inset que
+   .pk-board, así que left%/top% de su punto interno coinciden con los nodos. */
+.pk-ball {
+  position: absolute;
+  inset: 22px 28px 56px 28px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 6;
+  transition: opacity 0.25s;
+}
+
+/* La bolita real: un punto movido por left%/top% dentro de la caja inset. */
+.pk-ball > span {
+  position: absolute;
+  left: 50%;
+  top: 9%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 32% 28%, #67e8f9, #22d3ee 55%, #0e7490);
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.35),
+    0 10px 26px -6px rgba(34, 211, 238, 0.7),
+    inset 0 4px 10px rgba(255, 255, 255, 0.6);
+  color: #04222b;
+  font-family: var(--mono);
+  font-weight: 800;
+  font-size: 14px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+  transition: left 0.5s cubic-bezier(0.34, 1.15, 0.5, 1),
+    top 0.5s cubic-bezier(0.4, 0, 0.4, 1);
+  will-change: left, top;
+}
+
+.pk-ball.pk-drop > span {
+  animation: pk-wobble 0.5s ease;
+}
+@keyframes pk-wobble {
+  0% {
+    transform: scale(0.82);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.pk-ball.pk-reject > span {
+  animation: pk-shake 0.5s ease;
+  background: radial-gradient(circle at 32% 28%, #fda4af, #fb7185 55%, #9f1239);
+}
+@keyframes pk-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-7px) rotate(-8deg);
+  }
+  75% {
+    transform: translateX(7px) rotate(8deg);
+  }
+}

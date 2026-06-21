@@ -1,0 +1,222 @@
+/* ===========================================================================
+   Interpolation Search — "Adivinar la página de un nombre en la guía".
+   Prefijo de clases: intp-*  ·  usa las variables de tema de styles.css.
+   Acento de categoría (search / verde): #34d399.
+   =========================================================================== */
+
+.intp-stage {
+  --intp-accent: #34d399;
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding-bottom: 64px; /* aire para que el narrador (~56px) no pise las páginas */
+}
+
+/* ─────────────────────────── Objetivo (a quién busco) ────────────────────── */
+.intp-target {
+  align-self: center;
+  font-size: 15px;
+  color: var(--ink-dim);
+  padding: 8px 18px;
+  border: 1px solid var(--stroke);
+  border-radius: 999px;
+  background: var(--panel);
+}
+.intp-target .mono {
+  font-family: var(--mono);
+  color: var(--intp-accent);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ─────────────────────────── La guía (book) ──────────────────────────────── */
+.intp-book {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+  justify-content: center;
+}
+.intp-book-label {
+  align-self: center;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Carril que contiene el dedo, la fracción y las páginas. El dedo y la
+   etiqueta de fracción se posicionan en % respecto de este wrapper. */
+.intp-rail-wrap {
+  position: relative;
+  padding-top: 56px; /* aire arriba para el pulgar y la fracción flotante */
+}
+.intp-rail {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* ─────────────────────────── Páginas (el array) ──────────────────────────── */
+.intp-page {
+  position: relative;
+  flex: 0 0 auto;
+  width: 54px;
+  height: 92px;
+  border-radius: 6px 8px 8px 6px;
+  background: linear-gradient(110deg, #15152a 0 6px, #1e1e34 6px);
+  border: 1px solid var(--stroke);
+  border-left: 3px solid rgba(255, 255, 255, 0.16); /* "lomo" de la página */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform 0.45s cubic-bezier(0.3, 0.8, 0.3, 1), opacity 0.45s,
+    filter 0.4s, box-shadow 0.4s, border-color 0.4s, background 0.4s;
+}
+.intp-page-val {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink-dim);
+  transition: color 0.3s;
+}
+.intp-page-idx {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-faint);
+}
+
+/* Dentro de la ventana activa [lo, hi] */
+.intp-page.intp-in-window {
+  border-color: rgba(52, 211, 153, 0.5);
+  box-shadow: 0 0 20px -8px rgba(52, 211, 153, 0.5);
+  background: linear-gradient(110deg, #173027 0 6px, #1c3a30 6px);
+}
+.intp-page.intp-in-window .intp-page-val {
+  color: #c9ffe9;
+}
+
+/* Página estimada por la interpolación (antes de abrir) */
+.intp-page.intp-estimating {
+  border-color: var(--amber);
+  box-shadow: 0 0 24px -6px rgba(251, 191, 36, 0.55);
+  transform: translateY(-6px);
+}
+.intp-page.intp-estimating .intp-page-val {
+  color: var(--amber);
+}
+
+/* Página abierta (probe) */
+.intp-page.intp-probing {
+  z-index: 4;
+  border-color: var(--amber);
+  box-shadow: 0 0 30px -4px rgba(251, 191, 36, 0.7);
+  transform: translateY(-10px) scale(1.06);
+}
+.intp-page.intp-probing .intp-page-val {
+  color: var(--amber);
+}
+
+/* Páginas descartadas — se caen y desvanecen */
+.intp-page.intp-dropped {
+  transform: translateY(120px) rotate(8deg);
+  opacity: 0;
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+/* Página encontrada — dorada y elevada */
+.intp-page.intp-found {
+  z-index: 5;
+  border-color: var(--amber);
+  background: linear-gradient(110deg, #4a3a0c 0 6px, #5e4a0e 6px);
+  box-shadow: 0 0 46px -2px rgba(251, 191, 36, 0.9);
+  transform: translateY(-16px) scale(1.1);
+  animation: intp-pop 0.55s ease;
+}
+.intp-page.intp-found .intp-page-val {
+  color: #fff4cf;
+}
+@keyframes intp-pop {
+  40% {
+    transform: translateY(-24px) scale(1.16);
+  }
+}
+
+/* Fallo — todo en gris */
+.intp-page.intp-fail {
+  filter: grayscale(0.7) brightness(0.7);
+}
+
+/* ─────────────────────────── El pulgar / dedo ────────────────────────────── */
+.intp-thumb-wrap {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: left 0.55s cubic-bezier(0.34, 1.3, 0.5, 1), opacity 0.3s;
+  pointer-events: none;
+  z-index: 6;
+}
+.intp-thumb-wrap.intp-thumb-on {
+  opacity: 1;
+}
+.intp-thumb {
+  font-size: 30px;
+  line-height: 1;
+  transform: rotate(8deg);
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
+  animation: intp-thumb-bob 1.6s ease-in-out infinite;
+}
+@keyframes intp-thumb-bob {
+  50% {
+    transform: rotate(8deg) translateY(-3px);
+  }
+}
+
+/* ─────────────────────────── Fracción interpolada ────────────────────────── */
+.intp-frac {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: #07101a;
+  background: var(--amber);
+  border-radius: 999px;
+  padding: 2px 9px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: left 0.55s cubic-bezier(0.34, 1.3, 0.5, 1), opacity 0.3s,
+    transform 0.3s;
+  pointer-events: none;
+  z-index: 6;
+  box-shadow: 0 6px 16px -6px rgba(251, 191, 36, 0.7);
+}
+.intp-frac.intp-frac-on {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ─────────────────────────── Responsivo angosto ──────────────────────────── */
+@media (max-width: 720px) {
+  .intp-page {
+    width: 40px;
+    height: 76px;
+  }
+  .intp-rail {
+    gap: 5px;
+  }
+  .intp-page-val {
+    font-size: 13px;
+  }
+}

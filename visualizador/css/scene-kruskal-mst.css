@@ -1,0 +1,307 @@
+/* ===========================================================================
+   Escena Kruskal MST — "Conectar islas con los puentes más baratos".
+   Todas las clases con prefijo krk-. Las islas son nodos absolutos; las
+   aristas (puentes) y sus pesos viven en un <svg> overlay (viewBox 0..100).
+   Acento de categoría (grafos): #f472b6 (rosa).
+   =========================================================================== */
+
+.krk-stage {
+  min-height: 460px;
+  display: block;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(244, 114, 182, 0.12), transparent 60%),
+    radial-gradient(90% 60% at 80% 110%, rgba(34, 211, 238, 0.08), transparent 55%),
+    linear-gradient(180deg, rgba(34, 211, 238, 0.03), rgba(124, 58, 237, 0.05));
+}
+
+/* Zona de juego: el grafo vive en el ~78% SUPERIOR del tablero (ver geometría
+   en el JS). Reservamos ~78px abajo para que la fila inferior de islas + sus
+   aristas y etiquetas de peso queden POR ENCIMA de la banda del narrador.
+   .krk-board y .krk-edges comparten exactamente el mismo inset, así el viewBox
+   0..100 del SVG mapea 1:1 con los left%/top% de los nodos. */
+.krk-board,
+.krk-edges {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  top: 20px;
+  bottom: 78px;
+}
+
+/* Narrador propio de la escena: que NO trunque cuando el texto es largo y que
+   no tape nodos/pesos. Lo dejamos más ancho, con wrap y radio menor (deja de
+   ser un pill de una sola línea). Vive en la banda inferior reservada. */
+.krk-stage .narrator {
+  max-width: calc(100% - 36px);
+  width: max-content;
+  white-space: normal;
+  line-height: 1.35;
+  border-radius: 14px;
+  bottom: 14px;
+}
+
+/* ── Aristas (SVG overlay, viewBox 0..100 en x e y) ───────────────────────── */
+.krk-edges {
+  pointer-events: none;
+  z-index: 1;
+}
+
+.krk-edge {
+  stroke: rgba(182, 180, 208, 0.35);
+  stroke-width: 2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 4 3.5;
+  transition: stroke 0.35s ease, stroke-width 0.35s ease, opacity 0.4s ease;
+}
+
+/* arista bajo evaluación: amarilla y pulsante */
+.krk-edge-g.krk-considering .krk-edge {
+  stroke: var(--amber, #fbbf24);
+  stroke-width: 3.5;
+  stroke-dasharray: none;
+  animation: krk-pulse 0.9s ease-in-out infinite;
+}
+@keyframes krk-pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* arista ACEPTADA: puente sólido verde, dibujado de golpe */
+.krk-edge-g.krk-accepted .krk-edge {
+  stroke: #34d399;
+  stroke-width: 4;
+  stroke-dasharray: none;
+  opacity: 1;
+  filter: drop-shadow(0 0 4px rgba(52, 211, 153, 0.55));
+  animation: krk-build 0.45s ease forwards;
+}
+@keyframes krk-build {
+  from {
+    stroke-width: 1.5;
+    opacity: 0.4;
+  }
+  60% {
+    stroke-width: 5.5;
+  }
+  to {
+    stroke-width: 4;
+    opacity: 1;
+  }
+}
+
+/* arista RECHAZADA: parpadea en rojo y se desvanece (haría un bucle) */
+.krk-edge-g.krk-rejected .krk-edge {
+  stroke: #fb7185;
+  stroke-width: 2;
+  stroke-dasharray: none;
+  animation: krk-reject 0.95s ease forwards;
+}
+@keyframes krk-reject {
+  0% {
+    stroke: #fb7185;
+    stroke-width: 4.5;
+    opacity: 1;
+  }
+  25% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+    stroke-width: 4;
+  }
+  100% {
+    stroke: rgba(182, 180, 208, 0.14);
+    stroke-width: 1.5;
+    opacity: 0.45;
+  }
+}
+
+/* ── Etiquetas de peso (rect + texto centrado en el medio de la arista) ────── */
+.krk-wlabel-box {
+  fill: rgba(17, 17, 31, 0.92);
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 0.4;
+  vector-effect: non-scaling-stroke;
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+.krk-wlabel {
+  font-family: var(--mono, monospace);
+  font-size: 4.4px;
+  font-weight: 700;
+  fill: var(--ink-dim, #b6b4d0);
+  transition: fill 0.3s ease;
+}
+.krk-edge-g.krk-considering .krk-wlabel-box {
+  fill: rgba(120, 80, 8, 0.95);
+  stroke: var(--amber, #fbbf24);
+}
+.krk-edge-g.krk-considering .krk-wlabel {
+  fill: #fff;
+}
+.krk-edge-g.krk-accepted .krk-wlabel-box {
+  fill: rgba(6, 46, 35, 0.95);
+  stroke: rgba(52, 211, 153, 0.8);
+}
+.krk-edge-g.krk-accepted .krk-wlabel {
+  fill: #6ee7b7;
+}
+.krk-edge-g.krk-rejected .krk-wlabel {
+  fill: #fda4af;
+}
+
+/* ── Nodos / islas (círculos posicionados en % sobre .krk-board) ──────────── */
+.krk-node {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  margin: -27px 0 0 -27px; /* centra en (left,top) */
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 34% 28%, #3a3a5e, #22223a 72%);
+  border: 2px solid var(--stroke-strong, rgba(255, 255, 255, 0.22));
+  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7),
+    inset 0 3px 8px rgba(255, 255, 255, 0.1);
+  z-index: 3;
+  transition: transform 0.3s cubic-bezier(0.34, 1.5, 0.5, 1),
+    box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+}
+.krk-node-icon {
+  font-size: 19px;
+  line-height: 1;
+  margin-top: -2px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+}
+.krk-node-id {
+  font-family: var(--mono, monospace);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink, #f4f3ff);
+  letter-spacing: 0.5px;
+  margin-top: 1px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* isla bajo evaluación (extremo de la arista candidata) */
+.krk-node.krk-node-active {
+  border-color: var(--amber, #fbbf24);
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.7),
+    0 0 26px -4px rgba(251, 191, 36, 0.6);
+  transform: scale(1.08);
+  z-index: 5;
+}
+
+/* isla teñida por su componente conexa (color via --krk-grp) */
+.krk-node.krk-node-grouped {
+  border-color: var(--krk-grp, #f472b6);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--krk-grp, #f472b6) 65%, transparent),
+    0 8px 22px -8px rgba(0, 0, 0, 0.7);
+  background: radial-gradient(
+    circle at 34% 28%,
+    color-mix(in srgb, var(--krk-grp, #f472b6) 38%, #2a2a44),
+    #22223a 75%
+  );
+}
+
+/* árbol terminado: todas las islas conectadas, glow verde sutil */
+.krk-node.krk-node-win {
+  animation: krk-win-pop 0.5s ease;
+}
+@keyframes krk-win-pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ── Aside: tarjetas propias de la escena ─────────────────────────────────── */
+.krk-card-sub {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--ink-faint, #76749a);
+}
+
+.krk-edges-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 26px;
+  align-items: center;
+}
+.krk-edges-empty {
+  font-size: 12px;
+  color: var(--ink-faint, #76749a);
+  font-style: italic;
+}
+.krk-edge-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 7px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6ee7b7;
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  animation: krk-chip-in 0.3s ease;
+}
+@keyframes krk-chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.krk-edge-chip-w {
+  font-size: 10px;
+  padding: 0 4px;
+  border-radius: 5px;
+  background: rgba(52, 211, 153, 0.22);
+  color: #a7f3d0;
+}
+
+/* leyenda de colores */
+.krk-legend-items {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.krk-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ink-dim, #b6b4d0);
+}
+.krk-dot {
+  width: 14px;
+  height: 4px;
+  border-radius: 2px;
+  flex: none;
+}
+.krk-dot-consider {
+  background: var(--amber, #fbbf24);
+}
+.krk-dot-accept {
+  background: #34d399;
+}
+.krk-dot-reject {
+  background: #fb7185;
+  opacity: 0.6;
+}

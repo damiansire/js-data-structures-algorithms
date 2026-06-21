@@ -1,0 +1,165 @@
+/* ===========================================================================
+   Insertion Sort — "Ordenando una mano de cartas".
+   Prefijo de clases: is-*  ·  usa las variables de tema de styles.css.
+   Acento de categoría (ordenamientos): #a78bfa.
+   =========================================================================== */
+
+.is-stage {
+  min-height: 460px;
+  position: relative;
+  padding-bottom: 64px; /* aire para que el narrador no pise las cartas */
+}
+
+/* ─────────────────────────── Etiquetas de zona ───────────────────────────── */
+.is-labels {
+  display: flex;
+  gap: 14px;
+  padding: 2px 4px 14px;
+}
+.is-zone-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.is-zone-label::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--stroke-strong);
+}
+.is-zone-ok {
+  color: var(--green);
+}
+.is-zone-ok::before {
+  background: var(--green);
+}
+
+/* ─────────────────────────── Mesa de cartas ──────────────────────────────── */
+.is-row {
+  position: relative;
+  height: 280px;
+  margin-top: 4px;
+  border-radius: 16px;
+  border: 1px dashed var(--stroke);
+  background:
+    linear-gradient(180deg, rgba(167, 139, 250, 0.06), rgba(255, 255, 255, 0.01));
+}
+
+/* ─────────────────────────── Una carta ───────────────────────────────────── */
+.is-card {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  width: 64px;
+  transform: translateX(-50%);
+  border-radius: 10px;
+  background: linear-gradient(180deg, #f7f6ff, #d9d6f4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 10px 22px -10px rgba(7, 16, 26, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 6px 7px;
+  color: #1a1530;
+  transition: left 0.42s cubic-bezier(0.3, 1.1, 0.4, 1),
+    bottom 0.32s ease, transform 0.32s ease, box-shadow 0.3s ease,
+    border-color 0.3s ease, background 0.3s ease;
+}
+.is-card.no-anim {
+  transition: none;
+}
+.is-card-rank {
+  align-self: center;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+  color: #3a2f66;
+}
+.is-card-pip {
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--mono);
+  color: #6a5fb0;
+  line-height: 1;
+}
+.is-pip-tl {
+  text-align: left;
+}
+.is-pip-br {
+  text-align: right;
+  transform: rotate(180deg);
+}
+
+/* Carta de la región ya ordenada (mano ordenada → verde). */
+.is-card.is-sorted {
+  background: linear-gradient(180deg, #eafff6, #c4f3e0);
+  border-color: rgba(52, 211, 153, 0.7);
+  box-shadow: 0 10px 22px -10px rgba(52, 211, 153, 0.6),
+    inset 0 0 0 1px rgba(52, 211, 153, 0.35);
+}
+.is-card.is-sorted .is-card-rank {
+  color: #0f6b4c;
+}
+.is-card.is-sorted .is-card-pip {
+  color: #2f9c77;
+}
+
+/* Carta levantada (key): se eleva fuera de la fila y resalta en violeta. */
+.is-card.is-key {
+  bottom: 150px;
+  z-index: 5;
+  background: linear-gradient(180deg, #fff, #e9e2ff);
+  border-color: var(--violet);
+  box-shadow: 0 18px 34px -10px rgba(167, 139, 250, 0.85),
+    0 0 0 2px rgba(167, 139, 250, 0.8);
+  transform: translateX(-50%) scale(1.06) rotate(-3deg);
+}
+.is-card.is-key .is-card-rank {
+  color: #5b34c6;
+}
+
+/* Carta ordenada bajo comparación (¿es mayor que el key?). */
+.is-card.is-compare {
+  border-color: var(--amber);
+  box-shadow: 0 12px 24px -10px rgba(251, 191, 36, 0.8),
+    0 0 0 2px rgba(251, 191, 36, 0.85);
+  transform: translateX(-50%) translateY(-6px);
+}
+
+/* Carta que se desliza para abrir el hueco. */
+.is-card.is-gap {
+  box-shadow: 0 12px 26px -10px rgba(34, 211, 238, 0.7),
+    inset 0 0 0 1px rgba(34, 211, 238, 0.4);
+}
+
+/* Celebración final. */
+.is-card.is-win {
+  animation: is-pop 0.5s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+@keyframes is-pop {
+  40% {
+    transform: translateX(-50%) translateY(-10px) scale(1.07);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+/* ─────────────────────────── Responsivo angosto ──────────────────────────── */
+@media (max-width: 720px) {
+  .is-row {
+    height: 240px;
+  }
+  .is-card {
+    width: 48px;
+  }
+  .is-card-rank {
+    font-size: 20px;
+  }
+}
