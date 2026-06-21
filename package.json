@@ -2,7 +2,7 @@
   "name": "javascript-estructura-de-datos-y-algoritmos",
   "version": "1.0.0",
   "description": "Repositorio de estructura de datos y algoritmos",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage"
