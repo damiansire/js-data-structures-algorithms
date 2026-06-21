@@ -16,7 +16,6 @@ import { Player, buildTransport } from '../player.js';
 import { getLang } from '../i18n.js';
 
 const N = 60;
-const COLS = 10;
 const FIRST = 2; // primer número de la grilla
 
 // ── Strings bilingües (inglés por defecto, español opcional) ──────────

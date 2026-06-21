@@ -114,8 +114,6 @@ const tag = (v) => `<span class="mono">${v}</span>`;
 const SEQ_BST = [50, 30, 70, 20, 40, 60, 80, 35, 65];
 const SEQ_BT = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-const MAX_DEPTH = 3; // 0..3 → 4 niveles
-
 // ───────────────────────────── Geometría ──────────────────────────────────
 // Cada nodo tiene profundidad (depth) y una coordenada x en [0,1] obtenida
 // partiendo a la mitad el rango disponible al bajar izquierda/derecha. Así dos

@@ -204,7 +204,7 @@ function buildTrace(a, b) {
 
 export default function mountLevenshtein(host, meta) {
   const S = STRINGS[getLang()] || STRINGS.en;
-  const { steps, distance } = buildTrace(A, B);
+  const { steps } = buildTrace(A, B);
 
   // ── Construcción de la grilla DP como tabla ─────────────────────────
   // Fila 0: esquina vacía + cabecera "∅" + letras de B.

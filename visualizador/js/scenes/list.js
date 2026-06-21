@@ -15,7 +15,7 @@
 // extensión natural manteniendo los MISMOS invariantes (head nuevo, last si la
 // lista estaba vacía, length++) para poder mostrar inserción "al inicio".
 
-import { el, clear, setStyle, wait } from '../dom.js';
+import { el, clear, wait } from '../dom.js';
 import { getLang } from '../i18n.js';
 
 // ── Strings bilingües (EN por defecto, ES opcional) ──────────────

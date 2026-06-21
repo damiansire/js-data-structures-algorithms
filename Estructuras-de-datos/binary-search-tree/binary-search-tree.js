@@ -38,7 +38,7 @@ class BinarySearchTree {
             return node;
         }
         let current = this.root;
-        while (true) {
+        while (current !== null) {
             if (value < current.value) {
                 if (current.left === null) {
                     current.left = node;

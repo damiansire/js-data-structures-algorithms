@@ -212,7 +212,7 @@ export default function mountDijkstra(host, meta = {}) {
 
   // refs a las líneas y a los textos de peso por clave de arista
   const edgeLines = new Map();
-  for (const { u, v, w } of EDGES) {
+  for (const { u, v } of EDGES) {
     const a = nodeById.get(u);
     const b = nodeById.get(v);
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
