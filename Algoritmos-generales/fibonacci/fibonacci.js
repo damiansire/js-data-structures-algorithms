@@ -26,3 +26,5 @@ function fibProgDin(n, mem) {
     }
     return mem[n]
 }
+
+module.exports = { fibIterative, fibElementRecursive, fib };

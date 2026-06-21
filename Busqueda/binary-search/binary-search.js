@@ -24,3 +24,5 @@ function recursiveSearch(arr, element, bottonIndex, topIndex) {
 
     return recursiveSearch(arr, element, bottonIndex, topIndex);
 }
+
+module.exports = { binarySearch };

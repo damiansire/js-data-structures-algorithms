@@ -67,6 +67,8 @@ systemFile.insert("restaurants", "informacion/noche", "right");
 systemFile.insert("mcdonalds.txt", "informacion/noche/restaurants", "left");
 systemFile.insert("tequeños.txt", "informacion/noche/restaurants", "right");
 
+module.exports = { BinaryTree, BinaryTreeNode };
+
 
 // find(value)
 // specificInsert(valueParent, value)

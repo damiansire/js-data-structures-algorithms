@@ -75,3 +75,5 @@
     myList.push(8)
     myList.push(3)
     myList.push(2)
+
+module.exports = { List, Node };

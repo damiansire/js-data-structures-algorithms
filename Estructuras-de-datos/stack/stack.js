@@ -59,3 +59,5 @@ class Stack {
     }
 
 }
+
+module.exports = { Stack, Node };

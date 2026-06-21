@@ -51,3 +51,5 @@ fileSystem.insertByPath("Escritorio", "C:/Usuarios/Damian");
 fileSystem.insertByPath("Documentos", "C:/Usuarios/Damian");
 fileSystem.insertByPath("MaterialDeEstudio", "C:/Usuarios/Damian/Documentos")
 
+module.exports = { Tree, TreeNode };
+
