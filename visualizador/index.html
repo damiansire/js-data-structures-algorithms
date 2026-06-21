@@ -2,6 +2,26 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+    <!--
+      Content-Security-Policy fail-closed. Debe ir lo más arriba posible para
+      gobernar todas las cargas siguientes. Permite exactamente lo que usa la SPA:
+        - script-src 'self'  → app.js + imports dinámicos de escenas/trazas (mismo origen)
+        - style-src  'self' + Google Fonts CSS; los <link> de escena se inyectan
+          en runtime con href same-origin, y los estilos en línea se aplican vía
+          element.style (no atributo style=""), así que NO hace falta 'unsafe-inline'.
+        - font-src   → archivos woff2 de Google Fonts
+        - img-src 'self' data:  → favicon SVG embebido como data:
+        - object-src 'none' y base-uri 'self'. (frame-ancestors no se incluye:
+          se ignora vía <meta>; el anti-clickjacking necesita header HTTP.)
+      Nota: NO se pone SRI en el <link> de Google Fonts porque ese CSS se genera
+      dinámicamente por user-agent (no es byte-estable) y un integrity fijo lo
+      rompería. La mitigación de supply-chain de fuentes queda en el CSP (origen
+      acotado), no en SRI.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Visualizador de Algoritmos · El Catálogo de Escenas</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
