@@ -5,6 +5,13 @@
 
 /** @type {import('jest').Config} */
 const config = {
+  // Los tests de equivalencia del visualizador son ESM (.mjs): importan la
+  // traza ESM (que consume el browser) y cargan el módulo de dominio CommonJS
+  // vía createRequire. Por eso habilitamos .mjs como extensión y patrón de test.
+  // El flag --experimental-vm-modules lo aporta el script `test` (cross-env).
+  moduleFileExtensions: ['js', 'mjs', 'cjs', 'json'],
+  testMatch: ['**/*.test.js', '**/*.test.mjs'],
+
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 

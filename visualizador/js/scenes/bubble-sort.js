@@ -1,9 +1,8 @@
 // Escena: Bubble Sort — "Un vaso de agua con gas".
 //
-// El trace es FIEL a Ordenamiento/bubble-sort/bubble-sort.js:
-//   - compara adyacentes j y j+1
-//   - intercambia si arr[j] > arr[j+1]
-//   - bandera `swapped` → corte temprano si una pasada no intercambia nada
+// La traza viene de ../trace/bubble-sort.trace.mjs (única fuente de verdad,
+// verificada contra Ordenamiento/bubble-sort/bubble-sort.js por su test de
+// equivalencia). Esta escena solo la dibuja.
 //
 // Visual: cada valor es una burbuja cuyo diámetro crece con el valor. Las
 // comparaciones iluminan dos burbujas; al intercambiarse giran una alrededor
@@ -13,6 +12,7 @@
 import { el, clear } from '../dom.js';
 import { Player, buildTransport } from '../player.js';
 import { getLang } from '../i18n.js';
+import { buildTrace } from '../trace/bubble-sort.trace.mjs';
 
 const VALUES = [6, 3, 8, 2, 7, 4, 9, 1, 5];
 
@@ -53,33 +53,6 @@ const STRINGS = {
     card_trick_sub: 'bandera de corte temprano',
   },
 };
-
-/** Genera el trace replicando exactamente el bucle del repo. */
-function buildTrace(input) {
-  const a = input.slice();
-  const n = a.length;
-  const steps = [];
-  for (let i = 0; i < n - 1; i++) {
-    let swapped = false;
-    for (let j = 0; j < n - 1 - i; j++) {
-      steps.push({ type: 'compare', a: j, b: j + 1, va: a[j], vb: a[j + 1] });
-      if (a[j] > a[j + 1]) {
-        const aux = a[j];
-        a[j] = a[j + 1];
-        a[j + 1] = aux;
-        steps.push({ type: 'swap', a: j, b: j + 1 });
-        swapped = true;
-      }
-    }
-    steps.push({ type: 'settle', index: n - 1 - i, value: a[n - 1 - i] });
-    if (!swapped) {
-      steps.push({ type: 'earlybreak', to: n - 2 - i });
-      break;
-    }
-  }
-  steps.push({ type: 'done' });
-  return steps;
-}
 
 // hue agradable según el valor (cian→violeta)
 const hueFor = (v, max) => 190 + (v / max) * 110;

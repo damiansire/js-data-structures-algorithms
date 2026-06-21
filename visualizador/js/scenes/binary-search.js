@@ -1,10 +1,8 @@
 // Escena: Binary Search — "Un pasillo de puertas cerradas".
 //
-// Trace FIEL a Busqueda/binary-search/binary-search.js (recursiveSearch):
-//   middle = floor((lo+hi)/2)
-//   if arr[middle] === element → encontrado
-//   if arr[middle] >  element  → hi = middle - 1  (descarta middle..hi)
-//   else                       → lo = middle + 1  (descarta lo..middle)
+// La traza viene de ../trace/binary-search.trace.mjs (única fuente de verdad,
+// verificada contra Busqueda/binary-search/binary-search.js por su test de
+// equivalencia). Esta escena solo la dibuja.
 //
 // Visual: el array ordenado es un pasillo de puertas numeradas. El rango activo
 // está iluminado; el algoritmo "abre" la puerta del medio. La mitad descartada
@@ -13,6 +11,7 @@
 import { el, clear } from '../dom.js';
 import { Player, buildTransport } from '../player.js';
 import { getLang } from '../i18n.js';
+import { buildTrace } from '../trace/binary-search.trace.mjs';
 
 const ARRAY = [3, 7, 12, 18, 21, 26, 33, 41, 55, 64, 72, 88];
 const TARGET = 33; // está en el array (índice 6)
@@ -60,31 +59,6 @@ const STRINGS = {
     targetSub: (list) => `en [${list}]`,
   },
 };
-
-function buildTrace(arr, target) {
-  const steps = [];
-  let lo = 0;
-  let hi = arr.length - 1;
-  steps.push({ type: 'range', lo, hi });
-  while (lo <= hi) {
-    const mid = Math.floor((lo + hi) / 2);
-    steps.push({ type: 'probe', mid, value: arr[mid], lo, hi });
-    if (arr[mid] === target) {
-      steps.push({ type: 'found', mid });
-      return steps;
-    }
-    if (arr[mid] > target) {
-      steps.push({ type: 'discard', from: mid, to: hi, side: 'right' });
-      hi = mid - 1;
-    } else {
-      steps.push({ type: 'discard', from: lo, to: mid, side: 'left' });
-      lo = mid + 1;
-    }
-    steps.push({ type: 'range', lo, hi });
-  }
-  steps.push({ type: 'notfound' });
-  return steps;
-}
 
 export default function mountBinarySearch(host, meta) {
   const S = STRINGS[getLang()] || STRINGS.en;

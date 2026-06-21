@@ -6,13 +6,14 @@
 //   • merge-sort-in-place   → muta: solo la fila de trabajo, que se reordena
 //     sobre sí misma.
 //
-// Trace FIEL al esquema divide y vencerás de ambos archivos: parte por la
-// mitad (Math.trunc(n/2)) y mezcla dos mitades ya ordenadas tomando la menor
-// del frente de cada una.
+// La traza viene de ../trace/merge-sort.trace.mjs (única fuente de verdad,
+// verificada contra Ordenamiento/merge-sort-recursive y merge-sort-in-place por
+// su test de equivalencia). Esta escena solo la dibuja.
 
 import { el, clear } from '../dom.js';
 import { Player, buildTransport } from '../player.js';
 import { getLang } from '../i18n.js';
+import { buildTrace } from '../trace/merge-sort.trace.mjs';
 
 const VALUES = [5, 2, 8, 1, 9, 3, 7, 4]; // distintos → identidad por valor
 const N = VALUES.length;
@@ -55,40 +56,6 @@ const STRINGS = {
     infoInputTitle: 'Entrada',
   },
 };
-
-function buildTrace(input) {
-  const steps = [];
-  function ms(arr, lo) {
-    const hi = lo + arr.length; // [lo, hi)
-    if (arr.length <= 1) return arr;
-    const mid = Math.trunc(arr.length / 2);
-    steps.push({ type: 'split', lo, mid: lo + mid, hi });
-    const L = ms(arr.slice(0, mid), lo);
-    const R = ms(arr.slice(mid), lo + mid);
-    const out = [];
-    let i = 0;
-    let j = 0;
-    while (i < L.length && j < R.length) {
-      if (L[i] < R[j]) out.push(L[i++]);
-      else out.push(R[j++]);
-    }
-    while (i < L.length) out.push(L[i++]);
-    while (j < R.length) out.push(R[j++]);
-    steps.push({
-      type: 'merge',
-      lo,
-      mid: lo + mid,
-      hi,
-      left: L.slice(),
-      right: R.slice(),
-      result: out.slice(),
-    });
-    return out;
-  }
-  ms(input.slice(), 0);
-  steps.push({ type: 'done' });
-  return steps;
-}
 
 const leftPct = (k) => ((k + 0.5) / N) * 100;
 const hueFor = (v) => 190 + (v / Math.max(...VALUES)) * 120;

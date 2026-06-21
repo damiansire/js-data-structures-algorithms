@@ -1,9 +1,8 @@
 // Escena: Quick Sort — "Un profesor ordenando alumnos por altura".
 //
-// Trace FIEL a Ordenamiento/quick-sort/quick-sort.js (partición de Lomuto):
-//   pivot = arr[end]; i = start-1
-//   for j in [start, end): if arr[j] <= pivot { i++; swap(i,j) }
-//   swap(i+1, end); pivote queda en i+1
+// La traza viene de ../trace/quick-sort.trace.mjs (única fuente de verdad,
+// verificada contra Ordenamiento/quick-sort/quick-sort.js por su test de
+// equivalencia). Esta escena solo la dibuja.
 //
 // Visual: cada valor es un alumno-barra cuya altura crece con el valor. El
 // pivote (último del rango) se ilumina con un foco. El puntero j recorre la
@@ -13,6 +12,7 @@
 import { el, clear } from '../dom.js';
 import { Player, buildTransport } from '../player.js';
 import { getLang } from '../i18n.js';
+import { buildTrace } from '../trace/quick-sort.trace.mjs';
 
 const VALUES = [7, 2, 9, 4, 1, 8, 5, 3];
 const N = VALUES.length;
@@ -57,49 +57,6 @@ const STRINGS = {
     card_input_sub: 'in-place',
   },
 };
-
-function buildTrace(input) {
-  const a = input.slice();
-  const steps = [];
-  const swap = (i, j) => {
-    const t = a[i];
-    a[i] = a[j];
-    a[j] = t;
-  };
-  function partition(start, end) {
-    const pivot = a[end];
-    steps.push({ type: 'pivot', index: end, value: pivot, lo: start, hi: end });
-    let i = start - 1;
-    for (let j = start; j < end; j++) {
-      steps.push({ type: 'scan', j, pivot, lo: start, hi: end });
-      if (a[j] <= pivot) {
-        i++;
-        if (i !== j) {
-          swap(i, j);
-          steps.push({ type: 'swap', a: i, b: j });
-        } else {
-          steps.push({ type: 'keep', index: i });
-        }
-      }
-    }
-    swap(i + 1, end);
-    steps.push({ type: 'place', a: i + 1, b: end, value: pivot });
-    steps.push({ type: 'settled', index: i + 1 });
-    return i + 1;
-  }
-  function qs(start, end) {
-    if (start >= end) {
-      if (start === end) steps.push({ type: 'settled', index: start });
-      return;
-    }
-    const p = partition(start, end);
-    qs(start, p - 1);
-    qs(p + 1, end);
-  }
-  qs(0, a.length - 1);
-  steps.push({ type: 'done' });
-  return steps;
-}
 
 const leftPct = (k) => ((k + 0.5) / N) * 100;
 

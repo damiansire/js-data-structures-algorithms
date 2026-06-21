@@ -27,6 +27,33 @@
       }
     },
     {
+      "files": ["visualizador/js/trace/*.trace.mjs"],
+      "env": {
+        "browser": true,
+        "node": false,
+        "es2022": true
+      },
+      "parserOptions": {
+        "ecmaVersion": 2022,
+        "sourceType": "module"
+      },
+      "rules": {
+        "no-unused-vars": ["error", { "args": "none", "varsIgnorePattern": "^_" }]
+      }
+    },
+    {
+      "files": ["**/*.test.mjs"],
+      "env": {
+        "jest": true,
+        "node": true,
+        "es2022": true
+      },
+      "parserOptions": {
+        "ecmaVersion": 2022,
+        "sourceType": "module"
+      }
+    },
+    {
       "files": ["**/*.test.js"],
       "env": {
         "jest": true,
