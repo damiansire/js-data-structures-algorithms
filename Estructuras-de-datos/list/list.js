@@ -27,15 +27,6 @@
                 aux = aux.next
             }
         }
-        length() {
-            let aux = this.head
-            let length = 0;
-            while (aux != null) {
-                this.length;
-                aux = aux.next
-            }
-            return aux;
-        }
         getLastElement() {
             let aux = this.head
             while (aux != null && aux.next != null) {
