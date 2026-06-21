@@ -4,9 +4,10 @@
 // prefers-reduced-motion y se pausa cuando la pestaña no está visible.
 
 let started = false;
+let controls = { start() {}, stop() {} };
 
 export function startConstellation() {
-  if (started) return;
+  if (started) return controls;
   started = true;
 
   const canvas = document.createElement('canvas');
@@ -149,28 +150,50 @@ export function startConstellation() {
 
   let raf = 0;
   let running = false;
+  // `wanted` = el fondo debería estar animando si la pestaña está visible.
+  // La navegación a una escena lo pone en false (el fondo queda detrás y no se
+  // ve); visibilitychange solo reanuda si `wanted` sigue true.
+  let wanted = !reduce;
   function loop() {
     if (!running) return;
     step();
     raf = requestAnimationFrame(loop);
   }
-  function start() {
+  function runLoop() {
     if (running) return;
     running = true;
     raf = requestAnimationFrame(loop);
   }
-  function stop() {
+  function stopLoop() {
     running = false;
     cancelAnimationFrame(raf);
   }
 
+  // API pública: pausar/reanudar el fondo según se entre/salga de una escena.
+  function start() {
+    if (reduce) return;
+    wanted = true;
+    if (!document.hidden) runLoop();
+  }
+  function stop() {
+    wanted = false;
+    stopLoop();
+  }
+
+  // Resize con debounce: durante un drag se reasigna el backing store y se
+  // re-siembra una sola vez al final del gesto, no decenas por segundo.
+  let resizeTimer = 0;
   window.addEventListener('resize', () => {
-    resize();
-    seed();
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      resize();
+      seed();
+      if (reduce) step(); // re-pinta el frame estático con el nuevo tamaño
+    }, 150);
   });
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stop();
-    else if (!reduce) start();
+    if (document.hidden) stopLoop();
+    else if (wanted) runLoop();
   });
 
   resize();
@@ -180,6 +203,9 @@ export function startConstellation() {
   if (reduce) {
     step(); // un único frame estático
   } else {
-    start();
+    runLoop();
   }
+
+  controls = { start, stop };
+  return controls;
 }

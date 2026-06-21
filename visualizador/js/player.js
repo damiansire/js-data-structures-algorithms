@@ -29,6 +29,7 @@ export class Player {
     this.speed = 1;
     this.playing = false;
     this._timer = null;
+    this._restartTimer = null;
   }
 
   get total() {
@@ -90,6 +91,8 @@ export class Player {
     this.playing = false;
     if (this._timer) clearTimeout(this._timer);
     this._timer = null;
+    if (this._restartTimer) clearTimeout(this._restartTimer);
+    this._restartTimer = null;
     this._emit();
   }
 
@@ -111,9 +114,14 @@ export class Player {
   }
 
   restart() {
-    this.reset();
-    // pequeño respiro para que el reset pinte antes de arrancar
-    setTimeout(() => this.play(), 120);
+    this.reset(); // reset() -> pause() ya limpia cualquier _restartTimer pendiente
+    // pequeño respiro para que el reset pinte antes de arrancar.
+    // Se guarda el id para que pause()/destroy() puedan cancelarlo y no se
+    // dispare play() sobre un Player ya destruido.
+    this._restartTimer = setTimeout(() => {
+      this._restartTimer = null;
+      this.play();
+    }, 120);
   }
 
   setSpeed(v) {

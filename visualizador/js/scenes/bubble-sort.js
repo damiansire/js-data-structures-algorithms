@@ -89,6 +89,18 @@ export default function mountBubbleSort(host, meta) {
   const n = VALUES.length;
   const max = Math.max(...VALUES);
 
+  // Registro de timeouts propios de la escena: destroy() los cancela para no
+  // tocar un DOM ya desmontado al cambiar de escena/idioma.
+  const sceneTimers = new Set();
+  const later = (fn, ms) => {
+    const id = setTimeout(() => {
+      sceneTimers.delete(id);
+      fn();
+    }, ms);
+    sceneTimers.add(id);
+    return id;
+  };
+
   const water = el('div', { class: 'bs-water' });
   const fizz = el('div', { class: 'bs-fizz' });
   for (let i = 0; i < 14; i++) {
@@ -191,7 +203,7 @@ export default function mountBubbleSort(host, meta) {
       case 'done': {
         bubbles.forEach((b, i) => {
           b.classList.add('settled');
-          setTimeout(() => b.classList.add('win'), i * 70);
+          later(() => b.classList.add('win'), i * 70);
         });
         return S.done;
       }
@@ -232,7 +244,13 @@ export default function mountBubbleSort(host, meta) {
   // posicionamiento inicial
   requestAnimationFrame(() => placeAll(true));
 
-  return { destroy: () => player.destroy() };
+  return {
+    destroy: () => {
+      sceneTimers.forEach((id) => clearTimeout(id));
+      sceneTimers.clear();
+      player.destroy();
+    },
+  };
 }
 
 function infoCard(title, big, sub) {

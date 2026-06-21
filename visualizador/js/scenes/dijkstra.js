@@ -192,6 +192,18 @@ const nodeById = new Map(NODES.map((n) => [n.id, n]));
 export default function mountDijkstra(host, meta = {}) {
   const S = STRINGS[getLang()] || STRINGS.en;
 
+  // Registro de timeouts propios de la escena: destroy() los cancela para no
+  // tocar un DOM ya desmontado al cambiar de escena/idioma.
+  const sceneTimers = new Set();
+  const later = (fn, ms) => {
+    const id = setTimeout(() => {
+      sceneTimers.delete(id);
+      fn();
+    }, ms);
+    sceneTimers.add(id);
+    return id;
+  };
+
   // ── Lienzo: SVG (aristas + pesos) + nodos absolutos + narrador ──
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('class', 'dij-edges');
@@ -335,7 +347,7 @@ export default function mountDijkstra(host, meta = {}) {
         paintDistances(step.dist);
         nodeEls.forEach((e) => e.classList.add('dij-final'));
         NODES.forEach((n, i) => {
-          setTimeout(() => nodeEls.get(n.id).classList.add('dij-win'), i * 70);
+          later(() => nodeEls.get(n.id).classList.add('dij-win'), i * 70);
         });
         return S.done(SOURCE);
       }
@@ -396,7 +408,13 @@ export default function mountDijkstra(host, meta = {}) {
   host.append(stage, aside);
   resetVisual();
 
-  return { destroy: () => player.destroy() };
+  return {
+    destroy: () => {
+      sceneTimers.forEach((id) => clearTimeout(id));
+      sceneTimers.clear();
+      player.destroy();
+    },
+  };
 }
 
 function infoCard(title, big, sub) {

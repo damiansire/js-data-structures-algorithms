@@ -12,7 +12,8 @@ import { startConstellation } from './home-bg.js';
 const app = document.getElementById('app');
 
 // Fondo animado global (constelación de nodos con pulsos viajando por aristas).
-startConstellation();
+// Se pausa al entrar a una escena (queda detrás, no se ve) y se reanuda en home.
+const bg = startConstellation();
 
 // Las escenas se cargan bajo demanda (dynamic import) por id.
 const SCENE_LOADERS = {
@@ -54,6 +55,10 @@ const SCENE_LOADERS = {
 };
 
 let activeScene = null; // { destroy() }
+// Token de generación: cada navegación (renderScene/renderHome) lo incrementa.
+// Tras un await, una navegación que ya no es la vigente se aborta para no
+// montar una escena sobre un host reemplazado (race de routing/idioma).
+let renderGen = 0;
 
 function destroyActive() {
   if (activeScene && typeof activeScene.destroy === 'function') {
@@ -82,10 +87,14 @@ function setText(id, text) {
 
 /* ── Home / catálogo ───────────────────────────────────────────── */
 function renderHome() {
+  renderGen++;
   destroyActive();
+  bg.start(); // reanudar el fondo animado en el catálogo
   clear(app);
 
   const builtCount = SCENES.filter((s) => s.built).length;
+  // Deriva del catálogo, igual que las otras stats (no hardcodear).
+  const categoryCount = new Set(SCENES.map((s) => s.category)).size;
 
   app.append(
     el(
@@ -108,7 +117,7 @@ function renderHome() {
           { class: 'hero-stats' },
           chip(String(SCENES.length), t('stat_scenes')),
           chip(String(builtCount), t('stat_animated')),
-          chip('4', t('stat_categories')),
+          chip(String(categoryCount), t('stat_categories')),
           el('span', { class: 'chip ghost' }, t('stat_vanilla'))
         ),
         el('div', { class: 'scroll-hint' }, t('scroll_hint'), el('span', { class: 'arrow' }, '↓'))
@@ -231,7 +240,9 @@ function sceneCard(s, cat, idx) {
 
 /* ── Vista de escena ───────────────────────────────────────────── */
 async function renderScene(id) {
+  const gen = ++renderGen;
   destroyActive();
+  bg.stop(); // pausar el fondo animado: queda detrás de la escena y no se ve
   const meta = SCENES_BY_ID[id];
   if (!meta) return renderHome();
 
@@ -261,9 +272,13 @@ async function renderScene(id) {
 
   try {
     const mod = await loader();
+    // Si llegó otra navegación mientras se cargaba el módulo, abortar: el host
+    // ya fue reemplazado y montar aquí dejaría una escena huérfana.
+    if (gen !== renderGen) return;
     activeScene = mod.default(host, meta) || null;
     wirePlayOnCanvas(host);
   } catch (err) {
+    if (gen !== renderGen) return;
     console.error('Error cargando la escena', id, err);
     host.append(soonStage(meta, true));
   }
