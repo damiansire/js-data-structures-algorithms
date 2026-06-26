@@ -1,19 +1,23 @@
-# Estructuras de Datos y Algoritmos en JavaScript
+# Data Structures and Algorithms in JavaScript
 
-Implementaciones de estructuras de datos y algoritmos clásicos en JavaScript, pensadas como material de estudio y referencia. Cada módulo exporta su API con `module.exports` para poder importarlo y testearlo.
+Implementations of classic data structures and algorithms in JavaScript, meant
+as study and reference material. Each module exports its API with
+`module.exports` so it can be imported and tested.
 
-> Estado de los tests: todos los módulos de estructuras, ordenamiento, búsqueda y algoritmos generales tienen su suite Jest co-localizada (14 suites en total). Para ver la cobertura corré `npm run coverage`.
+> Test status: every data structure, sorting, search, and general-algorithm
+> module has a co-located Jest suite (14 suites in total). Run `npm run coverage`
+> to see the coverage report.
 
-## Contenido
+## Contents
 
-| Categoría                | Implementaciones                                                           |
-| ------------------------ | -------------------------------------------------------------------------- |
-| **Estructuras de datos** | Lista, Pila (stack), Árbol, Árbol binario, Árbol binario de búsqueda (BST) |
-| **Ordenamiento**         | Bubble sort, Merge sort (recursivo e _in-place_), Quick sort               |
-| **Búsqueda**             | Búsqueda binaria                                                           |
-| **Algoritmos generales** | Fibonacci, Greedy, conteo de letras, eliminar duplicados                   |
+| Category               | Implementations                                                            |
+| ---------------------- | -------------------------------------------------------------------------- |
+| **Data structures**    | List, Stack, Tree, Binary tree, Binary search tree (BST)                   |
+| **Sorting**            | Bubble sort, Merge sort (recursive and _in-place_), Quick sort             |
+| **Search**             | Binary search                                                              |
+| **General algorithms** | Fibonacci, Greedy, letter counting, removing duplicates                    |
 
-## Correr los tests
+## Running the tests
 
 ```bash
 npm install
