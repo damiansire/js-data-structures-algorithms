@@ -23,6 +23,7 @@ const SCENE_LOADERS = {
   'merge-sort-in-place': () => import('./scenes/merge-sort.js'),
   'binary-search': () => import('./scenes/binary-search.js'),
   stack: () => import('./scenes/stack.js'),
+  'bounded-stack': () => import('./scenes/bounded-stack.js'),
   list: () => import('./scenes/list.js'),
   'binary-tree': () => import('./scenes/pachinko.js'),
   'binary-search-tree': () => import('./scenes/pachinko.js'),

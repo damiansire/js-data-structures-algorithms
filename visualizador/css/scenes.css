@@ -561,3 +561,98 @@
     transform: translateX(6px);
   }
 }
+
+/* ── Bounded Stack (pila acotada) ─────────────────────────────────── */
+.bstk-stage {
+  min-height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bstk-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border: 2px dashed var(--stroke);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.bstk-frame.shake {
+  animation: shake 0.45s;
+}
+.bstk-slot {
+  width: 190px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: 9px;
+  border: 1px dashed var(--stroke);
+  color: var(--ink-faint);
+  transition:
+    transform 0.18s,
+    box-shadow 0.18s;
+}
+.bstk-slot.is-filled {
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #08121f;
+  font-weight: 700;
+  box-shadow:
+    0 6px 16px -6px rgba(0, 0, 0, 0.7),
+    inset 0 2px 6px rgba(255, 255, 255, 0.45),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.2);
+}
+.bstk-slot.is-top {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+.bstk-slot.pulse {
+  animation: bstk-pulse 0.4s ease;
+}
+@keyframes bstk-pulse {
+  0% {
+    transform: scale(0.9);
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.bstk-idx {
+  font-family: var(--mono, monospace);
+  font-size: 11px;
+  opacity: 0.7;
+  min-width: 30px;
+}
+.bstk-slot.is-filled .bstk-idx {
+  color: rgba(8, 18, 31, 0.6);
+}
+.bstk-val {
+  margin-left: auto;
+  font-size: 15px;
+}
+.bstk-cap {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  font-family: var(--mono, monospace);
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--stroke);
+  color: var(--ink-faint);
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background 0.2s;
+}
+.bstk-cap.is-hot {
+  color: #fff;
+  background: #e11d48;
+  border-color: #e11d48;
+}

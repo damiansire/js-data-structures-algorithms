@@ -109,6 +109,18 @@ export const SCENES = [
     built: true,
   },
   {
+    id: 'bounded-stack',
+    category: 'structures',
+    emoji: '🧱',
+    title: 'Bounded Stack',
+    scene: { en: 'A stack with a hard limit', es: 'Una pila con límite' },
+    description: {
+      en: 'A fixed-capacity, array-backed stack. push() fills the next slot; push() on a full stack overflows; pop() on an empty one underflows.',
+      es: 'Una pila de capacidad fija respaldada por un arreglo. push() llena el siguiente slot; push() sobre una pila llena desborda; pop() sobre una vacía hace underflow.',
+    },
+    built: true,
+  },
+  {
     id: 'binary-tree',
     category: 'structures',
     emoji: '🎰',
