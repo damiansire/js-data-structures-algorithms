@@ -163,6 +163,19 @@ export const SCENES = [
     built: true,
   },
   {
+    id: 'priority-queue',
+    category: 'structures',
+    emoji: '🏥',
+    title: 'Priority Queue',
+    scene: { en: 'An ER triage (min-heap)', es: 'El triaje de emergencias (min-heap)' },
+    description: {
+      en: 'A binary min-heap: the smallest priority is always at the root. enqueue bubbles up, dequeue re-settles down — both O(log n). Shown as a tree and as its flattened array.',
+      es: 'Un min-heap binario: la menor prioridad siempre en la raíz. enqueue burbujea hacia arriba, dequeue reacomoda hacia abajo — ambos O(log n). Se ve como árbol y como su arreglo aplanado.',
+    },
+    repo: 'Estructuras-de-datos/priority-queue/priority-queue.js',
+    built: true,
+  },
+  {
     id: 'binary-tree',
     category: 'structures',
     emoji: '🎰',

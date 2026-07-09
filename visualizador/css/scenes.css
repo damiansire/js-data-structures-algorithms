@@ -928,3 +928,99 @@
   font-size: 12px;
   color: var(--ink-faint);
 }
+
+/* ── Priority Queue (min-heap: árbol + arreglo) ───────────────────── */
+.pq-stage {
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 16px;
+}
+.pq-tree {
+  position: relative;
+  width: 480px;
+  max-width: 100%;
+}
+.pq-links {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.pq-links path {
+  fill: none;
+  stroke: var(--stroke);
+  stroke-width: 1.5;
+}
+.pq-node {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #60a5fa, #2563eb);
+  color: #04122e;
+  font-family: var(--mono, monospace);
+  font-weight: 700;
+  font-size: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.6);
+}
+.pq-node.is-root {
+  background: linear-gradient(180deg, #34d399, #059669);
+  outline: 2px solid #34d399;
+  outline-offset: 2px;
+}
+.pq-node.pulse,
+.pq-cell.pulse {
+  animation: cb-pulse 0.4s ease;
+}
+.pq-array {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.pq-arr-label {
+  font-family: var(--mono, monospace);
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-right: 4px;
+}
+.pq-arr-empty {
+  color: var(--ink-faint);
+  opacity: 0.4;
+}
+.pq-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 30px;
+  border: 1px solid var(--border, var(--stroke));
+  border-radius: 7px;
+  overflow: hidden;
+  background: var(--bg-elev, #16162c);
+}
+.pq-cell.is-root {
+  border-color: #34d399;
+  box-shadow: 0 0 0 1px #34d399;
+}
+.pq-cell__i {
+  width: 100%;
+  text-align: center;
+  font-size: 9px;
+  color: var(--ink-faint);
+  background: rgba(255, 255, 255, 0.05);
+  font-variant-numeric: tabular-nums;
+}
+.pq-cell__v {
+  padding: 4px 8px;
+  font-family: var(--mono, monospace);
+  font-size: 13px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
