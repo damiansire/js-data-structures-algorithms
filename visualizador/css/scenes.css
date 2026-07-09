@@ -1088,3 +1088,65 @@
 .dq-transport .spacer {
   flex: 0 1 24px;
 }
+
+/* ── Set (miembros únicos, dedup) ─────────────────────────────────── */
+.set-stage {
+  min-height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.set-members {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-content: center;
+  max-width: 520px;
+}
+.set-empty {
+  font-family: var(--mono, monospace);
+  font-size: 28px;
+  color: var(--ink-faint);
+  opacity: 0.5;
+}
+.set-chip {
+  padding: 10px 18px;
+  border-radius: 22px;
+  color: #08121f;
+  font-weight: 700;
+  font-size: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.6);
+}
+.set-chip.enter {
+  animation: set-pop 0.4s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.set-chip.bounce {
+  animation: set-bounce 0.5s ease;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+@keyframes set-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes set-bounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  30% {
+    transform: translateY(-10px) scale(1.08);
+  }
+  60% {
+    transform: translateY(0) scale(0.96);
+  }
+}

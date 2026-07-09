@@ -189,6 +189,19 @@ export const SCENES = [
     built: true,
   },
   {
+    id: 'set',
+    category: 'structures',
+    emoji: '🎟️',
+    title: 'Set',
+    scene: { en: 'A members-only club', es: 'El club de socios' },
+    description: {
+      en: 'A hash set: stores unique values. add() on one already present does nothing (it bounces). has() is O(1) — the structure behind deduplication and set operations.',
+      es: 'Un hash set: guarda valores únicos. add() de uno que ya está no hace nada (rebota). has() es O(1) — la estructura detrás de la deduplicación y las operaciones de conjuntos.',
+    },
+    repo: 'Estructuras-de-datos/set/set.js',
+    built: true,
+  },
+  {
     id: 'binary-tree',
     category: 'structures',
     emoji: '🎰',

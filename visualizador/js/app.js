@@ -29,6 +29,7 @@ const SCENE_LOADERS = {
   'hash-table': () => import('./scenes/hash-table.js'),
   'priority-queue': () => import('./scenes/priority-queue.js'),
   deque: () => import('./scenes/deque.js'),
+  set: () => import('./scenes/set.js'),
   list: () => import('./scenes/list.js'),
   'binary-tree': () => import('./scenes/pachinko.js'),
   'binary-search-tree': () => import('./scenes/pachinko.js'),
