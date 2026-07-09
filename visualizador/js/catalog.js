@@ -176,6 +176,19 @@ export const SCENES = [
     built: true,
   },
   {
+    id: 'deque',
+    category: 'structures',
+    emoji: '↔️',
+    title: 'Deque',
+    scene: { en: 'A line with two doors', es: 'La fila con dos puertas' },
+    description: {
+      en: 'A double-ended queue: push and pop from both the front and the back in O(1). With one door it is a stack or a queue; with two, a deque.',
+      es: 'Una cola de dos extremos: push y pop por el frente y por el final en O(1). Con una puerta es un stack o una cola; con dos, una deque.',
+    },
+    repo: 'Estructuras-de-datos/deque/deque.js',
+    built: true,
+  },
+  {
     id: 'binary-tree',
     category: 'structures',
     emoji: '🎰',
