@@ -24,6 +24,7 @@ const SCENE_LOADERS = {
   'binary-search': () => import('./scenes/binary-search.js'),
   stack: () => import('./scenes/stack.js'),
   'bounded-stack': () => import('./scenes/bounded-stack.js'),
+  queue: () => import('./scenes/queue.js'),
   list: () => import('./scenes/list.js'),
   'binary-tree': () => import('./scenes/pachinko.js'),
   'binary-search-tree': () => import('./scenes/pachinko.js'),

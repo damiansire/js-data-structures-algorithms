@@ -121,6 +121,19 @@ export const SCENES = [
     built: true,
   },
   {
+    id: 'queue',
+    category: 'structures',
+    emoji: '🚶',
+    title: 'Queue',
+    scene: { en: 'A checkout line (FIFO)', es: 'La fila del súper (FIFO)' },
+    description: {
+      en: 'enqueue() joins the back of the line; dequeue() serves the one at the front. First in, first out.',
+      es: 'enqueue() se suma al final de la fila; dequeue() atiende al del frente. Primero en entrar, primero en salir.',
+    },
+    repo: 'Estructuras-de-datos/queue/queue.js',
+    built: true,
+  },
+  {
     id: 'binary-tree',
     category: 'structures',
     emoji: '🎰',

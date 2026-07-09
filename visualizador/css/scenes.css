@@ -656,3 +656,76 @@
   background: #e11d48;
   border-color: #e11d48;
 }
+
+/* ── Queue (cola FIFO) ────────────────────────────────────────────── */
+.q-stage {
+  min-height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.q-track {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.q-end {
+  font-family: var(--mono, monospace);
+  font-size: 12px;
+  line-height: 1.3;
+  text-align: center;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.q-lane {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 240px;
+  min-height: 72px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 2px dashed var(--stroke);
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+.q-card {
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: #08121f;
+  font-weight: 700;
+  font-size: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 6px 16px -6px rgba(0, 0, 0, 0.7),
+    inset 0 2px 6px rgba(255, 255, 255, 0.45),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.2);
+}
+.q-card.enter {
+  animation: q-enter 0.4s cubic-bezier(0.3, 1.3, 0.5, 1);
+}
+.q-card.leave {
+  animation: q-leave 0.4s ease forwards;
+}
+@keyframes q-enter {
+  from {
+    opacity: 0;
+    transform: translateX(40px) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+@keyframes q-leave {
+  to {
+    opacity: 0;
+    transform: translateX(-46px) scale(0.85);
+    margin-right: -60px;
+  }
+}
