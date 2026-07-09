@@ -729,3 +729,116 @@
     margin-right: -60px;
   }
 }
+
+/* ── Circular Buffer (ring buffer) ────────────────────────────────── */
+.cb-stage {
+  min-height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cb-ring {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  border: 1px dashed var(--stroke);
+}
+.cb-ring.shake {
+  animation: shake 0.45s;
+}
+/* Slots are centred on their computed (left, top) via negative margin, leaving
+   `transform` free for the pulse animation. */
+.cb-slot {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px dashed var(--stroke);
+  color: var(--ink-faint);
+}
+.cb-slot.is-filled {
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #08121f;
+  font-weight: 700;
+  box-shadow:
+    0 6px 16px -6px rgba(0, 0, 0, 0.7),
+    inset 0 2px 6px rgba(255, 255, 255, 0.45);
+}
+.cb-slot.pulse {
+  animation: cb-pulse 0.4s ease;
+}
+@keyframes cb-pulse {
+  0% {
+    transform: scale(0.8);
+  }
+  60% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.cb-slot__i {
+  font-family: var(--mono, monospace);
+  font-size: 9px;
+  opacity: 0.65;
+}
+.cb-slot.is-filled .cb-slot__i {
+  color: rgba(8, 18, 31, 0.6);
+}
+.cb-slot__v {
+  font-size: 15px;
+  line-height: 1;
+}
+.cb-ptr {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-family: var(--mono, monospace);
+  font-size: 12px;
+  font-weight: 700;
+  color: #06122e;
+  box-shadow: 0 4px 10px -3px rgba(0, 0, 0, 0.6);
+}
+.cb-ptr--head {
+  background: #34d399;
+}
+.cb-ptr--tail {
+  background: #fbbf24;
+}
+.cb-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+.cb-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cb-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.cb-dot--head {
+  background: #34d399;
+}
+.cb-dot--tail {
+  background: #fbbf24;
+}

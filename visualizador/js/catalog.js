@@ -134,6 +134,19 @@ export const SCENES = [
     built: true,
   },
   {
+    id: 'circular-buffer',
+    category: 'structures',
+    emoji: '🔄',
+    title: 'Circular Buffer',
+    scene: { en: 'A ring buffer that wraps around', es: 'Un ring buffer que da la vuelta' },
+    description: {
+      en: 'A fixed-size FIFO whose indices wrap modulo capacity. When full, write() overwrites the oldest — the bounded-memory pattern behind audio and streaming buffers.',
+      es: 'Una FIFO de tamaño fijo cuyos índices dan la vuelta (módulo capacidad). Cuando está llena, write() pisa al más viejo — el patrón de memoria acotada de los buffers de audio y streaming.',
+    },
+    repo: 'Estructuras-de-datos/circular-buffer/circular-buffer.js',
+    built: true,
+  },
+  {
     id: 'binary-tree',
     category: 'structures',
     emoji: '🎰',

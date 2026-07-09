@@ -25,6 +25,7 @@ const SCENE_LOADERS = {
   stack: () => import('./scenes/stack.js'),
   'bounded-stack': () => import('./scenes/bounded-stack.js'),
   queue: () => import('./scenes/queue.js'),
+  'circular-buffer': () => import('./scenes/circular-buffer.js'),
   list: () => import('./scenes/list.js'),
   'binary-tree': () => import('./scenes/pachinko.js'),
   'binary-search-tree': () => import('./scenes/pachinko.js'),
