@@ -1,7 +1,7 @@
 {
-  "name": "javascript-estructura-de-datos-y-algoritmos",
+  "name": "js-data-structures-algorithms",
   "version": "1.0.0",
-  "description": "Repositorio de estructura de datos y algoritmos",
+  "description": "Implementaciones de estructuras de datos y algoritmos clásicos en JavaScript para estudio y referencia.",
   "private": true,
   "keywords": [
     "algorithms",
