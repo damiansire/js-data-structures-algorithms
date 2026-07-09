@@ -10,12 +10,12 @@ as study and reference material. Each module exports its API with
 
 ## Contents
 
-| Category               | Implementations                                                            |
-| ---------------------- | -------------------------------------------------------------------------- |
-| **Data structures**    | List, Stack, Tree, Binary tree, Binary search tree (BST)                   |
-| **Sorting**            | Bubble sort, Merge sort (recursive and _in-place_), Quick sort             |
-| **Search**             | Binary search                                                              |
-| **General algorithms** | Fibonacci, Greedy, letter counting, removing duplicates                    |
+| Category               | Implementations                                                |
+| ---------------------- | -------------------------------------------------------------- |
+| **Data structures**    | List, Stack, Tree, Binary tree, Binary search tree (BST)       |
+| **Sorting**            | Bubble sort, Merge sort (recursive and _in-place_), Quick sort |
+| **Search**             | Binary search                                                  |
+| **General algorithms** | Fibonacci, Greedy, letter counting, removing duplicates        |
 
 ## Running the tests
 
