@@ -842,3 +842,89 @@
 .cb-dot--tail {
   background: #fbbf24;
 }
+
+/* ── Hash Table (encadenamiento separado) ─────────────────────────── */
+.ht-stage {
+  min-height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.ht-table {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: 460px;
+}
+.ht-bucket {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.02);
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.ht-bucket.is-flash {
+  border-color: var(--accent, #fbbf24);
+  background: rgba(251, 191, 36, 0.08);
+}
+.ht-idx {
+  font-family: var(--mono, monospace);
+  font-size: 12px;
+  color: var(--ink-faint);
+  min-width: 28px;
+}
+.ht-chain {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.ht-empty {
+  color: var(--ink-faint);
+  opacity: 0.4;
+}
+.ht-arrow {
+  color: var(--ink-faint);
+  opacity: 0.5;
+}
+.ht-entry {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 7px;
+  border: 1px solid var(--stroke);
+  background: var(--bg-elev, #16162c);
+  font-family: var(--mono, monospace);
+  animation: ht-pop 0.3s ease;
+}
+.ht-entry.is-hot {
+  border-color: var(--accent, #fbbf24);
+  box-shadow: 0 0 0 1px var(--accent, #fbbf24);
+}
+@keyframes ht-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.ht-key {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.ht-val {
+  font-size: 12px;
+  color: var(--ink-faint);
+}

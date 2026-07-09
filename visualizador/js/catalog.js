@@ -147,6 +147,22 @@ export const SCENES = [
     built: true,
   },
   {
+    id: 'hash-table',
+    category: 'structures',
+    emoji: '🗄️',
+    title: 'Hash Table',
+    scene: {
+      en: 'A locker room for keys (chaining)',
+      es: 'El casillero de claves (encadenamiento)',
+    },
+    description: {
+      en: 'A hash function maps each key to a bucket; keys that land in the same bucket (collisions) are chained together. The map behind objects, dictionaries and sets.',
+      es: 'Una función hash mapea cada clave a un bucket; las claves que caen en el mismo bucket (colisiones) se encadenan. El mapa detrás de objetos, diccionarios y sets.',
+    },
+    repo: 'Estructuras-de-datos/hash-table/hash-table.js',
+    built: true,
+  },
+  {
     id: 'binary-tree',
     category: 'structures',
     emoji: '🎰',
