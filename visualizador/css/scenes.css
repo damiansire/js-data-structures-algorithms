@@ -1150,3 +1150,99 @@
     transform: translateY(0) scale(0.96);
   }
 }
+
+/* ── Graph (nodos + ejes, lista de adyacencia) ────────────────────── */
+.gr-stage {
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px;
+}
+.gr-board {
+  position: relative;
+  width: 300px;
+  height: 300px;
+}
+.gr-links {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.gr-links line {
+  stroke: var(--stroke);
+  stroke-width: 2;
+}
+.gr-links line.is-hot {
+  stroke: #fbbf24;
+  stroke-width: 3;
+}
+.gr-node {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(180deg, #60a5fa, #2563eb);
+  color: #04122e;
+  font-family: var(--mono, monospace);
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.6);
+  transition:
+    transform 0.15s,
+    outline-color 0.15s;
+}
+.gr-node:hover {
+  transform: scale(1.08);
+}
+.gr-node.is-selected {
+  outline: 3px solid #fbbf24;
+  outline-offset: 2px;
+  transform: scale(1.1);
+}
+.gr-node.is-neighbor {
+  outline: 2px solid #34d399;
+  outline-offset: 2px;
+}
+.gr-adj {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-family: var(--mono, monospace);
+  font-size: 13px;
+  min-width: 200px;
+}
+.gr-adj-label {
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.gr-adj-empty {
+  color: var(--ink-faint);
+  opacity: 0.4;
+}
+.gr-adj-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gr-adj-key {
+  font-weight: 700;
+  color: var(--ink);
+  min-width: 16px;
+}
+.gr-adj-arrow {
+  color: var(--ink-faint);
+  opacity: 0.6;
+}
+.gr-adj-vals {
+  color: var(--ink-faint);
+}

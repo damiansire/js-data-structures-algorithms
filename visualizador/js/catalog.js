@@ -202,6 +202,19 @@ export const SCENES = [
     built: true,
   },
   {
+    id: 'graph',
+    category: 'structures',
+    emoji: '🔗',
+    title: 'Graph',
+    scene: { en: 'A friendship network', es: 'La red de amistades' },
+    description: {
+      en: 'An undirected graph as an adjacency list: each node maps to its set of neighbors. Click two nodes to connect them. The base for BFS, DFS and Dijkstra.',
+      es: 'Un grafo no dirigido como lista de adyacencia: cada nodo mapea a su conjunto de vecinos. Clic en dos nodos para conectarlos. La base de BFS, DFS y Dijkstra.',
+    },
+    repo: 'Estructuras-de-datos/graph/graph.js',
+    built: true,
+  },
+  {
     id: 'binary-tree',
     category: 'structures',
     emoji: '🎰',

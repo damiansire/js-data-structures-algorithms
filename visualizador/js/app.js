@@ -30,6 +30,7 @@ const SCENE_LOADERS = {
   'priority-queue': () => import('./scenes/priority-queue.js'),
   deque: () => import('./scenes/deque.js'),
   set: () => import('./scenes/set.js'),
+  graph: () => import('./scenes/graph.js'),
   list: () => import('./scenes/list.js'),
   'binary-tree': () => import('./scenes/pachinko.js'),
   'binary-search-tree': () => import('./scenes/pachinko.js'),
