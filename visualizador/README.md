@@ -28,7 +28,7 @@ visualizador/
 │   └── scenes.css      # estilos por escena (burbujas, puertas, platos…)
 └── js/
     ├── app.js          # router por hash (#/ y #/scene/<id>)
-    ├── catalog.js      # metadatos de las 15 escenas (qué está "Listo")
+    ├── catalog.js      # metadatos de cada escena (qué está "Listo")
     ├── dom.js          # helpers: el(), clear(), setStyle()…
     ├── player.js       # motor de reproducción + barra de transporte
     └── scenes/         # una escena por archivo
