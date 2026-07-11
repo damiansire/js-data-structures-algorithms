@@ -66,6 +66,44 @@ function buildMetricsBlock() {
   ].join('\n');
 }
 
+// Tolerancia para las 4 cifras de cobertura al comparar en `--check`. La
+// cobertura de FUNCIONES en particular puede variar un poco entre versiones
+// de Node (V8/Istanbul cuentan algunas expresiones de función de forma
+// distinta) — confirmado real: 74.25% (Node v26 local) vs 73.77% (Node 22.x
+// en CI) sobre el MISMO código, mismo commit. Bakear un número exacto que
+// tiene que matchear byte-a-byte una corrida fresca en OTRO entorno es
+// frágil por diseño; una tolerancia chica separa "el número drifteó porque
+// cambió el código" (falla de verdad) de "el número drifteó porque V8 mide
+// distinto" (ruido de entorno, no debería tumbar CI).
+const COVERAGE_TOLERANCE_PCT = 1.0;
+
+const PCT_LINE_RE =
+  /don't, which pulls the overall % down\): \*\*([\d.]+)% statements,\n> ([\d.]+)% lines, ([\d.]+)% functions, ([\d.]+)%\n> branches\*\*/;
+
+function extractPercentages(block) {
+  const match = block.match(PCT_LINE_RE);
+  if (!match) return null;
+  return match.slice(1, 5).map(Number);
+}
+
+/** Compara dos bloques de métricas ignorando diferencias de cobertura dentro
+ * de COVERAGE_TOLERANCE_PCT puntos porcentuales. El resto del texto (suites,
+ * tests, wording) se sigue comparando exacto. */
+function blocksMatchWithinTolerance(oldBlock, newBlock) {
+  if (oldBlock === newBlock) return true;
+
+  const oldPcts = extractPercentages(oldBlock);
+  const newPcts = extractPercentages(newBlock);
+  if (!oldPcts || !newPcts) return false;
+
+  // Reemplaza las cifras de cobertura por un placeholder común en ambos
+  // bloques; si lo que queda coincide, la única diferencia real eran los %.
+  const stripPcts = (block) => block.replace(PCT_LINE_RE, 'PCT_PLACEHOLDER');
+  if (stripPcts(oldBlock) !== stripPcts(newBlock)) return false;
+
+  return oldPcts.every((oldPct, i) => Math.abs(oldPct - newPcts[i]) <= COVERAGE_TOLERANCE_PCT);
+}
+
 function main() {
   const checkOnly = process.argv.includes('--check');
   const block = buildMetricsBlock();
@@ -80,25 +118,20 @@ function main() {
 
   const before = readme.slice(0, startIdx);
   const after = readme.slice(endIdx + END_MARKER.length);
-  const nextReadme = `${before}${block}${after}`;
+  const oldBlock = readme.slice(startIdx, endIdx + END_MARKER.length);
 
   if (checkOnly) {
-    if (nextReadme !== readme) {
-      const oldBlock = readme.slice(startIdx, endIdx + END_MARKER.length);
-      console.error('[update-metrics] DIFF DIAGNOSTIC (temporal):');
-      console.error('--- README actual ---');
-      console.error(JSON.stringify(oldBlock));
-      console.error('--- README esperado ---');
-      console.error(JSON.stringify(block));
+    if (!blocksMatchWithinTolerance(oldBlock, block)) {
       console.error(
-        '[update-metrics] README.md desactualizado respecto a la última corrida de tests/cobertura. Corré `npm run update-metrics` y commiteá el resultado.',
+        `[update-metrics] README.md desactualizado respecto a la última corrida de tests/cobertura (fuera de la tolerancia de ±${COVERAGE_TOLERANCE_PCT}pp). Corré \`npm run update-metrics\` y commiteá el resultado.`,
       );
       process.exit(1);
     }
-    console.log('[update-metrics] README.md está al día.');
+    console.log('[update-metrics] README.md está al día (dentro de tolerancia de cobertura).');
     return;
   }
 
+  const nextReadme = `${before}${block}${after}`;
   fs.writeFileSync(README_PATH, nextReadme, 'utf8');
   console.log('[update-metrics] README.md actualizado.');
 }
