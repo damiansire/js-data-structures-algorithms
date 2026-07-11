@@ -42,6 +42,17 @@
       }
     },
     {
+      "files": ["scripts/*.mjs"],
+      "env": {
+        "node": true,
+        "es2022": true
+      },
+      "parserOptions": {
+        "ecmaVersion": 2022,
+        "sourceType": "module"
+      }
+    },
+    {
       "files": ["**/*.test.mjs"],
       "env": {
         "jest": true,

@@ -12,6 +12,10 @@
   "scripts": {
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test:metrics": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --json --outputFile=test-results.json",
+    "update-metrics": "node scripts/update-metrics.mjs",
+    "check-metrics": "node scripts/update-metrics.mjs --check",
+    "benchmark": "node benchmarks/index.js",
     "lint": "eslint . --ext .js,.mjs,.cjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

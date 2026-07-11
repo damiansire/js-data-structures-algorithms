@@ -67,9 +67,72 @@ balanceado y no otro?" sin tener que leer el código fuente para cada módulo.
   in-place existe en este repo específicamente para mostrar ese trade-off
   memoria-vs-simplicidad del lado a lado con la recursiva.
 
+## Benchmarks
+
+Medición real de tiempo (`node benchmarks/index.js`, `perf_hooks.performance.now()`,
+mediana de 5 corridas), corrida en esta máquina con Node v26.2.0. El script no
+es un framework de benchmarking: alcanza para ver el orden de magnitud de
+cada trade-off descripto arriba, no para comparar micro-optimizaciones.
+
+### hash-table vs `Map` nativo
+
+| n       | set/insert (HashTable) | set/insert (Map) | get (HashTable) | get (Map) |
+| ------- | ---------------------- | ---------------- | --------------- | --------- |
+| 1.000   | 3.66 ms                | 1.13 ms          | 2.34 ms         | 0.71 ms   |
+| 10.000  | 17.42 ms               | 1.41 ms          | 2.98 ms         | 0.78 ms   |
+| 100.000 | 101.38 ms              | 31.08 ms         | 100.74 ms       | 10.73 ms  |
+
+Con la capacidad de bucket dimensionada al dataset (`new HashTable(n)`),
+`HashTable` queda entre 3x y 9x más lento que `Map` nativo (esperable: `Map`
+está implementado en C++ dentro de V8, no en JS). El punto real lo muestra la
+capacidad **default** (`new HashTable()`, 8 buckets fijos, sin resize
+automático, tal como está documentado arriba): insertar 100.000 claves tardó
+**15.664 ms** (15.6 segundos) contra 101 ms con capacidad dimensionada, porque
+cada bucket termina con miles de entradas encadenadas y cada `set` pasa a ser
+O(n). Este número es la evidencia concreta de la limitación "sin resize
+automático" que la nota de diseño menciona en teoría.
+
+### priority-queue (heap) vs array ordenado (naive)
+
+| n      | heap (enqueue+dequeue todo) | array ordenado (naive) |
+| ------ | --------------------------- | ---------------------- |
+| 1.000  | 4.45 ms                     | 0.51 ms                |
+| 10.000 | 5.97 ms                     | 11.17 ms               |
+| 20.000 | 12.78 ms                    | 136.55 ms              |
+
+Con pocos elementos el array ordenado (inserción por búsqueda binaria +
+`splice`, que es O(n) por el corrimiento) gana por overhead bajo. El cruce
+pasa entre 1.000 y 10.000 elementos: a partir de ahí el heap (O(log n) por
+operación) se despega, y en 20.000 elementos ya es 10.7x más rápido que la
+alternativa naive. Confirma en números el trade-off que documenta la nota de
+diseño: el heap es la elección correcta cuando insertar y extraer-mínimo son
+ambas frecuentes sobre datasets no triviales.
+
+### binary-search-tree vs `Set` nativo
+
+| n       | caso        | insert (BST) | insert (Set) | find/has (BST) | find/has (Set) |
+| ------- | ----------- | ------------ | ------------ | -------------- | -------------- |
+| 1.000   | aleatorio   | 0.71 ms      | 0.15 ms      | 0.21 ms        | 0.12 ms        |
+| 10.000  | aleatorio   | 2.19 ms      | 1.11 ms      | 1.97 ms        | 0.68 ms        |
+| 100.000 | aleatorio   | 65.06 ms     | 13.84 ms     | 70.18 ms       | 8.00 ms        |
+| 1.000   | ya ordenado | 0.96 ms      | 0.06 ms      | 0.94 ms        | 0.00 ms        |
+| 5.000   | ya ordenado | 26.88 ms     | 0.41 ms      | 37.37 ms       | 0.01 ms        |
+
+Con datos aleatorios el BST queda entre 4x y 8x más lento que `Set` (mismo
+motivo que `Map`: `Set` es nativo de V8). El caso interesante es el
+degenerado: insertar 5.000 valores ya ordenados hace que el BST se convierta
+en una lista enlazada (cada nodo cuelga solo del anterior), y tanto `insert`
+como `find` pasan a ser O(n) por operación. El resultado: 65x más lento en
+insert y ~3.700x más lento en find que `Set`, sobre apenas 5.000 elementos.
+Esto es la confirmación empírica exacta de lo que la nota de diseño advierte
+arriba ("O(n) en el peor caso si se insertan valores ya ordenados").
+
 ## Cómo mantener esto al día
 
 Si se agrega una estructura nueva o se cambia la estrategia interna de una
 existente (por ejemplo, agregar resize automático a `hash-table`), actualizar
 la entrada correspondiente acá — este archivo documenta la decisión, no
-reemplaza los comentarios de JSDoc del código fuente.
+reemplaza los comentarios de JSDoc del código fuente. Si el cambio afecta el
+rendimiento de una estructura ya benchmarkeada, correr `npm run benchmark` de
+nuevo y actualizar la sección "Benchmarks" con los números reales de esa
+corrida (no reescribirlos a mano).

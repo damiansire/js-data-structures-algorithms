@@ -49,13 +49,10 @@ const config = {
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: 'v8',
 
-  // A list of reporter names that Jest uses when writing coverage reports
-  // coverageReporters: [
-  //   "json",
-  //   "text",
-  //   "lcov",
-  //   "clover"
-  // ],
+  // A list of reporter names that Jest uses when writing coverage reports.
+  // json-summary agrega coverage/coverage-summary.json (totales agregados),
+  // que es lo que consume scripts/update-metrics.mjs para el badge del README.
+  coverageReporters: ['json-summary', 'text', 'lcov', 'clover'],
 
   // An object that configures minimum threshold enforcement for coverage results
   // coverageThreshold: undefined,
