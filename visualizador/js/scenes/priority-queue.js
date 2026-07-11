@@ -4,7 +4,7 @@
 // enqueue() agrega abajo y sube (sift-up); dequeue() saca la raíz, sube el
 // último y baja (sift-down). Abajo, el MISMO heap aplanado en un arreglo (el
 // hijo de i está en 2i+1 / 2i+2). Refleja la semántica real de
-// Estructuras-de-datos/priority-queue/priority-queue.js.
+// Estructuras-de-datos/priority-queue/priority-queue.ts.
 
 import { el, clear } from '../dom.js';
 import { getLang } from '../i18n.js';

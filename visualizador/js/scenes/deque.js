@@ -3,7 +3,7 @@
 // Se agrega y se saca por AMBOS extremos: pushFront/popFront (izquierda) y
 // pushBack/popBack (derecha), todo O(1). Con una sola puerta es un stack o una
 // cola; con las dos, una deque. Refleja la semántica real de
-// Estructuras-de-datos/deque/deque.js (doblemente enlazada).
+// Estructuras-de-datos/deque/deque.ts (doblemente enlazada).
 
 import { el, clear } from '../dom.js';
 import { getLang } from '../i18n.js';

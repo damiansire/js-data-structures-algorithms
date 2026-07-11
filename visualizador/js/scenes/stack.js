@@ -2,7 +2,7 @@
 //
 // Interactiva: push() deja caer un plato desde el techo con rebote elástico;
 // pop() dispara el plato del tope hacia un costado. Refleja la semántica real
-// de Estructuras-de-datos/stack/stack.js, incluyendo que pop() sobre una pila
+// de Estructuras-de-datos/stack/stack.ts, incluyendo que pop() sobre una pila
 // vacía lanza un Error (acá lo mostramos como aviso, sin romper la escena).
 
 import { el, clear } from '../dom.js';

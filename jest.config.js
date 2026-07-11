@@ -9,8 +9,15 @@ const config = {
   // traza ESM (que consume el browser) y cargan el módulo de dominio CommonJS
   // vía createRequire. Por eso habilitamos .mjs como extensión y patrón de test.
   // El flag --experimental-vm-modules lo aporta el script `test` (cross-env).
-  moduleFileExtensions: ['js', 'mjs', 'cjs', 'json'],
-  testMatch: ['**/*.test.js', '**/*.test.mjs'],
+  moduleFileExtensions: ['ts', 'js', 'mjs', 'cjs', 'json'],
+  testMatch: ['**/*.test.js', '**/*.test.mjs', '**/*.test.ts'],
+
+  // Las 5 estructuras genéricas (list/stack/queue/deque/priority-queue) están
+  // en TypeScript; ts-jest las transforma on-the-fly usando tsconfig.json
+  // (strict, sin any). El resto del repo sigue en JS puro.
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', {}],
+  },
 
   // All imported modules in your tests should be mocked automatically
   // automock: false,
@@ -32,9 +39,12 @@ const config = {
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   collectCoverageFrom: [
     '**/*.js',
+    '**/*.ts',
     '!**/node_modules/**',
     '!**/coverage/**',
     '!**/*.test.js',
+    '!**/*.test.ts',
+    '!**/*.d.ts',
     '!jest.config.js',
   ],
 

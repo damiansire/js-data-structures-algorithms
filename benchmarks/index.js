@@ -10,6 +10,10 @@
  * Los números reales de la última corrida están volcados en
  * `docs/design-notes.md` (sección "Benchmarks").
  */
+// priority-queue.ts es TypeScript (jsda-2): ts-node/register habilita requerir
+// .ts directo desde este script CommonJS sin paso de compilación aparte.
+require('ts-node/register');
+
 const { performance } = require('perf_hooks');
 const { HashTable } = require('../Estructuras-de-datos/hash-table/hash-table');
 const { PriorityQueue } = require('../Estructuras-de-datos/priority-queue/priority-queue');

@@ -1,8 +1,8 @@
-const { Deque, Node } = require('./deque');
+import { Deque, Node } from './deque';
 
 describe('Deque', () => {
   test('una deque nueva está vacía', () => {
-    const d = new Deque();
+    const d = new Deque<number>();
     expect(d.isEmpty()).toBe(true);
     expect(d.size()).toBe(0);
     expect(d.peekFront()).toBeNull();
@@ -11,7 +11,7 @@ describe('Deque', () => {
   });
 
   test('pushBack agrega al final y pushFront al frente', () => {
-    const d = new Deque();
+    const d = new Deque<number>();
     d.pushBack(2);
     d.pushBack(3);
     d.pushFront(1);
@@ -22,7 +22,7 @@ describe('Deque', () => {
   });
 
   test('popFront saca del frente y popBack del final', () => {
-    const d = new Deque();
+    const d = new Deque<number>();
     [1, 2, 3, 4].forEach((n) => d.pushBack(n));
     expect(d.popFront()).toBe(1);
     expect(d.popBack()).toBe(4);
@@ -31,7 +31,7 @@ describe('Deque', () => {
   });
 
   test('se comporta como stack (LIFO) usando un solo extremo', () => {
-    const d = new Deque();
+    const d = new Deque<string>();
     d.pushBack('a');
     d.pushBack('b');
     expect(d.popBack()).toBe('b');
@@ -40,7 +40,7 @@ describe('Deque', () => {
   });
 
   test('se comporta como cola (FIFO) empujando atrás y sacando adelante', () => {
-    const d = new Deque();
+    const d = new Deque<string>();
     d.pushBack('a');
     d.pushBack('b');
     expect(d.popFront()).toBe('a');
@@ -49,7 +49,7 @@ describe('Deque', () => {
   });
 
   test('vaciar desde ambos extremos deja la deque reutilizable', () => {
-    const d = new Deque();
+    const d = new Deque<number>();
     d.pushFront(1);
     expect(d.popFront()).toBe(1);
     expect(d.isEmpty()).toBe(true);
@@ -61,13 +61,13 @@ describe('Deque', () => {
   });
 
   test('popFront / popBack sobre vacía lanzan Error', () => {
-    const d = new Deque();
+    const d = new Deque<number>();
     expect(() => d.popFront()).toThrow('No se puede popFront() sobre una deque vacia');
     expect(() => d.popBack()).toThrow('No se puede popBack() sobre una deque vacia');
   });
 
   test('Node se construye con prev y next en null', () => {
-    const n = new Node(5);
+    const n = new Node<number>(5);
     expect(n.data).toBe(5);
     expect(n.prev).toBeNull();
     expect(n.next).toBeNull();

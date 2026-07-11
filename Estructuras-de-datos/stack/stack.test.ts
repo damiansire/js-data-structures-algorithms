@@ -1,15 +1,15 @@
-const { Stack, Node } = require('./stack');
+import { Stack, Node } from './stack';
 
 describe('Stack', () => {
   test('una pila recién creada está vacía', () => {
-    const s = new Stack();
+    const s = new Stack<number>();
     expect(s.isEmpty()).toBe(true);
     expect(s.length()).toBe(0);
     expect(s.peek()).toBeNull();
   });
 
   test('push agrega elementos en el tope (LIFO)', () => {
-    const s = new Stack();
+    const s = new Stack<number>();
     s.push(1);
     s.push(2);
     s.push(3);
@@ -19,14 +19,14 @@ describe('Stack', () => {
   });
 
   test('peekNode expone el nodo interno del tope', () => {
-    const s = new Stack();
+    const s = new Stack<number>();
     s.push(3);
     expect(s.peekNode()).toBeInstanceOf(Node);
-    expect(s.peekNode().data).toBe(3);
+    expect(s.peekNode()?.data).toBe(3);
   });
 
   test('pop devuelve y quita el último elemento apilado (LIFO)', () => {
-    const s = new Stack();
+    const s = new Stack<string>();
     s.push('a');
     s.push('b');
     expect(s.pop()).toBe('b');
@@ -35,7 +35,7 @@ describe('Stack', () => {
   });
 
   test('pop hasta vaciar deja la pila reutilizable', () => {
-    const s = new Stack();
+    const s = new Stack<number>();
     s.push(10);
     expect(s.pop()).toBe(10);
     expect(s.isEmpty()).toBe(true);
@@ -46,12 +46,12 @@ describe('Stack', () => {
   });
 
   test('pop sobre pila vacía lanza Error', () => {
-    const s = new Stack();
+    const s = new Stack<number>();
     expect(() => s.pop()).toThrow('No se puede hacer pop() sobre una pila vacia');
   });
 
   test('hasElement encuentra un valor presente y rechaza uno ausente', () => {
-    const s = new Stack();
+    const s = new Stack<number>();
     s.push(1);
     s.push(2);
     s.push(3);
@@ -62,12 +62,12 @@ describe('Stack', () => {
   });
 
   test('hasElement en pila vacía devuelve false', () => {
-    const s = new Stack();
+    const s = new Stack<number>();
     expect(s.hasElement(1)).toBe(false);
   });
 
   test('print recorre del tope al fondo', () => {
-    const s = new Stack();
+    const s = new Stack<number>();
     s.push(1);
     s.push(2);
     s.push(3);
@@ -78,7 +78,7 @@ describe('Stack', () => {
   });
 
   test('Node se construye con prev en null', () => {
-    const n = new Node(5);
+    const n = new Node<number>(5);
     expect(n.data).toBe(5);
     expect(n.prev).toBeNull();
   });

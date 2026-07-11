@@ -1,13 +1,13 @@
 /**
  * Nodo de la pila; apunta al elemento que tiene debajo.
  */
-class Node {
-  /**
-   * @param {*} data Valor almacenado en el nodo.
-   */
-  constructor(data) {
+export class Node<T> {
+  data: T;
+  /** Nodo que está debajo en la pila. */
+  prev: Node<T> | null;
+
+  constructor(data: T) {
     this.data = data;
-    /** @type {Node|null} Nodo que está debajo en la pila. */
     this.prev = null;
   }
 }
@@ -15,17 +15,18 @@ class Node {
 /**
  * Pila (LIFO) implementada con nodos enlazados.
  */
-class Stack {
+export class Stack<T> {
+  /** Nodo en el tope de la pila. */
+  top: Node<T> | null;
+
   constructor() {
-    /** @type {Node|null} Nodo en el tope de la pila. */
     this.top = null;
   }
 
   /**
    * Cuenta los elementos de la pila. O(n).
-   * @returns {number} Cantidad de elementos.
    */
-  length() {
+  length(): number {
     let aux = this.top;
     let count = 0;
     while (aux !== null) {
@@ -37,10 +38,8 @@ class Stack {
 
   /**
    * Indica si algún elemento de la pila coincide con el valor. O(n).
-   * @param {*} element Valor a buscar (comparación con ==).
-   * @returns {boolean} true si existe; false en caso contrario.
    */
-  hasElement(element) {
+  hasElement(element: T): boolean {
     let aux = this.top;
     while (aux != null && aux.data != element) {
       aux = aux.prev;
@@ -50,33 +49,29 @@ class Stack {
 
   /**
    * Devuelve el valor del tope sin desapilarlo. O(1).
-   * @returns {*} El dato en el tope, o null si la pila está vacía.
    */
-  peek() {
+  peek(): T | null {
     return this.top === null ? null : this.top.data;
   }
 
   /**
    * Devuelve el nodo del tope sin desapilarlo. O(1).
-   * @returns {Node|null} El nodo en el tope, o null si la pila está vacía.
    */
-  peekNode() {
+  peekNode(): Node<T> | null {
     return this.top;
   }
 
   /**
    * Indica si la pila está vacía. O(1).
-   * @returns {boolean} true si no hay elementos.
    */
-  isEmpty() {
+  isEmpty(): boolean {
     return this.top === null;
   }
 
   /**
    * Imprime por consola los elementos desde el tope hacia el fondo.
-   * @returns {void}
    */
-  print() {
+  print(): void {
     let aux = this.top;
     while (aux !== null) {
       console.log(aux.data);
@@ -86,21 +81,18 @@ class Stack {
 
   /**
    * Apila un elemento en el tope. O(1).
-   * @param {*} element Valor a apilar.
-   * @returns {void}
    */
-  push(element) {
-    let aux = new Node(element);
+  push(element: T): void {
+    const aux = new Node<T>(element);
     aux.prev = this.top;
     this.top = aux;
   }
 
   /**
    * Desapila el elemento del tope y devuelve su dato. O(1).
-   * @throws {Error} Si la pila está vacía.
-   * @returns {*} El dato que estaba en el tope.
+   * @throws Si la pila está vacía.
    */
-  pop() {
+  pop(): T {
     if (this.top != null) {
       const data = this.top.data;
       this.top = this.top.prev;
@@ -110,5 +102,3 @@ class Stack {
     }
   }
 }
-
-module.exports = { Stack, Node };

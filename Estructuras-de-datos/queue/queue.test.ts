@@ -1,15 +1,15 @@
-const { Queue, Node } = require('./queue');
+import { Queue, Node } from './queue';
 
 describe('Queue', () => {
   test('una cola recién creada está vacía', () => {
-    const q = new Queue();
+    const q = new Queue<number>();
     expect(q.isEmpty()).toBe(true);
     expect(q.length()).toBe(0);
     expect(q.peek()).toBeNull();
   });
 
   test('enqueue agrega elementos al final (FIFO)', () => {
-    const q = new Queue();
+    const q = new Queue<number>();
     q.enqueue(1);
     q.enqueue(2);
     q.enqueue(3);
@@ -19,7 +19,7 @@ describe('Queue', () => {
   });
 
   test('dequeue devuelve y quita el primer elemento encolado (FIFO)', () => {
-    const q = new Queue();
+    const q = new Queue<string>();
     q.enqueue('a');
     q.enqueue('b');
     expect(q.dequeue()).toBe('a');
@@ -28,7 +28,7 @@ describe('Queue', () => {
   });
 
   test('dequeue hasta vaciar deja la cola reutilizable', () => {
-    const q = new Queue();
+    const q = new Queue<number>();
     q.enqueue(10);
     expect(q.dequeue()).toBe(10);
     expect(q.isEmpty()).toBe(true);
@@ -39,12 +39,12 @@ describe('Queue', () => {
   });
 
   test('dequeue sobre cola vacía lanza Error', () => {
-    const q = new Queue();
+    const q = new Queue<number>();
     expect(() => q.dequeue()).toThrow('No se puede hacer dequeue() sobre una cola vacia');
   });
 
   test('el orden se preserva a lo largo de encolar y desencolar mezclados', () => {
-    const q = new Queue();
+    const q = new Queue<number>();
     q.enqueue(1);
     q.enqueue(2);
     expect(q.dequeue()).toBe(1);
@@ -55,7 +55,7 @@ describe('Queue', () => {
   });
 
   test('hasElement encuentra un valor presente y rechaza uno ausente', () => {
-    const q = new Queue();
+    const q = new Queue<number>();
     q.enqueue(1);
     q.enqueue(2);
     q.enqueue(3);
@@ -65,12 +65,12 @@ describe('Queue', () => {
   });
 
   test('hasElement en cola vacía devuelve false', () => {
-    const q = new Queue();
+    const q = new Queue<number>();
     expect(q.hasElement(1)).toBe(false);
   });
 
   test('print recorre del frente a la cola', () => {
-    const q = new Queue();
+    const q = new Queue<number>();
     q.enqueue(1);
     q.enqueue(2);
     q.enqueue(3);
@@ -81,7 +81,7 @@ describe('Queue', () => {
   });
 
   test('Node se construye con next en null', () => {
-    const n = new Node(5);
+    const n = new Node<number>(5);
     expect(n.data).toBe(5);
     expect(n.next).toBeNull();
   });

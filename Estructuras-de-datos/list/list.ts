@@ -1,13 +1,13 @@
 /**
  * Nodo de una lista enlazada simple.
  */
-class Node {
-  /**
-   * @param {*} data Valor almacenado en el nodo.
-   */
-  constructor(data) {
+export class Node<T> {
+  data: T;
+  /** Siguiente nodo, o null si es la cola. */
+  next: Node<T> | null;
+
+  constructor(data: T) {
     this.data = data;
-    /** @type {Node|null} Siguiente nodo, o null si es la cola. */
     this.next = null;
   }
 }
@@ -15,56 +15,60 @@ class Node {
 /**
  * Lista enlazada simple con puntero a cabeza y cola.
  */
-class List {
+export class List<T> {
+  /** Primer nodo de la lista. */
+  head: Node<T> | null;
+  /** Último nodo de la lista. */
+  last: Node<T> | null;
+  /** Cantidad de elementos. */
+  length: number;
+
   constructor() {
-    /** @type {Node|null} Primer nodo de la lista. */
     this.head = null;
-    /** @type {number} Cantidad de elementos. */
+    this.last = null;
     this.length = 0;
   }
+
   /**
    * Agrega un elemento al final de la lista. O(1).
-   * @param {*} data Valor a agregar.
-   * @returns {void}
    */
-  push(data) {
-    let node = new Node(data);
+  push(data: T): void {
+    const node = new Node<T>(data);
     if (this.head == null) {
       this.head = node;
-    } else {
+    } else if (this.last) {
       this.last.next = node;
     }
     this.last = node;
     this.length++;
   }
+
   /**
    * Imprime por consola el valor de cada nodo, en orden.
-   * @returns {void}
    */
-  print() {
+  print(): void {
     let aux = this.head;
     while (aux != null) {
       console.log(aux.data);
       aux = aux.next;
     }
   }
+
   /**
    * Recorre la lista y devuelve el último nodo. O(n).
-   * @returns {Node|null} El último nodo, o null si la lista está vacía.
    */
-  getLastElement() {
+  getLastElement(): Node<T> | null {
     let aux = this.head;
     while (aux != null && aux.next != null) {
       aux = aux.next;
     }
     return aux;
   }
+
   /**
    * Devuelve el nodo en la posición indicada (base 0). O(n).
-   * @param {number} index Índice a buscar.
-   * @returns {Node|null} El nodo, o null si el índice es inválido o no existe.
    */
-  getElementByIndex(index) {
+  getElementByIndex(index: number): Node<T> | null {
     if (index < 0) {
       return null;
     }
@@ -76,24 +80,23 @@ class List {
     }
     return aux;
   }
+
   /**
    * Busca el primer nodo cuyo dato coincide con el elemento. O(n).
-   * @param {*} element Valor a buscar (comparación con ==).
-   * @returns {Node|null} El primer nodo coincidente, o null si no existe.
    */
-  find(element) {
+  find(element: T): Node<T> | null {
     let aux = this.head;
     while (aux != null && aux.data != element) {
       aux = aux.next;
     }
     return aux;
   }
+
   /**
    * Elimina el primer nodo cuyo dato coincide con el elemento. O(n).
-   * @param {*} element Valor a eliminar (comparación con ==).
-   * @returns {*} El dato eliminado, o null si no se encontró.
+   * @returns El dato eliminado, o null si no se encontró.
    */
-  delete(element) {
+  delete(element: T): T | null {
     let aux = this.head;
     if (aux == null) {
       return null;
@@ -112,7 +115,7 @@ class List {
     if (aux.next == null) {
       return null;
     }
-    let removed = aux.next;
+    const removed = aux.next;
     aux.next = aux.next.next;
     if (removed == this.last) {
       this.last = aux;
@@ -120,13 +123,13 @@ class List {
     this.length--;
     return removed.data;
   }
+
   /**
    * Elimina un nodo copiando el dato del siguiente sobre él. O(1).
    * No funciona sobre la cola (no hay nodo siguiente del cual copiar).
-   * @param {Node} node Nodo a eliminar.
-   * @returns {null|void} null si el nodo es la cola; void en caso contrario.
+   * @returns null si el nodo es la cola; void en caso contrario.
    */
-  deleteByNode(node) {
+  deleteByNode(node: Node<T>): null | void {
     if (node.next == null) {
       return null;
     }
@@ -139,12 +142,10 @@ class List {
   }
 }
 
-module.exports = { List, Node };
-
 // Demo de uso: solo corre si se ejecuta este archivo directamente
 // (node list.js), no al importarlo como módulo.
 if (require.main === module) {
-  const myList = new List();
+  const myList = new List<number>();
   myList.push(1);
   myList.push(4);
   myList.push(6);

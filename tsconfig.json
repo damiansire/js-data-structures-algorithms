@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "strict": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": [
+    "Estructuras-de-datos/list/**/*.ts",
+    "Estructuras-de-datos/stack/**/*.ts",
+    "Estructuras-de-datos/queue/**/*.ts",
+    "Estructuras-de-datos/deque/**/*.ts",
+    "Estructuras-de-datos/priority-queue/**/*.ts"
+  ]
+}

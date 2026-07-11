@@ -1,13 +1,13 @@
 /**
  * Nodo de la cola; apunta al elemento que tiene detrás (hacia la cola).
  */
-class Node {
-  /**
-   * @param {*} data Valor almacenado en el nodo.
-   */
-  constructor(data) {
+export class Node<T> {
+  data: T;
+  /** Nodo siguiente (más cerca de la cola). */
+  next: Node<T> | null;
+
+  constructor(data: T) {
     this.data = data;
-    /** @type {Node|null} Nodo siguiente (más cerca de la cola). */
     this.next = null;
   }
 }
@@ -16,19 +16,21 @@ class Node {
  * Cola (FIFO) implementada con nodos enlazados. Mantiene punteros al frente y a
  * la cola para que enqueue() y dequeue() sean O(1).
  */
-class Queue {
+export class Queue<T> {
+  /** Nodo al frente (el primero en salir). */
+  head: Node<T> | null;
+  /** Nodo al final (el último en entrar). */
+  tail: Node<T> | null;
+
   constructor() {
-    /** @type {Node|null} Nodo al frente (el primero en salir). */
     this.head = null;
-    /** @type {Node|null} Nodo al final (el último en entrar). */
     this.tail = null;
   }
 
   /**
    * Cuenta los elementos de la cola. O(n).
-   * @returns {number} Cantidad de elementos.
    */
-  length() {
+  length(): number {
     let aux = this.head;
     let count = 0;
     while (aux !== null) {
@@ -40,26 +42,22 @@ class Queue {
 
   /**
    * Indica si la cola está vacía. O(1).
-   * @returns {boolean} true si no hay elementos.
    */
-  isEmpty() {
+  isEmpty(): boolean {
     return this.head === null;
   }
 
   /**
    * Devuelve el valor del frente sin sacarlo. O(1).
-   * @returns {*} El dato al frente, o null si la cola está vacía.
    */
-  peek() {
+  peek(): T | null {
     return this.head === null ? null : this.head.data;
   }
 
   /**
    * Indica si algún elemento de la cola coincide con el valor. O(n).
-   * @param {*} element Valor a buscar (comparación con ==).
-   * @returns {boolean} true si existe; false en caso contrario.
    */
-  hasElement(element) {
+  hasElement(element: T): boolean {
     let aux = this.head;
     while (aux != null && aux.data != element) {
       aux = aux.next;
@@ -69,9 +67,8 @@ class Queue {
 
   /**
    * Imprime por consola los elementos desde el frente hacia la cola.
-   * @returns {void}
    */
-  print() {
+  print(): void {
     let aux = this.head;
     while (aux !== null) {
       console.log(aux.data);
@@ -81,11 +78,9 @@ class Queue {
 
   /**
    * Encola un elemento al final. O(1).
-   * @param {*} element Valor a encolar.
-   * @returns {void}
    */
-  enqueue(element) {
-    const node = new Node(element);
+  enqueue(element: T): void {
+    const node = new Node<T>(element);
     if (this.tail === null) {
       this.head = node;
       this.tail = node;
@@ -97,10 +92,9 @@ class Queue {
 
   /**
    * Saca el elemento del frente y devuelve su dato. O(1).
-   * @throws {Error} Si la cola está vacía.
-   * @returns {*} El dato que estaba al frente.
+   * @throws Si la cola está vacía.
    */
-  dequeue() {
+  dequeue(): T {
     if (this.head === null) {
       throw new Error('No se puede hacer dequeue() sobre una cola vacia');
     }
@@ -110,5 +104,3 @@ class Queue {
     return data;
   }
 }
-
-module.exports = { Queue, Node };

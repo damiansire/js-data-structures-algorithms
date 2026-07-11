@@ -3,7 +3,7 @@
 // Cada nodo es un VAGÓN; el puntero `next` es el ENGANCHE/cadena entre vagones
 // (con una flechita →). La cabeza (head) y la cola (last) llevan su banderín.
 //
-// La List de este módulo es FIEL a Estructuras-de-datos/list/list.js:
+// La List de este módulo es FIEL a Estructuras-de-datos/list/list.ts:
 //   - push(data): agrega al FINAL. Si head == null, head = node; si no,
 //     last.next = node. Siempre last = node y length++.  (O(1) gracias a last)
 //   - delete(element): elimina el PRIMER nodo cuyo data coincide. Mantiene

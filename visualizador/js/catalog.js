@@ -92,7 +92,7 @@ export const SCENES = [
       en: 'Each node is a wagon and the next pointers are magnetic couplings. Inserting breaks the chain, a new wagon drops in and re-couples.',
       es: 'Cada nodo es un vagón y los punteros (next) son cadenas magnéticas. Insertar rompe la cadena, cae un vagón nuevo y se reengancha.',
     },
-    repo: 'Estructuras-de-datos/list/list.js',
+    repo: 'Estructuras-de-datos/list/list.ts',
     built: true,
   },
   {
@@ -105,7 +105,7 @@ export const SCENES = [
       en: 'push() drops a plate from the ceiling with an elastic bounce. pop() shoots the top plate off to the side. Last in, first out.',
       es: 'push() deja caer un plato desde el techo con rebote elástico. pop() dispara el plato de arriba hacia un costado. Último en entrar, primero en salir.',
     },
-    repo: 'Estructuras-de-datos/stack/stack.js',
+    repo: 'Estructuras-de-datos/stack/stack.ts',
     built: true,
   },
   {
@@ -130,7 +130,7 @@ export const SCENES = [
       en: 'enqueue() joins the back of the line; dequeue() serves the one at the front. First in, first out.',
       es: 'enqueue() se suma al final de la fila; dequeue() atiende al del frente. Primero en entrar, primero en salir.',
     },
-    repo: 'Estructuras-de-datos/queue/queue.js',
+    repo: 'Estructuras-de-datos/queue/queue.ts',
     built: true,
   },
   {
@@ -172,7 +172,7 @@ export const SCENES = [
       en: 'A binary min-heap: the smallest priority is always at the root. enqueue bubbles up, dequeue re-settles down — both O(log n). Shown as a tree and as its flattened array.',
       es: 'Un min-heap binario: la menor prioridad siempre en la raíz. enqueue burbujea hacia arriba, dequeue reacomoda hacia abajo — ambos O(log n). Se ve como árbol y como su arreglo aplanado.',
     },
-    repo: 'Estructuras-de-datos/priority-queue/priority-queue.js',
+    repo: 'Estructuras-de-datos/priority-queue/priority-queue.ts',
     built: true,
   },
   {
@@ -185,7 +185,7 @@ export const SCENES = [
       en: 'A double-ended queue: push and pop from both the front and the back in O(1). With one door it is a stack or a queue; with two, a deque.',
       es: 'Una cola de dos extremos: push y pop por el frente y por el final en O(1). Con una puerta es un stack o una cola; con dos, una deque.',
     },
-    repo: 'Estructuras-de-datos/deque/deque.js',
+    repo: 'Estructuras-de-datos/deque/deque.ts',
     built: true,
   },
   {

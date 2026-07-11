@@ -2,7 +2,7 @@
 //
 // Interactiva: enqueue() mete una persona por atrás (derecha); dequeue() atiende
 // a la del frente (izquierda) y se va. Refleja la semántica real de
-// Estructuras-de-datos/queue/queue.js: dequeue() sobre una cola vacía lanza un
+// Estructuras-de-datos/queue/queue.ts: dequeue() sobre una cola vacía lanza un
 // Error (acá lo mostramos como aviso, sin romper la escena).
 
 import { el, clear } from '../dom.js';

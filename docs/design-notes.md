@@ -4,6 +4,31 @@ Por qué cada estructura está implementada como está, y qué alternativa se
 dejó afuera a propósito. Pensado para responder "¿por qué este árbol
 balanceado y no otro?" sin tener que leer el código fuente para cada módulo.
 
+## TypeScript (migración parcial, jsda-2)
+
+De las 15 implementaciones del repo (11 en `Estructuras-de-datos` + 4 en
+`Ordenamiento`), **5 están migradas a TypeScript con genéricos estrictos**
+(`strict: true`, sin `any` en ningún archivo): `list`, `stack`, `queue`,
+`deque` y `priority-queue`. Las **10 restantes siguen en JavaScript puro**
+(`binary-search-tree`, `binary-tree`, `circular-buffer`, `graph`,
+`hash-table`, `set`, `tree` y los 4 algoritmos de `Ordenamiento`).
+
+La elección no es arbitraria: las 5 migradas son **contenedores genéricos**
+(estructuras que envuelven un tipo `T` arbitrario sin asumir nada sobre él:
+comparación por igualdad, orden lineal FIFO/LIFO/deque, o una prioridad
+numérica separada del valor), el caso donde `class List<T>` da valor real:
+el compilador garantiza que lo que sale de `pop()`/`dequeue()`/`peek()` es
+del mismo tipo que entró, sin casteos en el call-site. Las que quedan afuera
+son, o bien algoritmos de forma fija sobre arrays/números (los 4 de
+`Ordenamiento`, y en igual medida `hash-table`/`set` que ya asumen claves
+hasheables), o estructuras con invariantes propios del dominio (BST, árbol,
+grafo) que se beneficiarían de tipado pero no eran el foco de esta pasada:
+se prioriza profundidad (genéricos reales, cero `any`) sobre cobertura total,
+según el propio criterio de jsda-2. `tsc --noEmit` (`npm run build`) tipa en
+CI sin emitir; en runtime, `ts-jest` transforma los `.ts` on-the-fly para los
+tests y `ts-node/register` habilita requerirlos desde `benchmarks/index.js`
+(CommonJS puro, sin paso de compilación aparte).
+
 ## Estructuras-de-datos
 
 - **binary-search-tree**: BST clásico, **sin auto-balanceo** (no es AVL ni

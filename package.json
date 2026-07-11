@@ -16,6 +16,7 @@
     "update-metrics": "node scripts/update-metrics.mjs",
     "check-metrics": "node scripts/update-metrics.mjs --check",
     "benchmark": "node benchmarks/index.js",
+    "build": "tsc --noEmit",
     "lint": "eslint . --ext .js,.mjs,.cjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -35,9 +36,15 @@
   },
   "homepage": "https://github.com/damiansire/js-data-structures-algorithms#readme",
   "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@types/jest": "^29.5.12",
     "cross-env": "^10.1.0",
     "eslint": "^8.57.0",
     "jest": "^29.7.0",
-    "prettier": "^3.3.0"
+    "jest-environment-jsdom": "^29.7.0",
+    "prettier": "^3.3.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
   }
 }

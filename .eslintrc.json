@@ -9,6 +9,7 @@
     "ecmaVersion": 2022,
     "sourceType": "commonjs"
   },
+  "ignorePatterns": ["**/*.ts"],
   "overrides": [
     {
       "files": ["visualizador/js/**/*.js"],
