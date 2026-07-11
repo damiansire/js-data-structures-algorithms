@@ -181,6 +181,19 @@ export default function mountBFS(host, meta = {}) {
   const { steps, level } = buildTrace(SOURCE);
   const maxLevel = Math.max(...level.values());
 
+  // Registro de timeouts propios de la escena (pulso de 'skip' y el 'win'
+  // escalonado de 'done'): destroy() los cancela para no tocar un DOM ya
+  // desmontado al cambiar de escena/idioma, ni dejar timers colgados.
+  const sceneTimers = new Set();
+  const later = (fn, ms) => {
+    const id = setTimeout(() => {
+      sceneTimers.delete(id);
+      fn();
+    }, ms);
+    sceneTimers.add(id);
+    return id;
+  };
+
   // ── Aristas (SVG overlay, viewBox 0..100) ──
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('class', 'bfs-edges');
@@ -357,7 +370,7 @@ export default function mountBFS(host, meta = {}) {
           edge.classList.remove('bfs-skip');
           void edge.getBoundingClientRect();
           edge.classList.add('bfs-skip');
-          setTimeout(() => edge.classList.remove('bfs-skip'), 500);
+          later(() => edge.classList.remove('bfs-skip'), 500);
         }
         renderQueue(step.queue);
         return S.skip(step.to, step.from);
@@ -366,7 +379,7 @@ export default function mountBFS(host, meta = {}) {
         clearActive();
         nodeEls.forEach((n, id) => {
           n.classList.remove('bfs-dequeued');
-          setTimeout(() => n.classList.add('bfs-win'), (level.get(id) || 0) * 120);
+          later(() => n.classList.add('bfs-win'), (level.get(id) || 0) * 120);
         });
         renderQueue([]);
         return S.done(step.count);
@@ -400,7 +413,13 @@ export default function mountBFS(host, meta = {}) {
   host.append(stage, aside);
   resetVisual();
 
-  return { destroy: () => player.destroy() };
+  return {
+    destroy: () => {
+      sceneTimers.forEach((id) => clearTimeout(id));
+      sceneTimers.clear();
+      player.destroy();
+    },
+  };
 }
 
 function infoCard(title, big, sub) {
