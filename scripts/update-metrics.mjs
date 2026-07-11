@@ -84,6 +84,12 @@ function main() {
 
   if (checkOnly) {
     if (nextReadme !== readme) {
+      const oldBlock = readme.slice(startIdx, endIdx + END_MARKER.length);
+      console.error('[update-metrics] DIFF DIAGNOSTIC (temporal):');
+      console.error('--- README actual ---');
+      console.error(JSON.stringify(oldBlock));
+      console.error('--- README esperado ---');
+      console.error(JSON.stringify(block));
       console.error(
         '[update-metrics] README.md desactualizado respecto a la última corrida de tests/cobertura. Corré `npm run update-metrics` y commiteá el resultado.',
       );
