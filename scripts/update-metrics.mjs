@@ -37,12 +37,18 @@ function readJson(filePath, label) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
-function buildMetricsBlock() {
+function getRealCounts() {
   const results = readJson(TEST_RESULTS_PATH, 'test-results.json');
+  return {
+    suites: results.numTotalTestSuites,
+    tests: results.numTotalTests,
+  };
+}
+
+function buildMetricsBlock() {
+  const { suites, tests } = getRealCounts();
   const coverage = readJson(COVERAGE_SUMMARY_PATH, 'coverage-summary.json');
 
-  const suites = results.numTotalTestSuites;
-  const tests = results.numTotalTests;
   const { lines, statements, functions, branches } = coverage.total;
 
   // Las líneas en blanco justo después de START_MARKER y antes de END_MARKER
@@ -104,9 +110,36 @@ function blocksMatchWithinTolerance(oldBlock, newBlock) {
   return oldPcts.every((oldPct, i) => Math.abs(oldPct - newPcts[i]) <= COVERAGE_TOLERANCE_PCT);
 }
 
+// Detecta números de suites/tests escritos a mano FUERA del bloque generado
+// (p.ej. "npm test # Jest (25 suites)" en la sección "Running the tests")
+// que queden desincronizados del conteo real. El bloque generado es el único
+// dueño de esa cifra: cualquier otra mención a mano es, por definición, un
+// duplicado que puede driftear (nos pasó: bloque decía 30 suites, la sección
+// de abajo decía 25).
+const HANDWRITTEN_COUNT_RE = /(\d[\d,]*)\s+(suites?|tests?)\b/gi;
+
+function findHandwrittenDrift(textOutsideBlock, realSuites, realTests) {
+  const issues = [];
+  let match;
+  HANDWRITTEN_COUNT_RE.lastIndex = 0;
+  while ((match = HANDWRITTEN_COUNT_RE.exec(textOutsideBlock)) !== null) {
+    const value = Number(match[1].replace(/,/g, ''));
+    const unit = match[2].toLowerCase();
+    const isSuiteUnit = unit.startsWith('suite');
+    const expected = isSuiteUnit ? realSuites : realTests;
+    if (value !== expected) {
+      issues.push(
+        `"${match[0]}" dice ${value} pero el conteo real (generado) es ${expected} ${isSuiteUnit ? 'suites' : 'tests'}.`,
+      );
+    }
+  }
+  return issues;
+}
+
 function main() {
   const checkOnly = process.argv.includes('--check');
   const block = buildMetricsBlock();
+  const { suites: realSuites, tests: realTests } = getRealCounts();
   const readme = fs.readFileSync(README_PATH, 'utf8');
 
   const startIdx = readme.indexOf(START_MARKER);
@@ -119,6 +152,23 @@ function main() {
   const before = readme.slice(0, startIdx);
   const after = readme.slice(endIdx + END_MARKER.length);
   const oldBlock = readme.slice(startIdx, endIdx + END_MARKER.length);
+
+  // Corre en ambos modos (--check y escritura normal): un número a mano
+  // desincronizado en OTRA sección del README no lo arregla regenerar el
+  // bloque, así que hay que frenar y avisar en vez de escribir/pasar en verde.
+  const driftIssues = findHandwrittenDrift(before + after, realSuites, realTests);
+  if (driftIssues.length > 0) {
+    console.error(
+      '[update-metrics] Encontré número(s) de tests/suites escritos a mano fuera del bloque generado, desincronizados del conteo real:',
+    );
+    for (const issue of driftIssues) {
+      console.error(`  - ${issue}`);
+    }
+    console.error(
+      '[update-metrics] El bloque generado (METRICS:START/END) es el único dueño de esa cifra. Sacá el número a mano o hacé que referencie el bloque en vez de repetirlo.',
+    );
+    process.exit(1);
+  }
 
   if (checkOnly) {
     if (!blocksMatchWithinTolerance(oldBlock, block)) {

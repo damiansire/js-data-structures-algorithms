@@ -57,7 +57,7 @@ file.
 
 ```bash
 npm install
-npm test           # Jest (25 suites)
+npm test           # Jest (suite count above, kept in sync by scripts/update-metrics.mjs)
 npm run coverage   # Jest with coverage report
 npm run lint       # ESLint
 npm run format:check
