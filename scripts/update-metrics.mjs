@@ -60,7 +60,7 @@ function buildMetricsBlock() {
     START_MARKER,
     '',
     `> Test status: every implementation ships with a co-located Jest suite —`,
-    `> **${suites} suites, ${tests} tests** in total, all passing. Coverage`,
+    `> ${suites} suites, ${tests} tests in total, all passing. Coverage`,
     `> (\`npm run coverage\`, statement/line/function/branch — includes the`,
     `> visualizer: 4 scenes (one per category) plus the player/dom/catalog`,
     `> orchestration have component tests; most of the other 36 scenes still`,
