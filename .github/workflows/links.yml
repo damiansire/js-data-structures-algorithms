@@ -23,12 +23,14 @@ jobs:
       - name: Check README and doc links
         uses: lycheeverse/lychee-action@v2
         with:
-          # Fail the run if any link/badge is broken. Loopback (localhost) and
-          # mail links are excluded to avoid false positives from local-dev docs.
+          # Fail the run if any link/badge is broken. Loopback (localhost) links
+          # are excluded to avoid false positives from local-dev docs. Mail links
+          # (mailto:) are excluded by default in lychee, so no flag is needed
+          # (the old --exclude-mail flag was removed in lychee 0.24; use
+          # --include-mail to opt them back in).
           args: >-
             --no-progress
             --exclude-loopback
-            --exclude-mail
             ./README.md
             ./visualizador/README.md
           fail: true
