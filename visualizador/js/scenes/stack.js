@@ -7,6 +7,9 @@
 
 import { el, clear } from '../dom.js';
 import { getLang } from '../i18n.js';
+// Única copia de la lógica, con test de equivalencia contra stack.ts
+// (trace/stack.trace.test.mjs). La escena solo dibuja.
+import { Stack } from '../trace/stack.trace.mjs';
 
 // Strings bilingües de la escena. EN por defecto; ES opcional.
 const STRINGS = {
@@ -43,43 +46,6 @@ const STRINGS = {
     cardEmptySub: 'top === null',
   },
 };
-
-// Pila fiel al repo: nodos enlazados, el tope apunta al de abajo (prev).
-class Node {
-  constructor(data) {
-    this.data = data;
-    this.prev = null;
-  }
-}
-class Stack {
-  constructor() {
-    this.top = null;
-  }
-  isEmpty() {
-    return this.top === null;
-  }
-  length() {
-    let aux = this.top;
-    let c = 0;
-    while (aux !== null) {
-      c++;
-      aux = aux.prev;
-    }
-    return c;
-  }
-  peek() {
-    return this.top;
-  }
-  push(element) {
-    const aux = new Node(element);
-    aux.prev = this.top;
-    this.top = aux;
-  }
-  pop() {
-    if (this.top != null) this.top = this.top.prev;
-    else throw new Error('No se puede hacer pop() sobre una pila vacia');
-  }
-}
 
 const PLATE_COLORS = [
   ['#a78bfa', '#7c3aed'],
@@ -138,7 +104,7 @@ export default function mountStack(host) {
 
   function syncStats() {
     statLen.textContent = String(stack.length());
-    statTop.textContent = stack.isEmpty() ? '—' : String(stack.peek().data);
+    statTop.textContent = stack.isEmpty() ? '—' : String(stack.peek());
     statEmpty.textContent = stack.isEmpty() ? 'true' : 'false';
     statEmpty.style.color = stack.isEmpty() ? 'var(--green)' : 'var(--ink)';
     popBtn.disabled = stack.isEmpty() || busy;
@@ -151,7 +117,7 @@ export default function mountStack(host) {
     counter += 1;
     stack.push(counter);
     const idx = stack.length() - 1;
-    const node = stack.peek();
+    const node = stack.peekNode(); // el NODO: la animación mapea nodo -> plato
     const p = plateFor(node, idx);
     platesByNode.set(node, p);
     pile.append(p);
@@ -170,10 +136,9 @@ export default function mountStack(host) {
       return;
     }
     busy = true;
-    const node = stack.peek();
+    const node = stack.peekNode();
     const p = platesByNode.get(node);
-    const val = node.data;
-    stack.pop();
+    const val = stack.pop(); // el canónico devuelve el dato desapilado
     platesByNode.delete(node);
     setNarration(S.popMsg(val));
     syncStats();
