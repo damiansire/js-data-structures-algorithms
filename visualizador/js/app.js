@@ -8,59 +8,16 @@ import { CATEGORIES, SCENES, SCENES_BY_ID } from './catalog.js';
 import { el, clear } from './dom.js';
 import { t, pick, getLang, toggleLang, onLang } from './i18n.js';
 import { startConstellation } from './home-bg.js';
+// Las escenas se cargan bajo demanda (dynamic import) por id; el registro vive
+// en su propio módulo para que el gate de catalog.test.js pueda cruzarlo con el
+// catálogo sin importar este archivo (que monta la app al cargarse).
+import { hasScene, loadScene } from './scene-loaders.js';
 
 const app = document.getElementById('app');
 
 // Fondo animado global (constelación de nodos con pulsos viajando por aristas).
 // Se pausa al entrar a una escena (queda detrás, no se ve) y se reanuda en home.
 const bg = startConstellation();
-
-// Las escenas se cargan bajo demanda (dynamic import) por id.
-const SCENE_LOADERS = {
-  'bubble-sort': () => import('./scenes/bubble-sort.js'),
-  'quick-sort': () => import('./scenes/quick-sort.js'),
-  'merge-sort-recursive': () => import('./scenes/merge-sort.js'),
-  'merge-sort-in-place': () => import('./scenes/merge-sort.js'),
-  'binary-search': () => import('./scenes/binary-search.js'),
-  stack: () => import('./scenes/stack.js'),
-  'bounded-stack': () => import('./scenes/bounded-stack.js'),
-  queue: () => import('./scenes/queue.js'),
-  'circular-buffer': () => import('./scenes/circular-buffer.js'),
-  'hash-table': () => import('./scenes/hash-table.js'),
-  'priority-queue': () => import('./scenes/priority-queue.js'),
-  deque: () => import('./scenes/deque.js'),
-  set: () => import('./scenes/set.js'),
-  graph: () => import('./scenes/graph.js'),
-  list: () => import('./scenes/list.js'),
-  'binary-tree': () => import('./scenes/pachinko.js'),
-  'binary-search-tree': () => import('./scenes/pachinko.js'),
-  tree: () => import('./scenes/tree.js'),
-  fibonacci: () => import('./scenes/fibonacci.js'),
-  greddy: () => import('./scenes/greddy.js'),
-  'letter-count': () => import('./scenes/letter-count.js'),
-  'remove-duplicates': () => import('./scenes/remove-duplicates.js'),
-  // ── clásicos añadidos ──
-  'insertion-sort': () => import('./scenes/insertion-sort.js'),
-  'selection-sort': () => import('./scenes/selection-sort.js'),
-  'heap-sort': () => import('./scenes/heap-sort.js'),
-  'counting-sort': () => import('./scenes/counting-sort.js'),
-  'radix-sort': () => import('./scenes/radix-sort.js'),
-  'linear-search': () => import('./scenes/linear-search.js'),
-  'jump-search': () => import('./scenes/jump-search.js'),
-  'interpolation-search': () => import('./scenes/interpolation-search.js'),
-  bfs: () => import('./scenes/bfs.js'),
-  dfs: () => import('./scenes/dfs.js'),
-  dijkstra: () => import('./scenes/dijkstra.js'),
-  'topological-sort': () => import('./scenes/topological-sort.js'),
-  'kruskal-mst': () => import('./scenes/kruskal-mst.js'),
-  'kmp-search': () => import('./scenes/kmp-search.js'),
-  levenshtein: () => import('./scenes/levenshtein.js'),
-  'caesar-cipher': () => import('./scenes/caesar-cipher.js'),
-  'euclid-gcd': () => import('./scenes/euclid-gcd.js'),
-  'sieve-eratosthenes': () => import('./scenes/sieve-eratosthenes.js'),
-  'tower-of-hanoi': () => import('./scenes/tower-of-hanoi.js'),
-  'n-queens': () => import('./scenes/n-queens.js'),
-};
 
 let activeScene = null; // { destroy() }
 // Token de generación: cada navegación (renderScene/renderHome) lo incrementa.
@@ -69,6 +26,7 @@ let activeScene = null; // { destroy() }
 let renderGen = 0;
 
 function destroyActive() {
+  detachSpaceToPlay();
   if (activeScene && typeof activeScene.destroy === 'function') {
     try {
       activeScene.destroy();
@@ -213,11 +171,19 @@ function motifFor(category) {
 }
 
 function sceneCard(s, cat, idx) {
+  // a11y: la tarjeta es el control de navegación primario del producto (42 de
+  // ellas). Era un <article> enfocable con handlers de click/Enter pero sin rol
+  // ni nombre accesible: un lector de pantalla la anunciaba como "article", sin
+  // decir que se puede activar ni a dónde lleva. Las no construidas encima
+  // quedaban sin tabIndex y sin explicar por qué no responden.
   const card = el(
     'article',
     {
       class: 'card ' + (s.built ? 'is-built' : 'is-soon'),
       style: { '--card-accent': cat.accent, '--i': String(idx) },
+      role: 'button',
+      'aria-label': `${s.title}: ${t(s.built ? 'card_open' : 'card_soon')}`,
+      'aria-disabled': s.built ? null : 'true',
     },
     motifFor(s.category),
     el(
@@ -275,18 +241,18 @@ async function renderScene(id) {
   const host = el('div', { class: 'scene-host' });
   app.append(el('section', { class: 'scene-view' }, head, host));
 
-  const loader = SCENE_LOADERS[id];
-  if (!loader) {
+  if (!hasScene(id)) {
     host.append(soonStage(meta));
     return;
   }
 
   try {
-    const mod = await loader();
+    const mod = await loadScene(id);
     // Si llegó otra navegación mientras se cargaba el módulo, abortar: el host
     // ya fue reemplazado y montar aquí dejaría una escena huérfana.
     if (gen !== renderGen) return;
     activeScene = mod.default(host, meta) || null;
+    announceNarration(host);
     wirePlayOnCanvas(host);
   } catch (err) {
     if (gen !== renderGen) return;
@@ -295,10 +261,31 @@ async function renderScene(id) {
   }
 }
 
+// a11y: la narración paso a paso es el payload pedagógico de toda la app y era
+// invisible para lectores de pantalla (cero regiones live en el visualizador).
+// Se marca acá, en el único punto por el que pasa TODA escena montada, en vez de
+// repetir los atributos en los 40 archivos de escena (y volver a olvidarlos en
+// el 41). role=status + aria-live=polite anuncian cada cambio sin robar el foco;
+// aria-atomic lee la frase entera y no sólo el fragmento que cambió.
+function announceNarration(host) {
+  host.querySelectorAll('.narrator').forEach((narrator) => {
+    narrator.setAttribute('role', 'status');
+    narrator.setAttribute('aria-live', 'polite');
+    narrator.setAttribute('aria-atomic', 'true');
+    narrator.setAttribute('aria-label', t('narrator_label'));
+  });
+}
+
 // Usabilidad: en las escenas con reproductor (las que tienen barra de transporte
 // con contador "X / Y"), hacer click en el lienzo (donde aparece "Ready to play")
 // equivale a tocar Play/Pausa. Las escenas interactivas (Stack/List) no tienen ese
 // contador, así que no se ven afectadas.
+//
+// El click sobre un div no es alcanzable por teclado, así que el mismo atajo se
+// expone como barra espaciadora a nivel de escena (con preventDefault para que
+// no scrollee). No se le pone tabindex/role al lienzo a propósito: sería un
+// segundo control invisible que compite con el botón Play real, que ya es
+// enfocable y anunciado.
 function wirePlayOnCanvas(host) {
   host.querySelectorAll('.stage').forEach((stage) => {
     const progress = stage.querySelector('.transport .progress');
@@ -311,7 +298,35 @@ function wirePlayOnCanvas(host) {
       if (e.target.closest('button, a, input, select, textarea')) return;
       primary.click();
     });
+    attachSpaceToPlay(primary);
   });
+}
+
+// Atajo de teclado equivalente al click en el lienzo. Vive en `document` (el
+// lienzo es un div: no recibe foco, así que un listener sobre él nunca vería la
+// tecla) y se desengancha al desmontar la escena, para no dejar un handler
+// zombie apuntando a un botón que ya no está en el DOM.
+let spaceToPlay = null;
+
+function attachSpaceToPlay(primary) {
+  detachSpaceToPlay();
+  primary.title = t('tp_play_hint'); // el atajo se anuncia, no es secreto
+  spaceToPlay = (e) => {
+    if (e.key !== ' ' && e.key !== 'Spacebar') return;
+    // si el foco está en un control real, que lo maneje él (space ya lo activa)
+    if (e.target && e.target.closest && e.target.closest('button, a, input, select, textarea')) {
+      return;
+    }
+    e.preventDefault();
+    primary.click();
+  };
+  document.addEventListener('keydown', spaceToPlay);
+}
+
+function detachSpaceToPlay() {
+  if (!spaceToPlay) return;
+  document.removeEventListener('keydown', spaceToPlay);
+  spaceToPlay = null;
 }
 
 function soonStage(meta, errored = false) {
