@@ -12,11 +12,6 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": [
-    "Estructuras-de-datos/list/**/*.ts",
-    "Estructuras-de-datos/stack/**/*.ts",
-    "Estructuras-de-datos/queue/**/*.ts",
-    "Estructuras-de-datos/deque/**/*.ts",
-    "Estructuras-de-datos/priority-queue/**/*.ts"
-  ]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "coverage", "_audit", "_audits"]
 }

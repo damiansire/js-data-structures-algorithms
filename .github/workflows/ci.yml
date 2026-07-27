@@ -5,6 +5,9 @@ on:
     branches: ['**']
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -27,6 +30,13 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # Typecheck como gate propio y bloqueante, separado de lint y de build
+      # (corpus node-ts/from-consensus-2026-07-16.md, consenso 2: n8n y Backstage
+      # corren `tsc --noEmit` en un step dedicado). Antes existia el script pero
+      # ningun workflow lo corria: una regresion de tipos pasaba en verde.
+      - name: Typecheck
+        run: npm run build
+
       - name: Format check
         run: npm run format:check
 
@@ -36,3 +46,20 @@ jobs:
       - name: Check README metrics are up to date
         if: matrix.node-version == '22.x'
         run: npm run check-metrics
+
+      # "Working tree limpio" como check determinista (corpus node-ts, consenso 4:
+      # Backstage cierra sus jobs con `git ls-files --others --modified`). Convierte
+      # "los scripts no ensucian archivos versionados" de suposicion en propiedad
+      # verificada: test:metrics genera archivos y update-metrics reescribe el README.
+      - name: Working tree limpio tras los gates
+        shell: bash
+        run: |
+          set -e
+          DIRTY=$(git ls-files --others --exclude-standard --modified)
+          if [ -n "$DIRTY" ]; then
+            echo "Los gates dejaron archivos versionados modificados o sin ignorar:"
+            echo "$DIRTY"
+            git diff --stat
+            exit 1
+          fi
+          echo "OK: working tree limpio."

@@ -1,11 +1,12 @@
 name: Hygiene Gate
 
 # Gate preventivo global (roastme 2026-07-17, items 1.3d + 3.3e): falla si queda
-# trackeado un .env, o un descartable de sesion tipo claude-scratch-*/temp_*/
-# rewrite<N>.py. Higiene dependiente del gate, no del habito (Netflix/Instagram).
+# trackeado un .env, un descartable de sesion tipo claude-scratch-*/temp_*/
+# rewrite<N>.py, o un artefacto de auditoria interna (_audit/, _audits/,
+# AUDITORIA.md). Higiene dependiente del gate, no del habito (Netflix/Instagram).
 on:
   push:
-    branches: ["**"]
+    branches: ['**']
   pull_request:
 
 permissions:
@@ -20,11 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Sin .env / claude-scratch-* / temp_* / rewrite[0-9]*.py trackeados
+      - name: Sin .env / scratch de sesion / artefactos de auditoria trackeados
         shell: bash
         run: |
           set -e
-          MATCHES=$(git ls-files | grep -E '(^|/)\.env$|(^|/)claude-scratch-[^/]*$|(^|/)temp_[^/]*$|(^|/)rewrite[0-9]+\.py$' || true)
+          MATCHES=$(git ls-files | grep -E '(^|/)\.env$|(^|/)claude-scratch-[^/]*$|(^|/)temp_[^/]*$|(^|/)rewrite[0-9]+\.py$|(^|/)_audits?/|(^|/)AUDITORIA\.md$' || true)
           if [ -n "$MATCHES" ]; then
             echo "Archivos trackeados que no deberian estar en el repo:"
             echo "$MATCHES"

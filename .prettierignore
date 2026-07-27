@@ -1,3 +1,9 @@
 node_modules
 coverage
 package-lock.json
+test-results.json
+
+# Artefactos de auditoria interna (Fragua)
+_audit
+_audits
+AUDITORIA.md

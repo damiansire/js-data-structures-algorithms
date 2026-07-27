@@ -1,3 +1,8 @@
 node_modules
 coverage
 test-results.json
+
+# Artefactos de auditoria interna (Fragua): nunca se versionan
+_audit/
+_audits/
+AUDITORIA.md

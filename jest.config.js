@@ -64,8 +64,23 @@ const config = {
   // que es lo que consume scripts/update-metrics.mjs para el badge del README.
   coverageReporters: ['json-summary', 'text', 'lcov', 'clover'],
 
-  // An object that configures minimum threshold enforcement for coverage results
-  // coverageThreshold: undefined,
+  // Piso de cobertura como RATCHET: fijado ~1pp por debajo de lo medido hoy
+  // (24.19% stmts/lines, 74.25% functions, 89.22% branches) para absorber el
+  // ruido entre versiones de Node, la misma tolerancia que documenta
+  // scripts/update-metrics.mjs. Solo se aplica cuando se recolecta cobertura
+  // (`npm run coverage` / `npm run test:metrics`), que es lo que corre CI.
+  // Regla: este piso SUBE cuando sube la cobertura real, nunca baja.
+  // Nota de honestidad (corpus node-ts/from-consensus-2026-07-16.md, D4): el
+  // mecanismo de thresholds es estandar, pero gatear cobertura por umbral es
+  // barra propia de este repo, no consenso de los OSS top.
+  coverageThreshold: {
+    global: {
+      statements: 23,
+      lines: 23,
+      functions: 73,
+      branches: 88,
+    },
+  },
 
   // A path to a custom dependency extractor
   // dependencyExtractor: undefined,
