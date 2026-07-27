@@ -142,22 +142,41 @@ export function buildTransport(player) {
   const playBtn = el('button', { class: 'tbtn primary' }, t('tp_play'));
   const stepBtn = el('button', { class: 'tbtn', title: t('tp_step_title') }, t('tp_step'));
   const resetBtn = el('button', { class: 'tbtn', title: t('tp_reset_title') }, '↺');
+  // a11y: el slider tomaba su nombre accesible del <label> que lo envuelve
+  // junto a los emoji, o sea se anunciaba como "🐢 🐇 1.0×". Con aria-label +
+  // aria-valuetext se anuncia "Velocidad, 1.0×".
   const speedInput = el('input', {
     type: 'range',
     min: '0.25',
     max: '3',
     step: '0.25',
     value: '1',
+    'aria-label': t('tp_speed_label'),
+    'aria-valuetext': '1.0×',
   });
   const speedVal = el('span', { class: 'mono' }, '1.0×');
-  const progress = el('span', { class: 'progress' }, '0 / ' + player.total);
+  // a11y: el contador de progreso se actualizaba en silencio. role=status +
+  // aria-live lo hacen audible para un lector de pantalla sin robar el foco.
+  const progress = el(
+    'span',
+    {
+      class: 'progress',
+      role: 'status',
+      'aria-live': 'polite',
+      'aria-atomic': 'true',
+      'aria-label': t('tp_progress_label'),
+    },
+    '0 / ' + player.total,
+  );
 
   playBtn.addEventListener('click', () => player.toggle());
   stepBtn.addEventListener('click', () => player.stepOnce());
   resetBtn.addEventListener('click', () => player.reset());
   speedInput.addEventListener('input', () => {
     const v = parseFloat(speedInput.value);
-    speedVal.textContent = v.toFixed(2).replace(/0$/, '') + '×';
+    const formatted = v.toFixed(2).replace(/0$/, '') + '×';
+    speedVal.textContent = formatted;
+    speedInput.setAttribute('aria-valuetext', formatted);
     player.setSpeed(v);
   });
 
