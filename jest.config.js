@@ -65,7 +65,7 @@ const config = {
   coverageReporters: ['json-summary', 'text', 'lcov', 'clover'],
 
   // Piso de cobertura como RATCHET: fijado ~1pp por debajo de lo medido hoy
-  // (24.19% stmts/lines, 74.25% functions, 89.22% branches) para absorber el
+  // (29.56% stmts/lines, 76.05% functions, 88.53% branches) para absorber el
   // ruido entre versiones de Node, la misma tolerancia que documenta
   // scripts/update-metrics.mjs. Solo se aplica cuando se recolecta cobertura
   // (`npm run coverage` / `npm run test:metrics`), que es lo que corre CI.
@@ -75,9 +75,9 @@ const config = {
   // barra propia de este repo, no consenso de los OSS top.
   coverageThreshold: {
     global: {
-      statements: 23,
-      lines: 23,
-      functions: 73,
+      statements: 28,
+      lines: 28,
+      functions: 75,
       branches: 88,
     },
   },
