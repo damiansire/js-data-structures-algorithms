@@ -1,8 +1,17 @@
 /**
  * Conjunto (hash set) con encadenamiento separado: guarda valores ÚNICOS y
- * responde `has()` en O(1) promedio. Igual que una tabla hash, pero sin valores
- * asociados: la clave ES el elemento, y `add()` de un valor ya presente no hace
- * nada. Es lo que está detrás de la deduplicación y las operaciones de conjuntos.
+ * responde `has()` en O(1) promedio **mientras el factor de carga se mantenga
+ * bajo**. Igual que una tabla hash, pero sin valores asociados: la clave ES el
+ * elemento, y `add()` de un valor ya presente no hace nada. Es lo que está
+ * detrás de la deduplicación y las operaciones de conjuntos.
+ *
+ * LIMITACIÓN DECLARADA (misma que `hash-table`, ver docs/design-notes.md): la
+ * capacidad se fija en el constructor y NO hay resize/rehash automático. Con n
+ * elementos sobre `capacity` buckets, cada bucket guarda ~n/capacity valores y
+ * `add`/`has`/`delete` degradan a O(n). El "O(1) promedio" de esta clase vale
+ * con el conjunto dimensionado (`new HashSet(n)`), no con el default de 8
+ * buckets: en la estructura gemela ese cliff se midió en 155x (15.664 ms vs
+ * 101 ms para 100.000 claves, `docs/design-notes.md`).
  */
 class HashSet {
   /**
@@ -31,7 +40,8 @@ class HashSet {
   }
 
   /**
-   * Agrega un valor si no estaba. O(1) promedio.
+   * Agrega un valor si no estaba. O(1) promedio con el factor de carga
+   * acotado; O(n) si el bucket está sobrecargado (no hay resize, ver arriba).
    * @param {*} value
    * @returns {boolean} true si lo agregó (era nuevo); false si ya estaba.
    */
@@ -44,7 +54,8 @@ class HashSet {
   }
 
   /**
-   * Indica si el valor está en el conjunto. O(1) promedio.
+   * Indica si el valor está en el conjunto. O(1) promedio con el factor de
+   * carga acotado; O(n) si el bucket está sobrecargado (no hay resize).
    * @param {*} value
    * @returns {boolean}
    */
@@ -53,7 +64,8 @@ class HashSet {
   }
 
   /**
-   * Elimina un valor. O(1) promedio.
+   * Elimina un valor. O(1) promedio con el factor de carga acotado; O(n) si
+   * el bucket está sobrecargado (no hay resize).
    * @param {*} value
    * @returns {boolean} true si eliminó algo; false si no estaba.
    */

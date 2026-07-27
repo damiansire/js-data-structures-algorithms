@@ -74,7 +74,14 @@ tests y `ts-node/register` habilita requerirlos desde `benchmarks/index.js`
   clásicas (FIFO / LIFO) — sirven de base conceptual para deque/priority-queue.
 - **set**: set propio (no `Set` nativo de JS) — el propósito es de estudio: la
   implementación expone cómo se resuelve membership/unicidad por debajo, algo
-  que el `Set` nativo esconde.
+  que el `Set` nativo esconde. Comparte diseño (y limitación) con `hash-table`:
+  encadenamiento separado y **capacidad fija sin resize/rehash automático**, así
+  que el "O(1) promedio" del JSDoc vale con el conjunto dimensionado
+  (`new HashSet(n)`) y degrada a O(n) por bucket sobrecargado con el default de
+  8 buckets. El costo medido de ese cliff en la estructura gemela está en la
+  sección de benchmarks (155x). La limitación es deliberada mientras la nota lo
+  declare; el día que se agregue rehash amortizado, se actualiza acá y se vuelve
+  a correr `npm run benchmark`.
 
 ## Ordenamiento
 
