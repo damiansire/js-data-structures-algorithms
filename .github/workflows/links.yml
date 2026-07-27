@@ -5,14 +5,22 @@ on:
     branches: ['**']
     paths:
       - '**.md'
+      - '**.html'
       - '.github/workflows/links.yml'
       - '.lycheeignore'
   pull_request:
     paths:
       - '**.md'
+      - '**.html'
       - '.github/workflows/links.yml'
       - '.lycheeignore'
   workflow_dispatch:
+
+# Permisos minimos declarados a nivel workflow (corpus node-ts, consenso 5).
+# Sin este bloque el job hereda el default del repo/organizacion, que puede ser
+# contents: write, y ese token se le pasaba a una accion de tercero.
+permissions:
+  contents: read
 
 jobs:
   link-checker:
@@ -20,19 +28,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check README and doc links
-        uses: lycheeverse/lychee-action@v2
+      - name: Check README, doc and HTML links
+        # Accion de tercero pinneada a SHA completo, con el tag en comentario
+        # (corpus node-ts, consenso 5): un tag mutable reapuntado ejecutaria
+        # codigo arbitrario en el runner. El tag se actualiza a mano.
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
           # Fail the run if any link/badge is broken. Loopback (localhost) links
           # are excluded to avoid false positives from local-dev docs. Mail links
           # (mailto:) are excluded by default in lychee, so no flag is needed
           # (the old --exclude-mail flag was removed in lychee 0.24; use
-          # --include-mail to opt them back in).
+          # --include-mail to opt them back in). The published SPA is HTML, so
+          # its outbound links are checked too, not only the Markdown.
           args: >-
             --no-progress
             --exclude-loopback
             ./README.md
             ./visualizador/README.md
+            ./index.html
+            ./visualizador/index.html
           fail: true
         env:
           # Authenticated requests avoid GitHub API rate limiting on badge/repo links.
