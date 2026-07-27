@@ -40,6 +40,11 @@ jobs:
           # (the old --exclude-mail flag was removed in lychee 0.24; use
           # --include-mail to opt them back in). The published SPA is HTML, so
           # its outbound links are checked too, not only the Markdown.
+          #
+          # The `rel="preconnect"` hints of the SPA point at bare font origins,
+          # which answer 404 without a path by design (they are connection
+          # hints, not navigable links). They live in `.lycheeignore`, which
+          # lychee picks up from the repo root.
           args: >-
             --no-progress
             --exclude-loopback

@@ -1,0 +1,8 @@
+# Patrones (regex) que el gate de links ignora. lychee lo lee de la raiz del repo.
+
+# Hints de conexion `rel="preconnect"` del visualizador: son ORIGENES pelados,
+# no links navegables, y por diseno responden 404 sin path. Verificado a mano:
+# https://fonts.googleapis.com -> 404, y la hoja real
+# https://fonts.googleapis.com/css2?family=... -> 200. La hoja SI se chequea.
+^https://fonts\.googleapis\.com/?$
+^https://fonts\.gstatic\.com/?$
