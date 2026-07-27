@@ -561,15 +561,32 @@ a {
     opacity: 1;
   }
 }
+/* a11y / WCAG 2.3.3 — escape global de motion.
+   Antes esta regla enumeraba 7 selectores del catálogo: la preferencia del
+   sistema se honraba en la portada y en el fondo de constelación, y se ignoraba
+   justo al entrar a la escena, que es donde vive TODO el movimiento del
+   producto (27 hojas de escena, 21 declaraciones `animation:` en scenes.css,
+   sólo 2 hojas con su propio bloque). Prometer respetar la preferencia y no
+   hacerlo es peor que no implementarlo.
+
+   No se usa `animation: none`: eso borra también el fill-mode, así que
+   cualquier elemento que aparezca vía animación (opacity 0 -> 1 con `both`)
+   quedaría invisible para siempre. Colapsar la duración lleva la animación a su
+   estado final en el primer frame, que es el comportamiento correcto: se ve el
+   resultado, no el recorrido. El delay NEGATIVO no es cosmetico: con delay 0 una
+   animacion de duracion ~0 se queda en su keyframe inicial (medido: .scene-view
+   quedaba en opacity 0, o sea la escena entera invisible); el delay negativo la
+   arranca ya pasada, en el keyframe final. */
 @media (prefers-reduced-motion: reduce) {
-  .hero-bubble,
-  .m-bar,
-  .m-block,
-  .m-dot,
-  .m-spark,
-  .scroll-hint .arrow,
-  .hero h1 .accent {
-    animation: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: -0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: -0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
