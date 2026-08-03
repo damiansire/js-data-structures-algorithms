@@ -6,6 +6,7 @@
 
 import { el, clear } from '../dom.js';
 import { getLang } from '../i18n.js';
+import { Graph } from '../trace/graph.trace.mjs';
 
 const SVGNS = 'http://www.w3.org/2000/svg';
 const SIZE = 300;
@@ -45,40 +46,8 @@ const STRINGS = {
   },
 };
 
-// Grafo fiel al repo: no dirigido, lista de adyacencia.
-class Graph {
-  constructor() {
-    this.adj = new Map();
-  }
-  addNode(n) {
-    if (this.adj.has(n)) return false;
-    this.adj.set(n, new Set());
-    return true;
-  }
-  addEdge(a, b) {
-    if (a === b) return false;
-    this.addNode(a);
-    this.addNode(b);
-    if (this.adj.get(a).has(b)) return false;
-    this.adj.get(a).add(b);
-    this.adj.get(b).add(a);
-    return true;
-  }
-  neighbors(n) {
-    return this.adj.has(n) ? [...this.adj.get(n)] : [];
-  }
-  nodes() {
-    return [...this.adj.keys()];
-  }
-  size() {
-    return this.adj.size;
-  }
-  edgeCount() {
-    let e = 0;
-    for (const s of this.adj.values()) e += s.size;
-    return e / 2;
-  }
-}
+// La lógica del grafo vive en trace/graph.trace.mjs (única copia en la capa de
+// vista, con test de equivalencia contra Estructuras-de-datos/graph/graph.js).
 
 export default function mountGraph(host) {
   const S = STRINGS[getLang()] || STRINGS.en;

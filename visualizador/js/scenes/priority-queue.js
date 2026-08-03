@@ -8,6 +8,7 @@
 
 import { el, clear } from '../dom.js';
 import { getLang } from '../i18n.js';
+import { PriorityQueue } from '../trace/priority-queue.trace.mjs';
 
 const SVGNS = 'http://www.w3.org/2000/svg';
 const W = 480;
@@ -49,52 +50,10 @@ const STRINGS = {
   },
 };
 
-// Min-heap fiel al repo (guardamos la prioridad como valor mostrado).
-class MinHeap {
-  constructor() {
-    this.heap = [];
-  }
-  size() {
-    return this.heap.length;
-  }
-  isEmpty() {
-    return this.heap.length === 0;
-  }
-  peek() {
-    return this.heap.length === 0 ? null : this.heap[0];
-  }
-  enqueue(p) {
-    this.heap.push(p);
-    let i = this.heap.length - 1;
-    while (i > 0) {
-      const parent = (i - 1) >> 1;
-      if (this.heap[i] >= this.heap[parent]) break;
-      [this.heap[i], this.heap[parent]] = [this.heap[parent], this.heap[i]];
-      i = parent;
-    }
-  }
-  dequeue() {
-    if (this.heap.length === 0) throw new Error('dequeue() sobre cola de prioridad vacia');
-    const min = this.heap[0];
-    const last = this.heap.pop();
-    if (this.heap.length > 0) {
-      this.heap[0] = last;
-      let i = 0;
-      const n = this.heap.length;
-      for (;;) {
-        const l = 2 * i + 1;
-        const r = 2 * i + 2;
-        let s = i;
-        if (l < n && this.heap[l] < this.heap[s]) s = l;
-        if (r < n && this.heap[r] < this.heap[s]) s = r;
-        if (s === i) break;
-        [this.heap[i], this.heap[s]] = [this.heap[s], this.heap[i]];
-        i = s;
-      }
-    }
-    return min;
-  }
-}
+// La lógica del heap vive en trace/priority-queue.trace.mjs (única copia en la
+// capa de vista, con test de equivalencia contra
+// Estructuras-de-datos/priority-queue/priority-queue.ts). La escena muestra la
+// PRIORIDAD como valor: enqueue(p, p).
 
 const levelOf = (i) => Math.floor(Math.log2(i + 1));
 const px = (i) => {
@@ -107,7 +66,7 @@ const py = (i) => PAD_Y + levelOf(i) * ROW;
 
 export default function mountPriorityQueue(host) {
   const S = STRINGS[getLang()] || STRINGS.en;
-  const pq = new MinHeap();
+  const pq = new PriorityQueue();
   let seed = 41; // PRNG determinista (sin Math.random para no depender del entorno)
   const nextPriority = () => {
     seed = (seed * 73 + 41) % 100;
@@ -126,7 +85,8 @@ export default function mountPriorityQueue(host) {
 
   function render(flash) {
     clear(tree);
-    const n = pq.heap.length;
+    const heap = pq.entries();
+    const n = heap.length;
     const levels = n === 0 ? 1 : levelOf(n - 1) + 1;
     const H = PAD_Y * 2 + (levels - 1) * ROW + NODE;
     tree.style.height = `${H}px`;
@@ -160,7 +120,7 @@ export default function mountPriorityQueue(host) {
             class: `pq-node${i === 0 ? ' is-root' : ''}${i === flash ? ' pulse' : ''}`,
             style: { left: `${px(i)}px`, top: `${py(i)}px` },
           },
-          String(pq.heap[i]),
+          String(heap[i].priority),
         ),
       );
     }
@@ -171,13 +131,13 @@ export default function mountPriorityQueue(host) {
     if (n === 0) {
       arrayRow.append(el('span', { class: 'pq-arr-empty' }, '∅'));
     } else {
-      pq.heap.forEach((p, i) => {
+      heap.forEach((entry, i) => {
         arrayRow.append(
           el(
             'div',
             { class: `pq-cell${i === 0 ? ' is-root' : ''}${i === flash ? ' pulse' : ''}` },
             el('span', { class: 'pq-cell__i' }, String(i)),
-            el('span', { class: 'pq-cell__v' }, String(p)),
+            el('span', { class: 'pq-cell__v' }, String(entry.priority)),
           ),
         );
       });
@@ -193,9 +153,9 @@ export default function mountPriorityQueue(host) {
 
   function doEnqueue() {
     const p = nextPriority();
-    pq.enqueue(p);
+    pq.enqueue(p, p);
     setNarration(S.enqueueMsg(p));
-    render(pq.heap.indexOf(p));
+    render(pq.entries().findIndex((entry) => entry.priority === p));
     syncStats();
   }
 
@@ -208,7 +168,8 @@ export default function mountPriorityQueue(host) {
   }
 
   function doClear() {
-    pq.heap.length = 0;
+    // Vacía usando la operación real (no hay clear() en el canónico).
+    while (!pq.isEmpty()) pq.dequeue();
     setNarration(S.cleared);
     render(-1);
     syncStats();

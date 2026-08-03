@@ -2,21 +2,10 @@
 //
 // Cada nodo es un VAGÓN; el puntero `next` es el ENGANCHE/cadena entre vagones
 // (con una flechita →). La cabeza (head) y la cola (last) llevan su banderín.
-//
-// La List de este módulo es FIEL a Estructuras-de-datos/list/list.ts:
-//   - push(data): agrega al FINAL. Si head == null, head = node; si no,
-//     last.next = node. Siempre last = node y length++.  (O(1) gracias a last)
-//   - delete(element): elimina el PRIMER nodo cuyo data coincide. Mantiene
-//     head y last sincronizados y decrementa length, replicando los if del repo
-//     (caso cabeza, recorrido por next, reconexión y ajuste de last/length).
-//   - getLastElement()/getElementByIndex()/find(): recorrido por next.
-//
-// `prepend(data)` (insertar al inicio) NO existe en el repo; lo agregamos como
-// extensión natural manteniendo los MISMOS invariantes (head nuevo, last si la
-// lista estaba vacía, length++) para poder mostrar inserción "al inicio".
 
 import { el, clear, wait } from '../dom.js';
 import { getLang } from '../i18n.js';
+import { List } from '../trace/list.trace.mjs';
 
 // ── Strings bilingües (EN por defecto, ES opcional) ──────────────
 const STRINGS = {
@@ -99,65 +88,8 @@ function ensureStyle() {
   document.head.append(link);
 }
 
-/* ── Modelo: List fiel a list.js ─────────────────────────────────── */
-class Node {
-  constructor(data) {
-    this.data = data;
-    this.next = null;
-  }
-}
-class List {
-  constructor() {
-    this.head = null;
-    this.last = null;
-    this.length = 0;
-  }
-  // Agrega al final — replica push() del repo.
-  push(data) {
-    const node = new Node(data);
-    if (this.head == null) this.head = node;
-    else this.last.next = node;
-    this.last = node;
-    this.length++;
-    return node;
-  }
-  // Extensión: agrega al inicio manteniendo los mismos invariantes.
-  prepend(data) {
-    const node = new Node(data);
-    if (this.head == null) this.last = node;
-    node.next = this.head;
-    this.head = node;
-    this.length++;
-    return node;
-  }
-  // Elimina el primer nodo con ese data — replica delete() del repo.
-  delete(element) {
-    let aux = this.head;
-    if (aux == null) return null;
-    if (aux.data == element) {
-      this.head = aux.next;
-      if (aux == this.last) this.last = this.head;
-      this.length--;
-      return aux.data;
-    }
-    while (aux.next != null && aux.next.data != element) aux = aux.next;
-    if (aux.next == null) return null;
-    const removed = aux.next;
-    aux.next = aux.next.next;
-    if (removed == this.last) this.last = aux;
-    this.length--;
-    return removed.data;
-  }
-  toArray() {
-    const out = [];
-    let aux = this.head;
-    while (aux != null) {
-      out.push(aux);
-      aux = aux.next;
-    }
-    return out;
-  }
-}
+// La lógica de la lista vive en trace/list.trace.mjs (única copia en la capa
+// de vista, con test de equivalencia contra Estructuras-de-datos/list/list.ts).
 
 const CAR_COLORS = [
   ['#a78bfa', '#7c3aed'],
@@ -295,7 +227,9 @@ export default function mountList(host, meta) {
     if (busy) return;
     busy = true;
     counter += 1;
-    const node = list.push(counter);
+    // push() devuelve void (misma API que el canónico); el nodo nuevo es last.
+    list.push(counter);
+    const node = list.last;
     colorByNode.set(node, counter - 1);
     setNarration(list.length === 1 ? S.pushFirst(counter) : S.pushMore(counter));
     render({ fallNode: node, fallSide: 'tail' });
@@ -309,7 +243,9 @@ export default function mountList(host, meta) {
     if (busy) return;
     busy = true;
     counter += 1;
-    const node = list.prepend(counter);
+    // prepend() devuelve void (mismos invariantes que push); el nodo nuevo es head.
+    list.prepend(counter);
+    const node = list.head;
     colorByNode.set(node, counter - 1);
     setNarration(list.length === 1 ? S.prependFirst(counter) : S.prependMore(counter));
     render({ fallNode: node, fallSide: 'head' });
@@ -418,8 +354,8 @@ export default function mountList(host, meta) {
   // ── Arranque con 4 vagones precargados ──────────────────────────
   for (const v of [3, 7, 9, 5]) {
     counter += 1;
-    const node = list.push(v);
-    colorByNode.set(node, counter - 1);
+    list.push(v);
+    colorByNode.set(list.last, counter - 1);
   }
   render();
   syncStats();

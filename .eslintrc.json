@@ -66,6 +66,19 @@
       }
     },
     {
+      "files": ["visualizador/js/scenes/*.test.mjs"],
+      "env": {
+        "browser": true,
+        "jest": true,
+        "node": false,
+        "es2022": true
+      },
+      "parserOptions": {
+        "ecmaVersion": 2022,
+        "sourceType": "module"
+      }
+    },
+    {
       "files": ["**/*.test.js"],
       "env": {
         "jest": true,

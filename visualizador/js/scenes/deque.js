@@ -7,6 +7,7 @@
 
 import { el, clear } from '../dom.js';
 import { getLang } from '../i18n.js';
+import { Deque } from '../trace/deque.trace.mjs';
 
 const CARD_COLORS = [
   ['#a78bfa', '#7c3aed'],
@@ -56,65 +57,8 @@ const STRINGS = {
   },
 };
 
-// Deque fiel al repo: doblemente enlazada.
-class Node {
-  constructor(data) {
-    this.data = data;
-    this.prev = null;
-    this.next = null;
-  }
-}
-class Deque {
-  constructor() {
-    this.head = null;
-    this.tail = null;
-    this.length = 0;
-  }
-  isEmpty() {
-    return this.length === 0;
-  }
-  pushFront(x) {
-    const n = new Node(x);
-    if (!this.head) this.head = this.tail = n;
-    else {
-      n.next = this.head;
-      this.head.prev = n;
-      this.head = n;
-    }
-    this.length++;
-  }
-  pushBack(x) {
-    const n = new Node(x);
-    if (!this.tail) this.head = this.tail = n;
-    else {
-      n.prev = this.tail;
-      this.tail.next = n;
-      this.tail = n;
-    }
-    this.length++;
-  }
-  popFront() {
-    const n = this.head;
-    this.head = n.next;
-    if (!this.head) this.tail = null;
-    else this.head.prev = null;
-    this.length--;
-    return n.data;
-  }
-  popBack() {
-    const n = this.tail;
-    this.tail = n.prev;
-    if (!this.tail) this.head = null;
-    else this.tail.next = null;
-    this.length--;
-    return n.data;
-  }
-  toArray() {
-    const out = [];
-    for (let a = this.head; a; a = a.next) out.push(a.data);
-    return out;
-  }
-}
+// La lógica de la deque vive en trace/deque.trace.mjs (única copia en la capa
+// de vista, con test de equivalencia contra Estructuras-de-datos/deque/deque.ts).
 
 export default function mountDeque(host) {
   const S = STRINGS[getLang()] || STRINGS.en;
@@ -154,9 +98,9 @@ export default function mountDeque(host) {
   }
 
   function syncStats() {
-    statSize.textContent = String(dq.length);
-    statFront.textContent = dq.isEmpty() ? '—' : String(dq.head.data);
-    statBack.textContent = dq.isEmpty() ? '—' : String(dq.tail.data);
+    statSize.textContent = String(dq.size());
+    statFront.textContent = dq.isEmpty() ? '—' : String(dq.peekFront());
+    statBack.textContent = dq.isEmpty() ? '—' : String(dq.peekBack());
     for (const b of [popFrontBtn, popBackBtn, clearBtn]) b.disabled = dq.isEmpty();
   }
 
@@ -189,8 +133,7 @@ export default function mountDeque(host) {
     syncStats();
   }
   function doClear() {
-    dq.head = dq.tail = null;
-    dq.length = 0;
+    while (!dq.isEmpty()) dq.popBack();
     setNarration(S.cleared);
     render(-1);
     syncStats();

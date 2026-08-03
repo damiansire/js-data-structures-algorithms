@@ -7,6 +7,7 @@
 
 import { el, clear } from '../dom.js';
 import { getLang } from '../i18n.js';
+import { Queue } from '../trace/queue.trace.mjs';
 
 const STRINGS = {
   en: {
@@ -53,50 +54,8 @@ const CARD_COLORS = [
   ['#60a5fa', '#2563eb'],
 ];
 
-// Cola fiel al repo: nodos enlazados, head al frente, tail al final.
-class Node {
-  constructor(data) {
-    this.data = data;
-    this.next = null;
-  }
-}
-class Queue {
-  constructor() {
-    this.head = null;
-    this.tail = null;
-  }
-  isEmpty() {
-    return this.head === null;
-  }
-  length() {
-    let aux = this.head;
-    let c = 0;
-    while (aux !== null) {
-      c++;
-      aux = aux.next;
-    }
-    return c;
-  }
-  peek() {
-    return this.head === null ? null : this.head.data;
-  }
-  enqueue(element) {
-    const node = new Node(element);
-    if (this.tail === null) this.head = this.tail = node;
-    else {
-      this.tail.next = node;
-      this.tail = node;
-    }
-    return node;
-  }
-  dequeue() {
-    if (this.head === null) throw new Error('dequeue() sobre cola vacia');
-    const node = this.head;
-    this.head = this.head.next;
-    if (this.head === null) this.tail = null;
-    return node;
-  }
-}
+// La lógica de la cola vive en trace/queue.trace.mjs (única copia en la capa
+// de vista, con test de equivalencia contra Estructuras-de-datos/queue/queue.ts).
 
 export default function mountQueue(host) {
   const S = STRINGS[getLang()] || STRINGS.en;
@@ -144,7 +103,8 @@ export default function mountQueue(host) {
   function doEnqueue() {
     if (busy) return;
     counter += 1;
-    const node = queue.enqueue(counter);
+    queue.enqueue(counter);
+    const node = queue.tail; // el recién encolado; identidad para mapear a su tarjeta
     const card = cardFor(node, queue.length() - 1);
     cardsByNode.set(node, card);
     lane.append(card);
@@ -156,9 +116,9 @@ export default function mountQueue(host) {
   function doDequeue() {
     if (busy || queue.isEmpty()) return;
     busy = true;
-    const node = queue.dequeue();
+    const node = queue.peekNode(); // identidad del frente ANTES de desencolar
+    const val = queue.dequeue();
     const card = cardsByNode.get(node);
-    const val = node.data;
     cardsByNode.delete(node);
     setNarration(S.dequeueMsg(val));
     card.classList.add('leave');

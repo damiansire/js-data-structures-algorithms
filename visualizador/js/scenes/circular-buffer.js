@@ -7,6 +7,7 @@
 
 import { el, clear } from '../dom.js';
 import { getLang } from '../i18n.js';
+import { CircularBuffer } from '../trace/circular-buffer.trace.mjs';
 
 const N = 8; // capacidad
 const CENTER = 150;
@@ -59,40 +60,9 @@ const SLOT_COLORS = [
   ['#60a5fa', '#2563eb'],
 ];
 
-// Buffer circular fiel al repo.
-class CircularBuffer {
-  constructor(capacity) {
-    this.capacity = capacity;
-    this.buffer = new Array(capacity).fill(undefined);
-    this.head = 0;
-    this.tail = 0;
-    this.count = 0;
-  }
-  isEmpty() {
-    return this.count === 0;
-  }
-  isFull() {
-    return this.count === this.capacity;
-  }
-  write(element) {
-    const overwritten = this.isFull() ? this.buffer[this.head] : undefined;
-    const at = this.head;
-    this.buffer[this.head] = element;
-    this.head = (this.head + 1) % this.capacity;
-    if (this.isFull()) this.tail = (this.tail + 1) % this.capacity;
-    else this.count++;
-    return { at, overwritten };
-  }
-  read() {
-    if (this.isEmpty()) throw new Error('read() sobre buffer vacio');
-    const at = this.tail;
-    const value = this.buffer[this.tail];
-    this.buffer[this.tail] = undefined;
-    this.tail = (this.tail + 1) % this.capacity;
-    this.count--;
-    return { at, value };
-  }
-}
+// La lógica del ring buffer vive en trace/circular-buffer.trace.mjs (única
+// copia en la capa de vista, con test de equivalencia contra
+// Estructuras-de-datos/circular-buffer/circular-buffer.js).
 
 /** Posición (x, y) del índice `i` sobre un círculo de radio `radius`, empezando arriba. */
 function posOf(i, radius) {
@@ -173,7 +143,8 @@ export default function mountCircularBuffer(host) {
   function doWrite() {
     counter += 1;
     const wasFull = cb.isFull();
-    const { at, overwritten } = cb.write(counter);
+    const at = cb.head; // posición donde cae la escritura, ANTES de operar
+    const overwritten = cb.write(counter);
     if (wasFull) {
       setNarration(S.overwriteMsg(counter, overwritten));
       flashFull();
@@ -186,15 +157,15 @@ export default function mountCircularBuffer(host) {
 
   function doRead() {
     if (cb.isEmpty()) return;
-    const { at, value } = cb.read();
+    const at = cb.tail; // posición del más viejo, ANTES de leer
+    const value = cb.read();
     setNarration(S.readMsg(value));
     render(at);
     syncStats();
   }
 
   function doClear() {
-    cb.buffer.fill(undefined);
-    cb.head = cb.tail = cb.count = 0;
+    while (!cb.isEmpty()) cb.read();
     setNarration(S.cleared);
     render(-1);
     syncStats();

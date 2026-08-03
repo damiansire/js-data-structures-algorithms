@@ -6,6 +6,7 @@
 
 import { el, clear } from '../dom.js';
 import { getLang } from '../i18n.js';
+import { HashSet } from '../trace/set.trace.mjs';
 
 const POOL = ['apple', 'banana', 'cherry', 'date', 'fig', 'grape', 'kiwi', 'lemon'];
 
@@ -51,38 +52,8 @@ const STRINGS = {
   },
 };
 
-// Hash set fiel al repo.
-class HashSet {
-  constructor(capacity = 8) {
-    this.capacity = capacity;
-    this.buckets = Array.from({ length: capacity }, () => []);
-    this.count = 0;
-  }
-  hash(v) {
-    const s = String(v);
-    let h = 0;
-    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-    return h % this.capacity;
-  }
-  add(v) {
-    const b = this.buckets[this.hash(v)];
-    if (b.includes(v)) return false;
-    b.push(v);
-    this.count++;
-    return true;
-  }
-  delete(v) {
-    const b = this.buckets[this.hash(v)];
-    const i = b.indexOf(v);
-    if (i < 0) return false;
-    b.splice(i, 1);
-    this.count--;
-    return true;
-  }
-  values() {
-    return this.buckets.flat();
-  }
-}
+// La lógica del set vive en trace/set.trace.mjs (única copia en la capa de
+// vista, con test de equivalencia contra Estructuras-de-datos/set/set.js).
 
 export default function mountSet(host) {
   const S = STRINGS[getLang()] || STRINGS.en;
@@ -125,9 +96,9 @@ export default function mountSet(host) {
   }
 
   function syncStats() {
-    statSize.textContent = String(set.count);
-    removeBtn.disabled = set.count === 0;
-    clearBtn.disabled = set.count === 0;
+    statSize.textContent = String(set.size());
+    removeBtn.disabled = set.size() === 0;
+    clearBtn.disabled = set.size() === 0;
   }
 
   function doAdd() {
@@ -157,8 +128,7 @@ export default function mountSet(host) {
   }
 
   function doClear() {
-    set.buckets = Array.from({ length: set.capacity }, () => []);
-    set.count = 0;
+    for (const v of set.values()) set.delete(v);
     order.length = 0;
     setNarration(S.cleared);
     render(null, null);

@@ -7,6 +7,7 @@
 
 import { el, clear } from '../dom.js';
 import { getLang } from '../i18n.js';
+import { HashTable } from '../trace/hash-table.trace.mjs';
 
 const N = 8; // buckets
 
@@ -61,35 +62,9 @@ const STRINGS = {
   },
 };
 
-// Tabla hash fiel al repo: encadenamiento separado.
-class HashTable {
-  constructor(capacity) {
-    this.capacity = capacity;
-    this.buckets = Array.from({ length: capacity }, () => []);
-    this.count = 0;
-  }
-  hash(key) {
-    const s = String(key);
-    let h = 0;
-    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-    return h % this.capacity;
-  }
-  set(key, value) {
-    const bucket = this.buckets[this.hash(key)];
-    const entry = bucket.find((e) => e.key === key);
-    if (entry) {
-      entry.value = value;
-      return false;
-    }
-    bucket.push({ key, value });
-    this.count++;
-    return true;
-  }
-  get(key) {
-    const entry = this.buckets[this.hash(key)].find((e) => e.key === key);
-    return entry ? entry.value : undefined;
-  }
-}
+// La lógica de la tabla vive en trace/hash-table.trace.mjs (única copia en la
+// capa de vista, con test de equivalencia contra
+// Estructuras-de-datos/hash-table/hash-table.js).
 
 export default function mountHashTable(host) {
   const S = STRINGS[getLang()] || STRINGS.en;
@@ -183,8 +158,7 @@ export default function mountHashTable(host) {
   }
 
   function doClear() {
-    table.buckets = Array.from({ length: N }, () => []);
-    table.count = 0;
+    for (const key of inserted) table.delete(key);
     inserted.length = 0;
     nextWord = 0;
     value = 0;
