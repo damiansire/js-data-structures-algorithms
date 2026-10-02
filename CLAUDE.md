@@ -4,8 +4,9 @@ Repo educativo de estructuras de datos y algoritmos (módulos canónicos JS/TS c
 co-ubicado) más un visualizador SPA vanilla publicado en GitHub Pages, donde cada escena
 anima el algoritmo real.
 
-- **Stacks:** `node-ts` (dominio, tooling, CI) y `creative` (visualizador: canvas, rAF,
-  motion, UI viva). Transversales: `architecture`, `typescript`.
+- **Stacks:** Node + TypeScript (dominio, tooling, CI) y visualización creativa
+  (visualizador: canvas, rAF, motion, UI viva). Barras transversales: arquitectura y
+  TypeScript estricto.
 - **Gates locales:** `npm run lint`, `npm run build` (typecheck), `npm run format:check`,
   `npm test`, `npm run coverage`, `npm run check-metrics`.
 - **Artefactos internos:** `_audit/`, `_audits/` y `AUDITORIA.md` nunca se versionan
@@ -13,17 +14,18 @@ anima el algoritmo real.
 
 ---
 
-## Estándar nivel mundial
+## Barra de calidad
 
 Esta sección es **build-time**: se cumple ANTES de escribir la feature, no se audita al
-final. Sale del corpus de referencias de La Fragua (local, fuera de este repo), destilado
-de repos OSS top verificados con fuente primaria. Cada regla cita su origen. Si una regla
-no tiene cita, no es regla: es opinión.
+final. Las reglas de stack están destiladas de repos OSS de referencia, verificadas contra
+su fuente primaria (archivos de config y docs reales), y cada una cita su origen. Las que
+no vienen de un repo externo se declaran como barra propia. Si una regla no tiene cita, no
+es regla: es opinión.
 
 ### Piso de Craft (a-j)
 
-_(origen: corpus `architecture`, barra transversal. Regla raíz: Intención Clara /
-Zero-Guessing)_
+_(origen: barra propia de arquitectura, común a los repos del autor. Regla raíz: intención
+clara, que nada obligue a adivinar)_
 
 - **a. El nombre revela la intención de dominio, no el mecanismo.** Nada de `data`,
   `handle`, `manager`, `process` donde el dominio tiene término propio (`trace`, `step`,
@@ -54,7 +56,8 @@ Zero-Guessing)_
 
 ### Legibilidad en frío (k-m)
 
-_(origen: corpus `architecture` (barra transversal) + `architecture/from-consensus-2026-07-09.md`)_
+_(origen: barra propia de arquitectura + consenso de guías OSS de documentación; cada regla
+cita su fuente)_
 
 Que el artefacto haga visible y verificable lo que es, para alguien que cae en frío en 30
 segundos sin abrir el código. Su ausencia no baja el craft, pero deja el trabajo
@@ -78,7 +81,11 @@ sub-descripto.
 
 ### Techo de Craft
 
-_(origen: corpus `architecture` + `architecture/from-consensus-craft-techo-2026-07-09.md`)_
+_(origen: estudio de repos de referencia donde la calidad está machine-checked: Kubernetes
+[import-restrictions](https://github.com/kubernetes/kubernetes/blob/master/staging/publishing/import-restrictions.yaml),
+[SQLite testing](https://sqlite.org/testing.html) y [assert](https://www.sqlite.org/assert.html),
+[LLVM coding standards](https://llvm.org/docs/CodingStandards.html),
+[tracing-error](https://github.com/tokio-rs/tracing/blob/master/tracing-error/src/lib.rs))_
 
 Idea rectora: los repos de referencia convierten la calidad en **hecho machine-enforced**,
 no en convención. Lo que mueve este repo de "ok" a "referencia":
@@ -97,7 +104,7 @@ no en convención. Lo que mueve este repo de "ok" a "referencia":
 - **Observabilidad:** contexto capturado en el ORIGEN, render diferido. Techo fino (una
   sola fuente confirmada): no sobre-generalizar. _(tokio-rs/tracing-error)_
 - **Enforcement:** distinguí siempre "gateable por linter/CI" (regla dura) de "criterio de
-  review" (juicio). En el corpus solo el import-boss de Kubernetes y los assert/test-VFS de
+  review" (juicio). En esos repos solo el import-boss de Kubernetes y los assert/test-VFS de
   SQLite están literalmente machine-checked; el resto es "should" por review.
 
 > El patrón propio de este repo (traza pura sin DOM + test de equivalencia contra el módulo
@@ -106,10 +113,12 @@ no en convención. Lo que mueve este repo de "ok" a "referencia":
 
 ### Reglas enforzables del stack
 
-#### node-ts, tooling y CI
+#### Node + TypeScript, tooling y CI
 
-_(origen: `node-ts/from-consensus-2026-07-16.md`, verificado contra n8n, Backstage y
-Directus con archivo de config real)_
+_(origen: consenso verificado contra los archivos de config reales de
+[n8n](https://github.com/n8n-io/n8n), [Backstage](https://github.com/backstage/backstage) y
+[Directus](https://github.com/directus/directus). La numeración (consenso N, divergencia D4)
+es la que citan los comentarios de `.github/workflows/` y `jest.config.js`)_
 
 1. **tsconfig estricto en UN solo lugar y con `include` por patrón.** La cobertura del
    typecheck no puede depender de que alguien se acuerde de editar una allowlist: un `.ts`
@@ -130,11 +139,12 @@ Directus con archivo de config real)_
 6. **Coverage con umbral como ratchet** (`coverageThreshold` en `jest.config.js`): el piso
    solo sube, nunca baja. Honestidad al citarlo: el mecanismo es estándar, pero gatear
    cobertura por umbral es barra propia de este repo, no consenso de los OSS top.
-   _(divergencia D4)_
+   _(divergencia D4: no es consenso de los tres repos)_
 
 #### TypeScript
 
-_(origen: `typescript/strict-loopholes.md`)_
+_(origen: barra propia de TypeScript estricto, inspirada en el type-safety de tRPC y en
+las configs de monorepos tipo Nx)_
 
 - **`as Type` es apagar el compilador.** Prohibido el cast ciego después de una operación
   que puede devolver `undefined`/`null`: type guard o validación en runtime. Severidad
@@ -147,42 +157,44 @@ _(origen: `typescript/strict-loopholes.md`)_
 
 #### Visualizador (creative: SPA vanilla, canvas, motion)
 
-_(origen: `creative/from-mrdoob-three.js.md`, `creative/from-processing-p5.js.md`,
-`creative/from-google-ai-edge-mediapipe.md`, `creative/design-exemplars/from-neal-fun.md`,
-`creative/design-exemplars/usable-craft-gates.md`)_
+_(origen: [three.js](https://github.com/mrdoob/three.js),
+[p5.js](https://github.com/processing/p5.js),
+[MediaPipe](https://github.com/google-ai-edge/mediapipe), [neal.fun](https://neal.fun) para
+la UI viva, y WCAG 2.2 + Nielsen Norman Group para la usabilidad)_
 
 - **Cero dependencias de runtime, ESM tree-shakeable.** three.js sostiene ~600k LOC sin una
   sola dep de runtime; acá el claim de "sin build step, sin dependencias" es del README y
   hay que mantenerlo cierto. _(three.js)_
 - **Cero alloc en el hot path.** En loops de `requestAnimationFrame` no se instancian
-  objetos ni arrays por frame: temporales reutilizables a nivel módulo.
-  _(three.js 1.1, `architecture/high-performance-rendering.md`)_
+  objetos ni arrays por frame: temporales reutilizables a nivel módulo. _(three.js)_
 - **API fluida: los mutadores devuelven `this`**, y el JSDoc lo declara como contrato.
-  _(three.js 1.2)_
+  _(three.js)_
 - **Lint con reglas concretas, no genéricas:** `no-unused-vars` en `error`, tipos JSDoc
   obligatorios, y `browserslist` + `eslint-plugin-compat` para que usar una API más nueva
   que el target soportado falle en CI en vez de fallar en el navegador del visitante.
-  _(three.js 2.3)_
+  _(three.js)_
 - **Lógica de dominio testeable sin navegador,** con fakes en lugar del entorno real: el
-  test de la lógica no depende del DOM ni de un canvas. _(mediapipe 2.3, p5)_
+  test de la lógica no depende del DOM ni de un canvas. _(MediaPipe, p5.js)_
 - **Gobernanza de PRs explícita** para superficie grande: declarar qué clase de PRs se
   acepta baja el ruido de mantenimiento. _(mediapipe)_
 - **Toda pantalla nueva o retocada pasa los gates de UI antes de darse por terminada:**
-  - Polo "UI viva" (G1-G11, `from-neal-fun.md`): nada popea (G2: entradas y salidas
-    animadas ≥150ms), ack instantáneo en el primer frame post interacción (G6),
-    `prefers-reduced-motion` cubre **todo** el motion y no un subconjunto (G7), comprensión
-    sin código (G10), información completa y no truncada (G11).
-  - Polo "usable / sin defectos" (G12-G19, `usable-craft-gates.md`, anclado a WCAG 2.2 y
-    NNG): feedback ≤400ms (G12), targets ≥24×24 px (G13), contraste ≥4.5:1 (G14), foco
-    visible y no tapado (G16), transiciones de 100 a 500ms (G18), layout íntegro sin
-    overflow ni colisiones, medido por `getBoundingClientRect` contra TODOS los vecinos
-    (G19).
+  - Polo "UI viva" (estilo neal.fun): nada popea (entradas y salidas animadas ≥150ms),
+    ack instantáneo en el primer frame post interacción, `prefers-reduced-motion` cubre
+    **todo** el motion y no un subconjunto, comprensión sin código, información completa y
+    no truncada.
+  - Polo "usable / sin defectos" (anclado a WCAG 2.2 y NNG): feedback ≤400ms, targets
+    ≥24×24 px, contraste ≥4.5:1, foco visible y no tapado, transiciones de 100 a 500ms,
+    layout íntegro sin overflow ni colisiones, medido por `getBoundingClientRect` contra
+    TODOS los vecinos.
   - Los dos polos se exigen juntos: una pantalla puede estar viva y seguir siendo incómoda,
     inaccesible o rota.
 
 ### Documentación
 
-_(origen: corpus `architecture` (k-m) + `architecture/from-consensus-2026-07-09.md`)_
+_(origen: reglas k-m de arriba + consenso de guías de documentación OSS:
+[GitHub sobre READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes),
+[GitLab](https://about.gitlab.com/blog/how-to-start-a-great-oss-project/),
+[ADRs](https://github.com/joelparkerhenderson/architecture-decision-record))_
 
 - **El README nombra al proyecto igual que el manifest.** El título, la descripción de
   `package.json` y el claim de apertura describen la misma cosa. Un rename se propaga a los
@@ -201,7 +213,7 @@ _(origen: corpus `architecture` (k-m) + `architecture/from-consensus-2026-07-09.
   lo gatea; ningún número queda escrito a mano fuera de ese bloque.
 - **El "por qué" vive en un doc de decisión.** Una decisión por doc, con contexto y
   consecuencias (Nygard). Hoy eso es `docs/design-notes.md`; los cambios de decisión se
-  escriben ahí, no en el mensaje de commit. _(ADR, consenso 2026-07-09)_
+  escriben ahí, no en el mensaje de commit. _(ADR)_
 - **Scope declarado por negación.** El repo dice qué a propósito NO es ni hace (por
   ejemplo: no es una librería publicable, no busca ser la implementación más rápida).
   Presencia = alcance deliberado; ausencia = no se distingue deliberado de deriva.
