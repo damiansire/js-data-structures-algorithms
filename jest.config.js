@@ -65,20 +65,31 @@ const config = {
   coverageReporters: ['json-summary', 'text', 'lcov', 'clover'],
 
   // Piso de cobertura como RATCHET: fijado ~1pp por debajo de lo medido hoy
-  // (29.56% stmts/lines, 76.05% functions, 88.53% branches) para absorber el
-  // ruido entre versiones de Node, la misma tolerancia que documenta
+  // (84.23% stmts/lines, 56.05-56.15% functions, 87.76% branches) para absorber
+  // el ruido entre versiones de Node, la misma tolerancia que documenta
   // scripts/update-metrics.mjs. Solo se aplica cuando se recolecta cobertura
   // (`npm run coverage` / `npm run test:metrics`), que es lo que corre CI.
   // Regla: este piso SUBE cuando sube la cobertura real, nunca baja.
+  //
+  // Recalibrado al sumar scenes.smoke.test.mjs, que monta todas las escenas. Con
+  // el provider v8, un archivo que ningun test carga aporta lineas al
+  // denominador pero 0 funciones y casi 0 ramas: antes las escenas no cargadas
+  // eran invisibles para functions/branches. Al montarlas, sus handlers y
+  // callbacks de animacion (que el smoke no dispara) entraron al denominador.
+  // La cobertura real subio en todos los ejes (funciones cubiertas 265 -> 602,
+  // lineas 29.79% -> 84.23%); lo que bajo es el % de functions/branches porque
+  // ahora mide un universo 3 veces mas grande (349 -> 1072 funciones). El piso
+  // viejo (28/28/75/88) quedaba por debajo en lineas y por encima en funciones
+  // de una medicion que ya no es comparable.
   // Nota de honestidad (corpus node-ts/from-consensus-2026-07-16.md, D4): el
   // mecanismo de thresholds es estandar, pero gatear cobertura por umbral es
   // barra propia de este repo, no consenso de los OSS top.
   coverageThreshold: {
     global: {
-      statements: 28,
-      lines: 28,
-      functions: 75,
-      branches: 88,
+      statements: 83,
+      lines: 83,
+      functions: 55,
+      branches: 87,
     },
   },
 
